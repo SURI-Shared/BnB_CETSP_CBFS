@@ -4,11 +4,12 @@ SYSTEM = x86-64_linux
 LIBFORMAT = static_pic 
 
 ####diretorios com as libs do cplex
-CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio128/cplex
-CONCERTDIR    = /opt/ibm/ILOG/CPLEX_Studio128/concert
+CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio2211/cplex
+CONCERTDIR    = /opt/ibm/ILOG/CPLEX_Studio2211/concert
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
-CONCORDELIBDIR = /home/uranusring/concorde
+CONCORDEINCDIR = /home/ggutow/eclipse-workspace/concorde/INCLUDE 
+CONCORDELIBDIR = /home/ggutow/eclipse-workspace/concorde/install
 
 #### define o compilador
 CPPC = g++
@@ -18,7 +19,7 @@ CPPC = g++
 CCOPT = $(BITS_OPTION) -O3 -g -fPIC -fexceptions -DNDEBUG -DIL_STD -std=c++14
 CONCERTINCDIR = $(CONCERTDIR)/include
 CPLEXINCDIR   = $(CPLEXDIR)/include
-CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDELIBDIR)
+CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDEINCDIR)
 #############################
 
 #### flags do linker
