@@ -901,82 +901,82 @@ void subgraph_tsp_solver::solve_concorde(vector<vector<double>>& dist_mat)
     CC_IFFREE (name, char);
 }
 
-void subgraph_tsp_solver::solve_concorde_lk()
-{
-    if (m_size_subgraph <= 4) return;
+// void subgraph_tsp_solver::solve_concorde_lk()
+// {
+//     if (m_size_subgraph <= 4) return;
 
-    vector<vector<int>> int_dist_matrix;
-    int_dist_matrix.resize(m_size_subgraph);
-    for (int i = 0; i < m_size_subgraph; i++)
-    {
-        int_dist_matrix[i].resize(m_size_subgraph, 0);
-    }
+//     vector<vector<int>> int_dist_matrix;
+//     int_dist_matrix.resize(m_size_subgraph);
+//     for (int i = 0; i < m_size_subgraph; i++)
+//     {
+//         int_dist_matrix[i].resize(m_size_subgraph, 0);
+//     }
 
-    for (int i = 0; i < m_size_subgraph; i++)
-    {
-        for (int j = i+1; j < m_size_subgraph; j++)
-        {
-            int_dist_matrix[i][j] = m_subgraph->get_relaxed_dist(i,j) * m_int_factor;
-            if (int_dist_matrix[i][j] < 0)
-                int_dist_matrix[i][j] = 0;
-            int_dist_matrix[i][j] += m_dist_addon;
-            int_dist_matrix[j][i] = int_dist_matrix[i][j];
-        }
-    }
+//     for (int i = 0; i < m_size_subgraph; i++)
+//     {
+//         for (int j = i+1; j < m_size_subgraph; j++)
+//         {
+//             int_dist_matrix[i][j] = m_subgraph->get_relaxed_dist(i,j) * m_int_factor;
+//             if (int_dist_matrix[i][j] < 0)
+//                 int_dist_matrix[i][j] = 0;
+//             int_dist_matrix[i][j] += m_dist_addon;
+//             int_dist_matrix[j][i] = int_dist_matrix[i][j];
+//         }
+//     }
 
-    //TSP for more than 4 cities
-    int rval = 0; //Concorde functions return 1 if something fails
-    double tour_val = 0;
+//     //TSP for more than 4 cities
+//     int rval = 0; //Concorde functions return 1 if something fails
+//     double tour_val = 0;
 
-    CCrandstate rstate;
-    int seed = rand();
-    CCutil_sprand(seed, &rstate); //Initialize the portable random number generator
-    int ncount = int_dist_matrix.size(); //Number of nodes (cities)
-    int ecount = (ncount * (ncount - 1)) / 2; //Number of edges
-    int *elist = new int[ecount * 2]; //Array giving the ends of the edges (in pairs)
-    int *elen = new int[ecount]; //Array giving the weights of the edges
-    int edge = 0;
-    int edgeWeight = 0;
-    for (int i = 0; i < ncount; i++) 
-    {
-        for (int j = i + 1; j < ncount; j++) 
-        {
-            if (i != j) 
-            {
-                elist[edge] = i;
-                elist[edge + 1] = j;
-                elen[edgeWeight] = int_dist_matrix[i][j];
-                if (elen[edgeWeight] <= 0)
-                    elen[edgeWeight] = 1;
-                edgeWeight++;
-                edge = edge + 2;
-            }
-        }
-    }
-    CCdatagroup dat;
+//     CCrandstate rstate;
+//     int seed = rand();
+//     CCutil_sprand(seed, &rstate); //Initialize the portable random number generator
+//     int ncount = int_dist_matrix.size(); //Number of nodes (cities)
+//     int ecount = (ncount * (ncount - 1)) / 2; //Number of edges
+//     int *elist = new int[ecount * 2]; //Array giving the ends of the edges (in pairs)
+//     int *elen = new int[ecount]; //Array giving the weights of the edges
+//     int edge = 0;
+//     int edgeWeight = 0;
+//     for (int i = 0; i < ncount; i++) 
+//     {
+//         for (int j = i + 1; j < ncount; j++) 
+//         {
+//             if (i != j) 
+//             {
+//                 elist[edge] = i;
+//                 elist[edge + 1] = j;
+//                 elen[edgeWeight] = int_dist_matrix[i][j];
+//                 if (elen[edgeWeight] <= 0)
+//                     elen[edgeWeight] = 1;
+//                 edgeWeight++;
+//                 edge = edge + 2;
+//             }
+//         }
+//     }
+//     CCdatagroup dat;
 
-    //Initialize a CCdatagroup
-    CCutil_init_datagroup (&dat);
+//     //Initialize a CCdatagroup
+//     CCutil_init_datagroup (&dat);
 
-    //Convert a matrix of edge lengths to a CCdatagroup
-    rval = CCutil_graph2dat_matrix (ncount, ecount, elist, elen, 0, &dat);
+//     //Convert a matrix of edge lengths to a CCdatagroup
+//     rval = CCutil_graph2dat_matrix (ncount, ecount, elist, elen, 0, &dat);
 
-    //Solves the TSP over the graph specified in the datagroup
-    try
-    {
-        rval = CCtsp_solve_dat_lktour(ncount, &dat, &tour_val, &rstate);
-    }
-    catch (int n)
-    {
-        cout << "Contour exception." << endl;
-    }
+//     //Solves the TSP over the graph specified in the datagroup
+//     try
+//     {
+//         rval = CCtsp_solve_dat_lktour(ncount, &dat, &tour_val, &rstate);
+//     }
+//     catch (int n)
+//     {
+//         cout << "Contour exception." << endl;
+//     }
 
-    m_solution = (tour_val - ncount * m_dist_addon) / m_int_factor;
+//     m_solution = (tour_val - ncount * m_dist_addon) / m_int_factor;
 
-    //szeit = CCutil_zeit();
-    CC_IFFREE (elist, int);
-    CC_IFFREE (elen, int);
-}
+//     //szeit = CCutil_zeit();
+//     CC_IFFREE (elist, int);
+//     CC_IFFREE (elen, int);
+// }
 
 void subgraph_tsp_solver::get_tour_sequence(vector<int>& sequence)
 {

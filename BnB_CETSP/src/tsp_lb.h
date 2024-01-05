@@ -33,7 +33,6 @@ public:
     void solve_cplex_weak();
     void solve_concorde();
     void solve_concorde(vector<vector<double>>& dist_mat);
-    void solve_concorde_lk();
     double get_solution() { return m_solution; }
     void set_int_factor(double int_factor) { m_int_factor = int_factor; }
     void set_dist_addon(int addon) { m_dist_addon = addon; }
