@@ -31,7 +31,7 @@ int BranchNBound::getNotCoveredBalls( int i )
    return notCoveredBalls[ i ];
 }
 
-double norm( vector< double > element )
+double R3_2norm( vector< double > element )
 {	
    double normOfElement = 0;
    normOfElement = sqrt( pow( element[ 0 ], 2 ) + pow( element[ 1 ], 2 ) + pow( element[ 2 ], 2 ) );
@@ -249,7 +249,7 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
          cp2[ 0 ] = solution[ 0 ][ i + 1 ] - objectOfData->getCoordx( j );
          cp2[ 1 ] = solution[ 1 ][ i + 1 ] - objectOfData->getCoordy( j );
 
-         if ( norm( cp1 ) <= objectOfData->getRadius( j ) + 0.005*objectOfData->getRadius( j ) || norm( cp2 ) <= objectOfData->getRadius( j ) + 0.005*objectOfData->getRadius( j ) ){
+         if ( R3_2norm( cp1 ) <= objectOfData->getRadius( j ) + 0.005*objectOfData->getRadius( j ) || R3_2norm( cp2 ) <= objectOfData->getRadius( j ) + 0.005*objectOfData->getRadius( j ) ){
             coveredBalls[ j ] = 1;
             i = sizeSequence;
          }
@@ -266,7 +266,7 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
             cv[ 1 ] = v[ 1 ] - objectOfData->getCoordy( j );
 
             norm_cv = 0;
-            norm_cv = norm( cv );
+            norm_cv = R3_2norm( cv );
 
             p1v[ 0 ] = v[ 0 ] - solution[ 0 ][ i ];
             p1v[ 1 ] = v[ 1 ] - solution[ 1 ][ i ];
@@ -276,14 +276,14 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
             p2v[ 1 ] = v[ 1 ] - solution[ 1 ][ i + 1 ];
             p2v[ 2 ] = v[ 2 ] - solution[ 2 ][ i + 1 ];
 
-            test = norm( p1v );
+            test = R3_2norm( p1v );
 
-            if ( norm( p2v ) > test ){
-               test = norm( p2v );
+            if ( R3_2norm( p2v ) > test ){
+               test = R3_2norm( p2v );
             }
 
             if ( norm_cv <= objectOfData->getRadius( j ) ){
-               if ( test <= norm( r ) ){
+               if ( test <= R3_2norm( r ) ){
                   coveredBalls[ j ] = 1;
                   i = sizeSequence;
                }
@@ -301,7 +301,7 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
       cp2[ 0 ] = solution[ 0 ][ 0 ] - objectOfData->getCoordx( j );
       cp2[ 1 ] = solution[ 1 ][ 0 ] - objectOfData->getCoordy( j );
 
-      if ( norm( cp1 ) <= objectOfData->getRadius( j ) + 0.1*objectOfData->getRadius( j ) || norm( cp2 ) <= objectOfData->getRadius( j ) + 0.1*objectOfData->getRadius( j ) ){
+      if ( R3_2norm( cp1 ) <= objectOfData->getRadius( j ) + 0.1*objectOfData->getRadius( j ) || R3_2norm( cp2 ) <= objectOfData->getRadius( j ) + 0.1*objectOfData->getRadius( j ) ){
          coveredBalls[ j ] = 1;
       }				
       else{
@@ -318,7 +318,7 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
          cv[ 0 ] = v[ 0 ] - objectOfData->getCoordx( j );
          cv[ 1 ] = v[ 1 ] - objectOfData->getCoordy( j );
 
-         norm_cv = norm( cv );
+         norm_cv = R3_2norm( cv );
 
          p1v[ 0 ] = v[ 0 ] - solution[ 0 ][ sizeSequence ];
          p1v[ 1 ] = v[ 1 ] - solution[ 1 ][ sizeSequence ];
@@ -328,14 +328,14 @@ bool BranchNBound::checkFeasibility( vector< vector< double > > solution, vector
          p2v[ 1 ] = v[ 1 ] - solution[ 1 ][ 0 ];
          p2v[ 2 ] = v[ 2 ] - solution[ 2 ][ 0 ];
 
-         test = norm( p1v );
+         test = R3_2norm( p1v );
 
-         if ( norm( p2v ) > test ){
-            test = norm( p2v );
+         if ( R3_2norm( p2v ) > test ){
+            test = R3_2norm( p2v );
          }
 
          if ( norm_cv <= objectOfData->getRadius( j ) ){
-            if ( test <= norm( r ) ){
+            if ( test <= R3_2norm( r ) ){
                coveredBalls[ j ] = 1;
             }
             else{
