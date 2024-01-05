@@ -1,2 +1,4 @@
 
 BnB_CETSP/exeCVXHULL
+*.o
+*.d
