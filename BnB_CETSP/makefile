@@ -5,6 +5,7 @@ LIBFORMAT = static_pic
 
 ####diretorios com as libs do cplex
 CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio2211/cplex
+QSOPTDIR	  = /home/ggutow/eclipse-workspace/concorde/QSOPT
 CONCERTDIR    = /opt/ibm/ILOG/CPLEX_Studio2211/concert
 CPLEXLIBDIR   = $(CPLEXDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
@@ -23,7 +24,7 @@ CCFLAGS = $(CCOPT) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDEINCDIR)
 #############################
 
 #### flags do linker
-CCLNFLAGS = -L$(CONCORDELIBDIR) -lconcorde -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread
+CCLNFLAGS = -L$(CONCORDELIBDIR) -lconcorde -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -lqsopt
 #############################
 
 #### diretorios com os source files e com os objs files
