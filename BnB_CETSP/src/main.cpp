@@ -957,11 +957,11 @@ int main(int argc, char** argv)
       // }
       cout << endl;		
 
-      printDataToFile ( dataptr, option, overlap, sizeInst, bestKnown, best, best_lb, gap_root, 
-                        count_SOCP_solved, itCount, computationTime, sbComputationTime, totalSocpCompTime, 
-                        itToIncum, numLNodes, numNodes, branchingStrategy );
+      // printDataToFile ( dataptr, option, overlap, sizeInst, bestKnown, best, best_lb, gap_root, 
+      //                   count_SOCP_solved, itCount, computationTime, sbComputationTime, totalSocpCompTime, 
+      //                   itToIncum, numLNodes, numNodes, branchingStrategy );
 
-      printDataToMatlab( dataptr, sizeInst, overlap, best, solucao, solucaoXYZ );
+      // printDataToMatlab( dataptr, sizeInst, overlap, best, solucao, solucaoXYZ );
    }
    else{
 
@@ -971,9 +971,9 @@ int main(int argc, char** argv)
       cout << "Upper Bound: " << best_ub << endl;
       cout << "GAP(LB): " << ( (best_ub - best_lb)/best_ub )*100 << "% " << endl;
 
-      printDataToFile ( dataptr, option, overlap, sizeInst, bestKnown, best_ub, best_lb, gap_real, gap_lb_bnb, 
-                        gap_root, count_SOCP_solved, itCount, computationTime, sbComputationTime, totalSocpCompTime, 
-                        itToIncum, numLNodes, numNodes, branchingStrategy );
+      // printDataToFile ( dataptr, option, overlap, sizeInst, bestKnown, best_ub, best_lb, gap_real, gap_lb_bnb, 
+      //                   gap_root, count_SOCP_solved, itCount, computationTime, sbComputationTime, totalSocpCompTime, 
+      //                   itToIncum, numLNodes, numNodes, branchingStrategy );
    }
 
    cout << "Number of Resolved Nodes: " << count_SOCP_solved << endl;
