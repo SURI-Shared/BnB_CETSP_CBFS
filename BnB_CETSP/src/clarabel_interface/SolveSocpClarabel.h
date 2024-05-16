@@ -51,7 +51,7 @@ class SolveSocpClarabel{
    private:
       
       clarabel::DefaultSettings<double> settings;
-      clarabel::DefaultSolver<double> solver;
+      clarabel::DefaultSolver<double>* solver_ptr;
       clarabel::DefaultSolution<double> solution;
 
       Data *objectData;

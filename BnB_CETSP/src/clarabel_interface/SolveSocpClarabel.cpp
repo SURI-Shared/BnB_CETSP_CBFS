@@ -2,7 +2,7 @@
 
 typedef Eigen::Triplet<double> Triplet;
 
-SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(sequence.size()),f_value(0){
+SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(sequence.size()),f_value(0),solution(),solver_ptr(){
     settings=clarabel::DefaultSettings<double>::default_settings();
     createModel(sequence);
 }
@@ -128,12 +128,12 @@ void SolveSocpClarabel::createModel(vector<int>& sequence){
     for(size_t i=0;i<m+nf;i++){
         cones.push_back(clarabel::SecondOrderConeT<double>(SOCP_NDIM+1));
     }
-    solver=clarabel::DefaultSolver<double>(P,Eigen::Ref<Eigen::VectorXd>(q),A,Eigen::Ref<Eigen::VectorXd>(b),cones,settings);
+    solver_ptr=new clarabel::DefaultSolver<double>(P,Eigen::Ref<Eigen::VectorXd>(q),A,Eigen::Ref<Eigen::VectorXd>(b),cones,settings);
 }
 
 void SolveSocpClarabel::solveSOCP(){
-    solver.solve();
-    solution=solver.solution();
+    solver_ptr->solve();
+    solution=solver_ptr->solution();
 }
 
 double SolveSocpClarabel::getSolutionX( int idx){
