@@ -56,7 +56,7 @@ exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
 
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/test/%.o -o $@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $< -o $@ $(CCLNFLAGS)
 
 #includes dependency files
 -include $(OBJS:.o=.d)
