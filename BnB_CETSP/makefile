@@ -14,7 +14,7 @@ CONCORDEINCDIR = /home/ggutow/eclipse-workspace/concorde/INCLUDE
 CONCORDELIBDIR = /home/ggutow/eclipse-workspace/concorde/install
 CLARABEL_INCLUDE = /home/ggutow/eclipse-workspace/Clarabel.cpp/include
 CLARABEL_LIBDIR = /home/ggutow/eclipse-workspace/Clarabel.cpp/rust_wrapper/target/debug/
-EIGEN_INCLUDE = /usr/include/eigen3
+EIGEN_INCLUDE = /home/ggutow/miniconda3/envs/gobnilp/include/eigen3/
 
 #### define o compilador
 CPPC = g++
@@ -67,7 +67,7 @@ $(OBJDIR)/src/%.o: $(SRCDIR)/%.cpp
 	@echo  "\033[31m \nCompiling $<: \033[0m"
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
-	$(CPPC)  -MM I$(INCLUDE) $< > $(basename $@).d
+	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
 	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
@@ -76,7 +76,7 @@ $(OBJDIR)/src/%.o: $(SRCDIR)/clarabel_interface/%.cpp
 	@echo  "\033[31m \nCompiling $<: \033[0m"
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
-	$(CPPC)  -MM I$(INCLUDE) $< > $(basename $@).d
+	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
 	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
@@ -85,7 +85,7 @@ $(OBJDIR)/test/%.o: $(TESTDIR)/%.cpp
 	@echo  "\033[31m \nCompiling $<: \033[0m"
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
-	$(CPPC)  -MM I$(INCLUDE) $< > $(basename $@).d
+	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
 	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
@@ -94,7 +94,7 @@ $(OBJDIR)/exec/%.o: $(EXECDIR)/%.cpp
 	@echo  "\033[31m \nCompiling $<: \033[0m"
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
-	$(CPPC)  -MM I$(INCLUDE) $< > $(basename $@).d
+	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
 	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
