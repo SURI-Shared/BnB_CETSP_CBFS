@@ -4,18 +4,28 @@ int main(int argc, char** argv)
 {
     //Data constructor demands command line arguments
     //[path to instance] [OPTIONS] [OVERLAP FACTOR] [TIME LIMIT] [BRANCHING RULE] [BRANCHING STRATEGY] [ROOT SELECTION] [S.B SIZE]
-    vector<char*> load_args={"test_SolveSocpClarabel","/home/ggutow/eclipse-workspace/BnB_CETSP/Behdani/CETSP-50-1.txt","3D","1.0","1000","SB","BeFS","1","1","1"};
-    Data *dataptr = new Data("/home/ggutow/eclipse-workspace/BnB_CETSP/Behdani/CETSP-50-1.txt", "3D", 1, 9, load_args.data());
-
+    char exe[]="test_SolveSocpClarabel";
+    char instanceName[]="Behdani/CETSP-50-1.txt";
+    char option[]="2D";
+    char overlapRato[]="1.0";
+    char timeLimit[]="1000";
+    char branchingRule[]="SB";
+    char search_strategy[]="BeFS";
+    char root_selection[]="1";
+    char sb_size[]="1";
+    char* load_args[9]={exe,instanceName,option,overlapRato,timeLimit,branchingRule,search_strategy,root_selection,sb_size};
+    Data *dataptr = new Data(instanceName, option, 1, 9, load_args);
+    cout<<"Loaded data"<<endl;
     vector<int> in_order;
     int size=dataptr->getSizeInst();
     for(int i=0;i<size;i++){
         in_order.push_back(i);
     }
+    cout<<"Made sequence"<<endl;
     SolveSocpClarabel solver_handle=SolveSocpClarabel(dataptr,in_order);
-
+    cout<<"Made solver"<<endl;
     solver_handle.solveSOCP();
-
+    cout<<"Solved SOCP"<<endl;
     solver_handle.printSolution(in_order);
     return 0;
 }
