@@ -41,7 +41,8 @@ EXECDIR = exec
 #### list of all srcs and all objs
 SRCS = $(wildcard $(SRCDIR)/*.cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/src/%.o, $(SRCS))
-CLARABEL_OBJS = $(patsubst $(SRCDIR)/clarabel_interface/%.cpp, $(OBJDIR)/src/%.o, $(SRCS))
+CLARABEL_SRCS = $(wildcard $(SRCDIR)/clarabel_interface/*.cpp)
+CLARABEL_OBJS = $(patsubst $(SRCDIR)/clarabel_interface/%.cpp, $(OBJDIR)/src/%.o, $(CLARABEL_SRCS))
 TEST_SRCS = $(wildcard $(TESTDIR)/*.cpp)
 TEST_OBJS = $(patsubst $(TESTDIR)/%.cpp, $(OBJDIR)/test/%.o, $(TEST_SRCS))
 EXEC_SRCS =  $(wildcard $(EXECDIR)/*.cpp)
@@ -56,7 +57,7 @@ exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
 
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $< -o $@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $< -o $@ $(CCLNFLAGS)
 
 #includes dependency files
 -include $(OBJS:.o=.d)
