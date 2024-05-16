@@ -13,7 +13,7 @@ CONCERTLIBDIR = $(CONCERTDIR)/lib/$(SYSTEM)/$(LIBFORMAT)
 CONCORDEINCDIR = /home/ggutow/eclipse-workspace/concorde/INCLUDE 
 CONCORDELIBDIR = /home/ggutow/eclipse-workspace/concorde/install
 CLARABEL_INCLUDE = /home/ggutow/eclipse-workspace/Clarabel.cpp/include
-CLARABEL_LIBDIR = /home/ggutow/eclipse-workspace/Clarabel.cpp/rust_wrapper/target/debug/
+CLARABEL_LIBDIR = /home/ggutow/eclipse-workspace/Clarabel.cpp/rust_wrapper/target/release/
 EIGEN_INCLUDE = /home/ggutow/miniconda3/envs/gobnilp/include/eigen3/
 
 #### define o compilador
@@ -52,12 +52,12 @@ TEST_OBJS = $(patsubst $(EXECDIR)/%.cpp, $(OBJDIR)/exec/%.o, $(EXEC_SRCS))
 #### regra principal, gera o executavel
 exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -o $@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -o run/$@ $(CCLNFLAGS)
 ############################
 
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $< -o $@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS)
 
 #includes dependency files
 -include $(OBJS:.o=.d)
