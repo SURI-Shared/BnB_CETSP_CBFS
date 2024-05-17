@@ -51,6 +51,10 @@ SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):
     createModel(sequence);
 }
 
+SolveSocpClarabel::SolveSocpClarabel(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),solver_ptr(){
+    settings=clarabel::DefaultSettings<double>::default_settings();
+}
+
 /*
 void SolveSocpClarabel::createModel(vector<int>& sequence)
 
@@ -175,9 +179,35 @@ void SolveSocpClarabel::createModel(vector<int>& sequence){
     solver_ptr=new clarabel::DefaultSolver<double>(P,Eigen::Ref<Eigen::VectorXd>(q),A,Eigen::Ref<Eigen::VectorXd>(b),cones,settings);
 }
 
+void SolveSocpClarabel::initialize_model(){}//nothing to do, provided to match API of SolveSocpCplex
+void SolveSocpClarabel::clear_removable_constraints(){
+    delete solver_ptr;
+    solver_ptr=NULL;
+}
+void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence){
+    createModel(sequence);
+}
+void SolveSocpClarabel::solveSOCP(vector<int>& sequence){//only call this if we used the constructor that doesn't call createModel!
+    createModel(sequence);
+    solveSOCP();
+}
+
 void SolveSocpClarabel::solveSOCP(){
     solver_ptr->solve();
     new (&solution) clarabel::DefaultSolution<double>(solver_ptr->solution());
+    f_value=solution.obj_val;
+    violation=solution.r_prim;
+    m_num_solves+=1;
+}
+
+void SolveSocpClarabel::finishSOCP(){};//nothing to do, provided to match API of SolveSocpCplex
+
+double SolveSocpClarabel::getF_value(){
+    return f_value;
+}
+
+void SolveSocpClarabel::printF_value(){
+    cout << "Value of objective function: "<< f_value << endl;
 }
 
 double SolveSocpClarabel::getSolutionX( int idx){

@@ -16,7 +16,7 @@ int main(int argc, char** argv)
     char* load_args[9]={exe,instanceName,option,overlapRato,timeLimit,branchingRule,search_strategy,root_selection,sb_size};
     Data *dataptr = new Data(instanceName, option, 1, 9, load_args);
     vector<int> in_order;
-    int size=50;
+    int size=3;
     for(int i=0;i<size;i++){
         in_order.push_back(i);
     }

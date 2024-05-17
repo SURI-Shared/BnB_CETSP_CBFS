@@ -27,7 +27,7 @@ class SolveSocpClarabel{
 
       //construtor	
       SolveSocpClarabel( Data *, vector< int >& ); //constructor
-
+      SolveSocpClarabel( Data *,int);
       //functions
       void solveSOCP( vector< int >& );
       void solveSOCP();
@@ -61,10 +61,7 @@ class SolveSocpClarabel{
       vector<int> sequence;
 
       //functions for solving SOCP
-      int setSizeProblem( vector< int >& );		
       void createModel( vector< int >& );
-      void setF_value();
-
 };
 
 #endif
