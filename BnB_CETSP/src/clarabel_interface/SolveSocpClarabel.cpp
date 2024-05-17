@@ -1,8 +1,52 @@
 #include "SolveSocpClarabel.h"
 
+std::ostream& operator<<(std::ostream& os, const clarabel::SolverStatus& status_obj){
+    switch(status_obj){
+        case clarabel::SolverStatus::Unsolved: 
+            os<<"Unsolved";
+            break;
+        case clarabel::SolverStatus::Solved:
+            os<<"Solved";
+            break;
+        case clarabel::SolverStatus::PrimalInfeasible:
+            os<<"PrimalInfeasible";
+            break;
+        case clarabel::SolverStatus::DualInfeasible:
+            os<<"DualInfeasible";
+            break;
+        case clarabel::SolverStatus::AlmostSolved:
+            os<<"AlmostSolved";
+            break;
+        case clarabel::SolverStatus::AlmostPrimalInfeasible:
+            os<<"AlmostPrimalInfeasible";
+            break;
+        case clarabel::SolverStatus::AlmostDualInfeasible:
+            os<<"AlmostDualInfeasible";
+            break;
+        case clarabel::SolverStatus::MaxIterations:
+            os<<"MaxIterations";
+            break;
+        case clarabel::SolverStatus::MaxTime:
+            os<<"MaxTime";
+            break;
+        case clarabel::SolverStatus::NumericalError:
+            os<<"NumericalError";
+            break;
+        case clarabel::SolverStatus::ScalingError:
+            os<<"ScalingError";
+            break;
+        case clarabel::SolverStatus::InsufficientProgress:
+            os<<"InsufficientProgress";
+            break;
+        default:
+            os<<"UnrecognizedStatus";
+            break;
+    }
+    return os;
+}
 typedef Eigen::Triplet<double> Triplet;
 
-SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(sequence.size()),f_value(0),solution(),solver_ptr(){
+SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),solver_ptr(){
     settings=clarabel::DefaultSettings<double>::default_settings();
     createModel(sequence);
 }
@@ -156,6 +200,10 @@ double SolveSocpClarabel::getSolutionZ( int idx){
 }
 
 void SolveSocpClarabel::printSolution(vector<int>& sequence){
+    cout<<"SolverStatus: "<<solution.status<<endl;
+    cout<< "primals: "<<solution.x<<endl;
+    cout<<"duals: "<<solution.z<<endl;
+    cout<<"slacks: "<<solution.s<<endl;
     cout << "Solution: " << endl;
 
     for ( int j=0;j<sizeProblem;j++ ){

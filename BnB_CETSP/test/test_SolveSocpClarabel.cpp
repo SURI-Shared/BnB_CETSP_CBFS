@@ -15,17 +15,13 @@ int main(int argc, char** argv)
     char sb_size[]="1";
     char* load_args[9]={exe,instanceName,option,overlapRato,timeLimit,branchingRule,search_strategy,root_selection,sb_size};
     Data *dataptr = new Data(instanceName, option, 1, 9, load_args);
-    cout<<"Loaded data"<<endl;
     vector<int> in_order;
-    int size=dataptr->getSizeInst();
+    int size=50;
     for(int i=0;i<size;i++){
         in_order.push_back(i);
     }
-    cout<<"Made sequence"<<endl;
     SolveSocpClarabel solver_handle=SolveSocpClarabel(dataptr,in_order);
-    cout<<"Made solver"<<endl;
     solver_handle.solveSOCP();
-    cout<<"Solved SOCP"<<endl;
     solver_handle.printSolution(in_order);
     return 0;
 }
