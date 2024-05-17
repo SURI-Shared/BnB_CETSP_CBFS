@@ -72,7 +72,7 @@ void SolveSocpClarabel::createModel(vector<int>& sequence){
     size_t nx=SOCP_NDIM*m;
     size_t nvar=nf+nx;
     size_t xstart=nf;
-
+    sizeProblem=nf;
     //Quadratic cost matrix is empty
     Eigen::SparseMatrix<double> P(nvar,nvar);
 
@@ -185,12 +185,14 @@ void SolveSocpClarabel::initialize_model(){}//nothing to do, provided to match A
 void SolveSocpClarabel::clear_removable_constraints(){
     delete solver_ptr;
     solver_ptr=NULL;
+    sizeProblem=0;
 }
 void SolveSocpClarabel::clear_removable_constraints(int prev_pos, int curr_pos){
     clear_removable_constraints();
 }
 void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence){
     createModel(sequence);
+    this->sequence=sequence;
 }
 void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence, int prev_pos, int curr_pos){
     populate_removable_constraints(sequence);
