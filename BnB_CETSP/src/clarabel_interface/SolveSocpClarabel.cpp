@@ -177,7 +177,7 @@ void SolveSocpClarabel::createModel(vector<int>& sequence){
 
 void SolveSocpClarabel::solveSOCP(){
     solver_ptr->solve();
-    solution=solver_ptr->solution();
+    new (&solution) clarabel::DefaultSolution<double>(solver_ptr->solution());
 }
 
 double SolveSocpClarabel::getSolutionX( int idx){
@@ -201,11 +201,7 @@ double SolveSocpClarabel::getSolutionZ( int idx){
 
 void SolveSocpClarabel::printSolution(vector<int>& sequence){
     cout<<"SolverStatus: "<<solution.status<<endl;
-    cout<< "primals: "<<solution.x<<endl;
-    cout<<"duals: "<<solution.z<<endl;
-    cout<<"slacks: "<<solution.s<<endl;
     cout << "Solution: " << endl;
-
     for ( int j=0;j<sizeProblem;j++ ){
         cout << "( "<< getSolutionX(j) << ", " << getSolutionY(j) << ", " << getSolutionZ(j) << " )" << endl;
     }
