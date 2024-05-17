@@ -48,7 +48,7 @@ class SolveSocpClarabel{
       double violation;
       int m_num_solves = 0;
 
-   private:
+   protected:
       
       clarabel::DefaultSettings<double> settings;
       clarabel::DefaultSolver<double>* solver_ptr;
@@ -61,7 +61,7 @@ class SolveSocpClarabel{
       vector<int> sequence;
 
       //functions for solving SOCP
-      void createModel( vector< int >& );
+      virtual void createModel( vector< int >& );
 };
 
 #endif
