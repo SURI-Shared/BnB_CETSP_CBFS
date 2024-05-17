@@ -55,6 +55,10 @@ exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -o run/$@ $(CCLNFLAGS)
 ############################
 
+clarabel_dropin: $(OBJDIR)/exec/clarabel_dropin.o $(OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_dropin.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
+
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS)

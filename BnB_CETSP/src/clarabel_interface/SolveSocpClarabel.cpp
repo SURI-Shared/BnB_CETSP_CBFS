@@ -184,8 +184,14 @@ void SolveSocpClarabel::clear_removable_constraints(){
     delete solver_ptr;
     solver_ptr=NULL;
 }
+void SolveSocpClarabel::clear_removable_constraints(int prev_pos, int curr_pos){
+    clear_removable_constraints();
+}
 void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence){
     createModel(sequence);
+}
+void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence, int prev_pos, int curr_pos){
+    populate_removable_constraints(sequence);
 }
 void SolveSocpClarabel::solveSOCP(vector<int>& sequence){//only call this if we used the constructor that doesn't call createModel!
     createModel(sequence);
