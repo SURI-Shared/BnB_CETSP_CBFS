@@ -73,6 +73,7 @@ void SolveSocpClarabel::createModel(vector<int>& sequence){
     size_t nvar=nf+nx;
     size_t xstart=nf;
     sizeProblem=nf;
+    this->sequence=sequence;
     //Quadratic cost matrix is empty
     Eigen::SparseMatrix<double> P(nvar,nvar);
 
@@ -192,7 +193,6 @@ void SolveSocpClarabel::clear_removable_constraints(int prev_pos, int curr_pos){
 }
 void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence){
     createModel(sequence);
-    this->sequence=sequence;
 }
 void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence, int prev_pos, int curr_pos){
     populate_removable_constraints(sequence);
