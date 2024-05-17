@@ -48,11 +48,13 @@ typedef Eigen::Triplet<double> Triplet;
 
 SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),solver_ptr(){
     settings=clarabel::DefaultSettings<double>::default_settings();
+    settings.verbose=false;
     createModel(sequence);
 }
 
 SolveSocpClarabel::SolveSocpClarabel(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),solver_ptr(){
     settings=clarabel::DefaultSettings<double>::default_settings();
+    settings.verbose=false;
 }
 
 /*
