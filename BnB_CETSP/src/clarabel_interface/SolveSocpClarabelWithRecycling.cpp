@@ -16,13 +16,14 @@ Parameters: sequence : vector<int>&
                 the order to visit neighborhoods in. The first element must be the depot, of radius 0. The path returns to the depot after visiting sequence[-1]
 */
 void SolveSocpClarabelWithRecycling::createModel(vector<int>& sequence){
-    if (solvers.count(sequence.size())){
-        solver_ptr=solvers.at(sequence.size());
+    sizeProblem=sequence.size();
+    if (solvers.count(sizeProblem)){
+        solver_ptr=solvers.at(sizeProblem);
         this->sequence=sequence;
         update_b();
     }else{
         SolveSocpClarabel::createModel(sequence);
-        solvers.insert({sequence.size(),solver_ptr});
+        solvers.insert({sizeProblem,solver_ptr});
     }
 }
 void SolveSocpClarabelWithRecycling::update_b(){
