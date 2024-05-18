@@ -111,7 +111,8 @@ int main(int argc, char** argv)
       if (argc >= 12) use_reverse_prune = (atoi(argv[11]) > 0);
       if (argc >= 13) use_fsi = (atoi(argv[12]) > 0);
    }
-
+   cout<<"Use LAH: "<<use_lah<<endl;
+   cout<<"Use Concorde Feasible Solution improvement"<<use_fsi<<endl;
    Data *dataptr = new Data( arqInstancia, option, overlap, argc, argv );
 
    int sizeInst = dataptr->getSizeInst();
