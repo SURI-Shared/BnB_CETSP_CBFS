@@ -100,3 +100,24 @@ void SolveSocpClarabelWithRecycling::update_b(){
 }
 void SolveSocpClarabelWithRecycling::clear_removable_constraints(){}
 void SolveSocpClarabelWithRecycling::clear_removable_constraints(int prev_pos, int curr_pos){}
+
+/*provide a warm start to Clarabel
+Parameters: primal_guess : double *
+                guess for the primal variables. MUST be the correct length (# of columns in constraint matrix). Copied, not mutated.
+            slack_guess : double *
+                guess for the slack variables. MUST be the correct length (# of rows in constraint matrix). Copied, not mutated.
+            dual_guess : double *
+                guess for the dual variables. MUST be the correct length (# of rows in constraint matrix). Copied, not muted.
+Mutates:    solution
+            f_value
+            violation
+            m_num_solves
+            *solver_ptr
+*/
+void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess){
+    solver_ptr->solve_warm(primal_guess,slack_guess,dual_guess);
+    new (&solution) clarabel::DefaultSolution<double>(solver_ptr->solution());
+    f_value=solution.obj_val;
+    violation=solution.r_prim;
+    m_num_solves+=1;
+}

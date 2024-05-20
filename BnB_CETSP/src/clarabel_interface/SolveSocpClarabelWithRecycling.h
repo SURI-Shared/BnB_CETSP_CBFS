@@ -12,6 +12,7 @@ class SolveSocpClarabelWithRecycling: public SolveSocpClarabel{
       //functions
       void clear_removable_constraints();
       void clear_removable_constraints(int prev_pos, int curr_pos);
+      void solve_warm(double*, double*, double*);
    protected:
       unordered_map<size_t,clarabel::DefaultSolver<double>*> solvers;
       void createModel( vector< int >& ) override;
