@@ -63,6 +63,10 @@ clarabel_recycling: $(OBJDIR)/exec/clarabel_recycling.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycling.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
 
+clarabel_warmstart: $(OBJDIR)/exec/clarabel_warmstart.o $(OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_warmstart.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
+
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS)
