@@ -48,9 +48,9 @@ class SolveSocpClarabel{
       double violation;
       int m_num_solves = 0;
 
-      Eigen::Map<Eigen::VectorXd> primals(){solution.x;}
-      Eigen::Map<Eigen::VectorXd> duals(){solution.z;}
-      Eigen::Map<Eigen::VectorXd> slacks(){solution.s;}
+      Eigen::Map<Eigen::VectorXd> primals(){return solution.x;}
+      Eigen::Map<Eigen::VectorXd> duals(){return solution.z;}
+      Eigen::Map<Eigen::VectorXd> slacks(){return solution.s;}
 
    protected:
       
