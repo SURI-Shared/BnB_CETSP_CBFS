@@ -95,12 +95,15 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     //populate f guesses
     last_tp=depot;
     std::vector<Eigen::Vector3d> displacement_guesses;displacement_guesses.reserve(nf);
-    for(size_t i=0;i<nf;i++){
+    for(size_t i=0;i<m;i++){
         next_tp=Eigen::Map<Eigen::Vector3d>(out_primals.data()+xstart+i*ndim);
         displacement_guesses.push_back(next_tp-last_tp);
         out_primals[i]=displacement_guesses[i].norm();
         last_tp=next_tp;
     }
+    //last waypoint goes back to the depot
+    displacement_guesses.push_back(depot-last_tp);
+    out_primals[m]=displacement_guesses.at(m).norm();
 
     //slack guess
     //set the bounding magnitude of vi slack as s=[radii[i], ci-xguessi^T]^T
