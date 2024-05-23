@@ -41,9 +41,9 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     size_t ndual=nslack;
     size_t xstart=nf;
 
-    out_primals.reserve(nvar);
-    out_slacks.reserve(nslack);
-    out_duals.reserve(ndual);
+    out_primals.resize(nvar);//TODO: might be able to get away with some kind of reserve shenanigans to avoid default initializing the output in construct_initial_guess
+    out_slacks.resize(nslack);
+    out_duals.resize(ndual);
 
     //figure out guesses for turning points (either copied from parent, or via a small SOCP)
     //for the new turning point, also computes the dual variable related to the constraint that the turning point stay in the neighborhood

@@ -39,6 +39,10 @@ int main(int argc, char** argv)
     std::vector<double> dual_guess;
     warm_start_handler.construct_initial_guess(child_sequence,parent,dataptr,primal_guess,slack_guess,dual_guess);
 
+    cout<<"Primal Guess length: "<<primal_guess.size()<<endl;
+    cout<<"Slack Guess length: "<<slack_guess.size()<<endl;
+    cout<<"Dual Guess length: "<<dual_guess.size()<<endl;
+
     solver_handle.clear_removable_constraints(0, 0);
     solver_handle.populate_removable_constraints(child_sequence, 0, 0);
 
