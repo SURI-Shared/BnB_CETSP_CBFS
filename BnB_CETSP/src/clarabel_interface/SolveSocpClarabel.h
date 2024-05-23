@@ -48,6 +48,10 @@ class SolveSocpClarabel{
       double violation;
       int m_num_solves = 0;
 
+      Eigen::Map<Eigen::VectorXd> primals(){solution.x;}
+      Eigen::Map<Eigen::VectorXd> duals(){solution.z;}
+      Eigen::Map<Eigen::VectorXd> slacks(){solution.s;}
+
    protected:
       
       clarabel::DefaultSettings<double> settings;
