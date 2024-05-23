@@ -47,6 +47,8 @@ class Data{
       string fileName;
       double m_avg_radius;
 
+      void printSizes();
+
    private:
 
       int sizeInst;

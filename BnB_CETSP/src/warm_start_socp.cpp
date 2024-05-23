@@ -56,34 +56,34 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     Eigen::Vector3d depot={instanceData->getCoordx(current_sequence[0]),instanceData->getCoordy(current_sequence[0]),instanceData->getCoordz(current_sequence[0])};
     Eigen::Vector3d last_tp=depot;
     Eigen::Vector3d next_tp;
-    for(size_t i=0;i<current_sequence.size();i++){
+    for(size_t i=0;i<m;i++){//first entry in sequence is just the depot
         if (not_yet_inserted){
-            cnid=current_sequence.at(i);
-            pnid=parent_sequence.at(i);
-            pidx=i;
+            cnid=current_sequence.at(i+1);
+            pnid=parent_sequence.at(i+1);
+            pidx=i+1;
             not_in_parent=pnid!=cnid;
             //once the neighborhood in current_sequence differs from that in parent, we have found the spot where a new neighborhood was inserted
             not_yet_inserted=not_in_parent;
         }else{
-            cnid=current_sequence.at(i);
-            pnid=parent_sequence.at(i-1);
+            cnid=current_sequence.at(i+1);
+            pnid=parent_sequence.at(i);
             not_in_parent=pnid!=cnid;
-            pidx=i-1;
+            pidx=i;
         }
         if(not_in_parent){
             index_in_parent.at(i)=-1;
             //guess the turning point to be at the optimal location if all other turning points are held fixed
-            if(i+1>=current_sequence.size()){
+            if(i+2>=current_sequence.size()){
                 next_tp=depot;
             }else{
                 next_tp=parent_turning_points[i];
             }
-            Eigen::Vector3d center={instanceData->getCoordx(current_sequence[i]),instanceData->getCoordy(current_sequence[i]),instanceData->getCoordz(current_sequence[i])};
-            double radius=instanceData->getRadius(current_sequence[i]);
+            Eigen::Vector3d center={instanceData->getCoordx(cnid),instanceData->getCoordy(cnid),instanceData->getCoordz(cnid)};
+            double radius=instanceData->getRadius(cnid);
             solve_insertion_problem(last_tp,next_tp,center,radius,out_primals.data()+xstart+ndim*i,out_duals.data()+i*per_turn);
         }
         else{
-            index_in_parent.at(i)=pidx;
+            index_in_parent.at(i+1)=pidx;
             //turning points in previously considered neighborhoods are guessed to not change
             last_tp=parent_turning_points[i];
             out_primals[xstart+ndim*i]=last_tp[0];
@@ -105,11 +105,12 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     //slack guess
     //set the bounding magnitude of vi slack as s=[radii[i], ci-xguessi^T]^T
     for(size_t i=0;i<m;i++){
-        out_slacks[i*per_turn]=instanceData->getRadius(current_sequence[i]);
+        int cnid=current_sequence[i+1];//first entry in sequence is just the depot
+        out_slacks[i*per_turn]=instanceData->getRadius(cnid);
 
-        out_slacks[i*per_turn+1]=instanceData->getCoordx(current_sequence[i])-out_primals[xstart+ndim*i];
-        out_slacks[i*per_turn+2]=instanceData->getCoordy(current_sequence[i])-out_primals[xstart+ndim*i+1];
-        out_slacks[i*per_turn+3]=instanceData->getCoordz(current_sequence[i])-out_primals[xstart+ndim*i+2];
+        out_slacks[i*per_turn+1]=instanceData->getCoordx(cnid)-out_primals[xstart+ndim*i];
+        out_slacks[i*per_turn+2]=instanceData->getCoordy(cnid)-out_primals[xstart+ndim*i+1];
+        out_slacks[i*per_turn+3]=instanceData->getCoordz(cnid)-out_primals[xstart+ndim*i+2];
     }
 
     //set the bounding magnitude of wi slack as [fi wguessi^T]
@@ -129,11 +130,11 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     //nf SOC constraints relating magnitude of wi to fi (ndim+1 rows per SOC constraint, so nw+nf total rows)
 
     //ci-xi
-    for(size_t i=0;i<current_sequence.size();i++){
-        if (index_in_parent.at(i)>=0){
+    for(size_t i=0;i<m;i++){
+        if (index_in_parent.at(i+1)>=0){//first entry in sequence is just the depot
             //reuse dual values for SOC constraints bounding the magnitude of ci-xi
             for(size_t j=0;j<per_turn;j++){
-                out_slacks[i*per_turn+j]=parent_dual[index_in_parent.at(i)*per_turn+j];
+                out_slacks[i*per_turn+j]=parent_dual[index_in_parent.at(i+1)*per_turn+j];
             }
         }else{
             //SOC constraints enforcing ||ci-xi||<=ri

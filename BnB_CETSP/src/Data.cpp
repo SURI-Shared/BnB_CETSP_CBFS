@@ -494,6 +494,11 @@ void Data::printInstance()
    }
 }
 
+void Data::printSizes()
+{
+   cout<<"N Radii: "<<radius.size()<<" Nx: "<<coordx.size()<<" Ny: "<<coordy.size()<<" Nz: "<<coordz.size()<<" Nd: "<<demand.size()<<endl;
+}
+
 int Data::getBranchingRuleList( int i )
 {
    iterBranchingRuleList = branchingRuleList.begin();
