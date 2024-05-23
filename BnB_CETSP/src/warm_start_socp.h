@@ -8,9 +8,8 @@
 
 class BnBNodeForWarmStart{
     public:
-        BnBNodeForWarmStart(BnBNodeForWarmStart*,const std::vector<int>&,const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals);
+        BnBNodeForWarmStart(const std::vector<int>&,const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals);
 
-        BnBNodeForWarmStart* parent;//NULL if no parent
         const std::vector<int> sequence;
         const Eigen::VectorX<double> primals;
         const Eigen::VectorX<double> duals;

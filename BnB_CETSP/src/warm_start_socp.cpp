@@ -201,9 +201,9 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
 
 }
 
-BnBNodeForWarmStart::BnBNodeForWarmStart(BnBNodeForWarmStart* parent_pointer,const std::vector<int>& sequence_in,
+BnBNodeForWarmStart::BnBNodeForWarmStart(const std::vector<int>& sequence_in,
                                         const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals):
-                                        parent(parent_pointer),sequence(sequence_in),primals(primals),duals(duals){}
+                                        sequence(sequence_in),primals(primals),duals(duals){}
 
 std::vector<Eigen::Vector3d> BnBNodeForWarmStart::turning_points() const{
     size_t ndim=3;
