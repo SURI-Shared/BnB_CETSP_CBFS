@@ -18,8 +18,14 @@ WarmStartHandler::WarmStartHandler(){
 WarmStartHandler::~WarmStartHandler(){
     delete insertion_problem_solver_ptr;
 }
+void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const BnBNodeForWarmStart& parent,
+                                               Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
+    std::vector<Eigen::Vector3d> parent_turning_points=parent.turning_points();
+    this->construct_initial_guess(current_sequence,parent.sequence,parent_turning_points,parent.duals,instanceData,out_primals,out_slacks,out_duals);
+}
+
 void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, 
-                             const std::vector<int>& parent_sequence, const Eigen::ArrayX3d & parent_turning_points, Eigen::Map<Eigen::VectorX<double>> parent_dual,
+                             const std::vector<int>& parent_sequence, const std::vector<Eigen::Vector3d> & parent_turning_points, const Eigen::Ref<const Eigen::VectorX<double>>& parent_dual,
                              Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
     //the actual decision variables are [fi...xi], which are the travel distances and the turning point coordinates respectively
     //we use wi as shorthand for the displacement vector between x(i-1) and xi, wi=xi-x(i-1)
@@ -70,7 +76,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
             if(i+1>=current_sequence.size()){
                 next_tp=depot;
             }else{
-                next_tp=parent_turning_points.row(i);
+                next_tp=parent_turning_points[i];
             }
             Eigen::Vector3d center={instanceData->getCoordx(current_sequence[i]),instanceData->getCoordy(current_sequence[i]),instanceData->getCoordz(current_sequence[i])};
             double radius=instanceData->getRadius(current_sequence[i]);
@@ -79,7 +85,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
         else{
             index_in_parent.at(i)=pidx;
             //turning points in previously considered neighborhoods are guessed to not change
-            last_tp=parent_turning_points.row(i);
+            last_tp=parent_turning_points[i];
             out_primals[xstart+ndim*i]=last_tp[0];
             out_primals[xstart+ndim*i+1]=last_tp[1];
             out_primals[xstart+ndim*i+2]=last_tp[2];
@@ -193,4 +199,23 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
     }
     *out_dual=solution.z[0];
 
+}
+
+BnBNodeForWarmStart::BnBNodeForWarmStart(BnBNodeForWarmStart* parent_pointer,const std::vector<int>& sequence_in,
+                                        const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals):
+                                        parent(parent_pointer),sequence(sequence_in),primals(primals),duals(duals){}
+
+std::vector<Eigen::Vector3d> BnBNodeForWarmStart::turning_points() const{
+    size_t ndim=3;
+    size_t per_turn=ndim+1;
+    size_t m=sequence.size()-1;
+    size_t nf=m+1;
+
+    size_t xstart=nf;
+
+    std::vector<Eigen::Vector3d> tps;tps.reserve(m);
+    for(size_t i=0;i<m;i++){
+        tps.emplace_back(primals[xstart+i*ndim],primals[xstart+i*ndim+1],primals[xstart+i*ndim+2]);
+    }
+    return tps;
 }
