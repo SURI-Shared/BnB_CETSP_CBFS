@@ -6,7 +6,7 @@ WarmStartHandler::WarmStartHandler(){
     Eigen::SparseMatrix<double> _insertion_problem_P(5,5);
     Eigen::SparseMatrix<double> _insertion_problem_A(12,5);
     Eigen::Matrix<double,5,1> _insertion_problem_q{1,1,0,0,0};
-    Eigen::Array<double,12,1> _insertion_problem_initial_b;
+    Eigen::Array<double,12,1> _insertion_problem_initial_b={0,0,0,0,0,0,0,0,0,0,0,0};//if left uninitialze valgrind complains about a conditional jump or move depending on unintiailized values
     const std::vector<clarabel::SupportedConeT<double>> _insertion_problem_cones={clarabel::SecondOrderConeT<double>(4),clarabel::SecondOrderConeT<double>(4),clarabel::SecondOrderConeT<double>(4)};
     clarabel::DefaultSettings<double> _insertion_problem_settings=clarabel::DefaultSettings<double>::rerunnable_settings();
 
