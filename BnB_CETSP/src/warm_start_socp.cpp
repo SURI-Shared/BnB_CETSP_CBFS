@@ -85,7 +85,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
         else{
             index_in_parent.at(i+1)=pidx;
             //turning points in previously considered neighborhoods are guessed to not change
-            last_tp=parent_turning_points[i];
+            last_tp=parent_turning_points.at(pidx-1);
             out_primals[xstart+ndim*i]=last_tp[0];
             out_primals[xstart+ndim*i+1]=last_tp[1];
             out_primals[xstart+ndim*i+2]=last_tp[2];
