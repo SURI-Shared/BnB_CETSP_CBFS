@@ -3,6 +3,7 @@ import glob
 from collections import defaultdict
 
 import numpy as np
+from matplotlib import pyplot
 
 def convert_to(key,type,dict):
     dict[key]=type(dict[key])
@@ -61,3 +62,17 @@ def statistics_by_instance_size(size_to_list_of_dicts,key):
     stats["maximums"]={s:np.max(grouped[s]) for s in grouped}
     stats["medians"]={s:np.median(grouped[s]) for s in grouped}
     return stats
+
+def bar_plot_vs_size(size_value_dict,bar_index=0,num_bars=1,ax=None,log=False,ylabel=None,label=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    x=np.arange(len(size_value_dict))
+    bar_width=1/(num_bars+1)
+    sizes=list(sorted(size_value_dict.keys()))
+    ax.bar(x+bar_width*bar_index,[size_value_dict[s] for s in sizes],bar_width,log=log,label=label)
+    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
+    ax.set_xlabel("Number of Neighborhoods")
+    if ylabel is not None:
+        ax.set_ylabel(ylabel)
+    return ax
