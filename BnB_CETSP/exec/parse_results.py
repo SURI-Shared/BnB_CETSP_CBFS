@@ -1,5 +1,17 @@
+import os
+import glob
+from collections import defaultdict
+
+import numpy as np
+
 def convert_to(key,type,dict):
     dict[key]=type(dict[key])
+def convert_to_float(key,dict):
+    try:
+        asfloat=float(dict[key])
+    except ValueError:
+        asfloat=float.fromhex(dict[key])
+    dict[key]=asfloat
 def convert_to_percent(key,dict):
     percent=float(dict[key][:-1])
     dict[key]=percent
@@ -24,8 +36,28 @@ def parse_log(filepath):
               'Time total','Time S.B','Time SOCP','Warm Start Time','    init Time','    construct Time','        solve Time',
               'SOCP Internal Solve Time','SOCP Setup Time','    SOCP Equilibration Time','    SOCP KKT init Time','SOCP initialization Time','SOCP IP Iteration Time','    SOCP KKT Update Time','    SOCP KKT Solve Time']
     for key in to_float:
-        convert_to(key,float,parsed)
+        convert_to_float(key,parsed)
     to_percent=['Pruned tree percentage','Computed Tree Percentage']
     for key in to_percent:
         convert_to_percent(key,parsed)
     return parsed
+
+def load_folder(folder):
+    logfiles=glob.glob(os.path.join(folder,"*.log"))
+    parsed=[parse_log(lf) for lf in logfiles]
+    by_size=defaultdict(list)
+    for p in parsed:
+        by_size[p["Instance Size"]].append(p)
+    return by_size
+
+def statistics_by_instance_size(size_to_list_of_dicts,key):
+    grouped=dict()
+    for s in sorted(size_to_list_of_dicts):
+        grouped[s]=[d[key] for d in size_to_list_of_dicts[s]]
+    stats=dict()
+    stats["means"]={s:np.mean(grouped[s]) for s in grouped}
+    stats["stds"]={s:np.std(grouped[s]) for s in grouped}
+    stats["minimums"]={s:np.min(grouped[s]) for s in grouped}
+    stats["maximums"]={s:np.max(grouped[s]) for s in grouped}
+    stats["medians"]={s:np.median(grouped[s]) for s in grouped}
+    return stats
