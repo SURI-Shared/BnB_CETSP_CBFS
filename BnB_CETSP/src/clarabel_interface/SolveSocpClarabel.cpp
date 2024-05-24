@@ -201,7 +201,7 @@ void SolveSocpClarabel::populate_removable_constraints(vector<int>& sequence, in
 }
 void SolveSocpClarabel::solveSOCP(vector<int>& sequence){//only call this if we used the constructor that doesn't call createModel!
     createModel(sequence);
-    solveSOCP();
+    SolveSocpClarabel::solveSOCP();
 }
 
 void SolveSocpClarabel::solveSOCP(){

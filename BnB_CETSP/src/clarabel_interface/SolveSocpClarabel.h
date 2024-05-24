@@ -29,8 +29,8 @@ class SolveSocpClarabel{
       SolveSocpClarabel( Data *, vector< int >& ); //constructor
       SolveSocpClarabel( Data *,int);
       //functions
-      void solveSOCP( vector< int >& );
-      void solveSOCP();
+      virtual void solveSOCP( vector< int >& );
+      virtual void solveSOCP();
       void finishSOCP();
       double getF_value();
       double getSolutionX( int );
@@ -51,6 +51,15 @@ class SolveSocpClarabel{
       Eigen::Map<Eigen::VectorXd> primals(){return solution.x;}
       Eigen::Map<Eigen::VectorXd> duals(){return solution.z;}
       Eigen::Map<Eigen::VectorXd> slacks(){return solution.s;}
+      int get_latest_iterations(){return solution.iterations;}
+      double get_latest_solve_time(){return solution.solve_time;}
+      double get_latest_setup_time(){return solution.setup_time;}
+      double get_latest_equilibration_time(){return solution.equilibration_time;}
+      double get_latest_kktinit_time(){return solution.kktinit_time;}
+      double get_latest_initialization_time(){return solution.initialization_time;}
+      double get_latest_ip_iteration_time(){return solution.ip_iteration_time;}
+      double get_latest_kkt_update_time(){return solution.kkt_update_time;}
+      double get_latest_kkt_solve_time(){return solution.kkt_solve_time;}
 
    protected:
       
