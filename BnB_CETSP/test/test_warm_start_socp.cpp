@@ -1,14 +1,14 @@
 #include "warm_start_socp.h"
 #include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
 
-void print_vector(double* vector, size_t length){
+void print_vector(const double* vector, size_t length){
     for(size_t i=0;i<length-1;i++){
         cout<<vector[i]<<" ";
     }
     cout<<vector[length-1];
 }
 
-void print_vector(Eigen::Map<Eigen::VectorXd> vector, size_t length){
+void print_vector(const Eigen::Map<Eigen::VectorXd>& vector, size_t length){
     for(size_t i=0;i<length-1;i++){
         cout<<vector[i]<<" ";
     }
@@ -88,6 +88,9 @@ int main(int argc, char** argv)
     print_vector(solver_handle.slacks(),slack_guess.size());
     cout<<endl;
 
+    cout<<"Parent Dual: ";
+    print_vector(parent.duals.data(),parent.duals.size());
+    cout<<endl;
     cout<<"Dual Guess: ";
     print_vector(dual_guess.data(),dual_guess.size());
     cout<<endl;

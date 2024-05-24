@@ -101,7 +101,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
             pidx=i;
         }
         if(not_in_parent){
-            index_in_parent.at(i)=-1;
+            index_in_parent.at(i+1)=-1;
             //guess the turning point to be at the optimal location if all other turning points are held fixed
             if(i+2>=current_sequence.size()){
                 next_tp=depot;
