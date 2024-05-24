@@ -180,7 +180,7 @@ int main(int argc, char** argv)
 
    //### root node selection strategy ###
    SolveSocpClarabelWithRecycling *solveSocpPtr;
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(solveSocpPtr);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(&solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -190,17 +190,6 @@ int main(int argc, char** argv)
    }
    cout << endl;
 
-   double solve_time=solveSocpPtr->solve_time;
-   double setup_time=solveSocpPtr->setup_time;
-   double equilibration_time=solveSocpPtr->equilibration_time;
-   double kktinit_time=solveSocpPtr->kktinit_time;
-   double initialization_time=solveSocpPtr->initialization_time;
-   double ip_iteration_time=solveSocpPtr->ip_iteration_time;
-   double kkt_update_time=solveSocpPtr->kkt_update_time;
-   double kkt_solve_time=solveSocpPtr->kkt_solve_time;
-   uint32_t iterations=solveSocpPtr->iterations;
-   delete solveSocpPtr;//segmentation faults if I try to just keep using the SolveSocpClarabelWithRecycling created inside selectRootClarabelWithRecycling
-   solveSocpPtr=new SolveSocpClarabelWithRecycling(dataptr,root->pts);
    //####################################
    std::unordered_map<int,BnBNodeForWarmStart> nodes_for_warmstart;
    WarmStartHandler warm_start_handler;
@@ -951,15 +940,15 @@ int main(int argc, char** argv)
    double gap_real = ( ( bestKnown - best_lb )/ bestKnown )*100;
    double gap_lb_bnb = ( ( best - best_lb )/ best )*100;
 
-   solve_time+=solveSocpPtr->solve_time;
-   setup_time+=solveSocpPtr->setup_time;
-   equilibration_time+=solveSocpPtr->equilibration_time;
-   kktinit_time+=solveSocpPtr->kktinit_time;
-   initialization_time+=solveSocpPtr->initialization_time;
-   ip_iteration_time+=solveSocpPtr->ip_iteration_time;
-   kkt_update_time+=solveSocpPtr->kkt_update_time;
-   kkt_solve_time+=solveSocpPtr->kkt_solve_time;
-   iterations+=solveSocpPtr->iterations;
+   double solve_time=solveSocpPtr->solve_time;
+   double setup_time=solveSocpPtr->setup_time;
+   double equilibration_time=solveSocpPtr->equilibration_time;
+   double kktinit_time=solveSocpPtr->kktinit_time;
+   double initialization_time=solveSocpPtr->initialization_time;
+   double ip_iteration_time=solveSocpPtr->ip_iteration_time;
+   double kkt_update_time=solveSocpPtr->kkt_update_time;
+   double kkt_solve_time=solveSocpPtr->kkt_solve_time;
+   uint32_t iterations=solveSocpPtr->iterations;
 
    // int numLNodes = cbfs->getNumNodes(best_ub);
    // int numNodes = itCount;
