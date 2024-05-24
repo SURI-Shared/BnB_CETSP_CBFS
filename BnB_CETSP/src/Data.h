@@ -67,6 +67,7 @@ class Data{
       void setIntersecMatrix();
 
       void setSizeInst( char * );
+      void setSize_GeordanBehdanis(const string&);
 
       list < int > branchingRuleList;
       list< int >::iterator iterBranchingRuleList;

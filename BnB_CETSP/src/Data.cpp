@@ -3,7 +3,7 @@
 using namespace std;
 
 //constructor initializes sizeGraphMatrix, numberEdges, pNumber, pathMatrix and graphMatrix
-Data::Data ( char * instanceName, char * options, double overlapFactor, int argc, char** argv )
+Data::Data ( char * instanceName, char * options, double overlapFactor, int argc, char** argv ):ub(INFINITY)
 {	
 
    if ( strcmp( argv[ 2 ], "2D" ) && strcmp( argv[ 2 ], "3D" ) ){
@@ -61,10 +61,13 @@ Data::Data ( char * instanceName, char * options, double overlapFactor, int argc
    string DirectoryName;
 
    string::size_type found = str.find_first_of("/");
-   DirectoryName.append( instanceName, found );
 
    string::size_type loc = str.find_last_of(".", str.size() );
    string::size_type loc2 = str.find_last_of("/", str.size() );
+
+   string folder_path; folder_path.append(instanceName,loc2);
+   string::size_type last_slash = folder_path.find_last_of("/");
+   DirectoryName.append( instanceName,last_slash+1,folder_path.size()-last_slash-1 );
 
    if (loc != string::npos) {
       fileName.append(instanceName, loc2+1, loc-loc2-1 );
@@ -95,6 +98,11 @@ Data::Data ( char * instanceName, char * options, double overlapFactor, int argc
          setUb( "Behdani", fileName, options, overlapFactor );
       }
       //			######### Behdani Instances ##########
+      else if (DirectoryName.compare( "medium_2D_Behdani_CETSPs" )==0 ){
+         setSize_GeordanBehdanis( fileName );
+         setAllData2( readFile );
+         setUb( "medium_2D_Behdani_CETSPs", fileName, options, overlapFactor);
+      }
       else{
          cout << "Something wrong with the directory names!" << endl;
          exit( 1 );
@@ -155,6 +163,11 @@ void Data::setSizeInst( char * instancePath )
    }
    //  	count on the DEPOT
    sizeInst++;
+}
+
+void Data::setSize_GeordanBehdanis( const string& filename){
+   string size_string;size_string.append(filename,1,filename.find_first_of("_")-1);
+   sizeInst=stoi(size_string);
 }
 
 void Data::setUb( string drctName, string instName, char * option, double overlap )
