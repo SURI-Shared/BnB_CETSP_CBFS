@@ -1005,6 +1005,10 @@ int main(int argc, char** argv)
 
    cout << "SOCPs solved: "<<solveSocpPtr->m_num_solves<<endl;
    cout << "Solvers made: "<<solveSocpPtr->solvers_made()<<endl;
+   cout << "Warm Start Time: "<<warm_start_handler.get_total_time()<<endl;
+   cout << "    init Time: "<<warm_start_handler.get_init_time()<<endl;
+   cout << "    construct Time: "<<warm_start_handler.get_construct_time()<<endl;
+   cout << "        solve Time: "<<warm_start_handler.get_solve_time()<<endl;
    cout << "SOCP Internal Iterations: "<<iterations<<endl;
    cout << "SOCP Internal Solve Time: "<<solve_time<<endl;
    cout << "SOCP Setup Time: "<<setup_time<<endl;
