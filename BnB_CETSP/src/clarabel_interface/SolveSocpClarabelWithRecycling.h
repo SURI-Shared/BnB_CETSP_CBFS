@@ -14,6 +14,7 @@ class SolveSocpClarabelWithRecycling: public SolveSocpClarabel{
       void clear_removable_constraints(int prev_pos, int curr_pos);
       void solve_warm(double*, double*, double*);
       void accumulate_info();
+      size_t solvers_made(){return solvers.size();}
       using SolveSocpClarabel::solveSOCP;
       virtual void solveSOCP() override;
 

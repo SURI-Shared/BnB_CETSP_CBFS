@@ -115,7 +115,7 @@ $(OBJDIR)/exec/%.o: $(EXECDIR)/%.cpp
 #delete objetos e arquivos de dependencia
 clean:
 	@echo "\033[31mcleaning obj directory \033[0m"
-	@rm -f $(OBJDIR)/**.o $(OBJDIR)/**.d
+	@rm -f $(OBJDIR)/src/**.o $(OBJDIR)/src/**.d $(OBJDIR)/test/**.o $(OBJDIR)/test/**.d $(OBJDIR)/exec/**.o $(OBJDIR)/exec/**.d
 
 rebuild: clean exeCVXHULL
 

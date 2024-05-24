@@ -1004,6 +1004,7 @@ int main(int argc, char** argv)
    cout << endl << "#################" << endl;	
 
    cout << "SOCPs solved: "<<solveSocpPtr->m_num_solves<<endl;
+   cout << "Solvers made: "<<solveSocpPtr->solvers_made()<<endl;
    cout << "SOCP Internal Iterations: "<<iterations<<endl;
    cout << "SOCP Internal Solve Time: "<<solve_time<<endl;
    cout << "SOCP Setup Time: "<<setup_time<<endl;
