@@ -10,6 +10,36 @@ WarmStartHandler::WarmStartHandler(){
     const std::vector<clarabel::SupportedConeT<double>> _insertion_problem_cones={clarabel::SecondOrderConeT<double>(4),clarabel::SecondOrderConeT<double>(4),clarabel::SecondOrderConeT<double>(4)};
     clarabel::DefaultSettings<double> _insertion_problem_settings=clarabel::DefaultSettings<double>::rerunnable_settings();
 
+    //populate constraint matrix using a triplet list
+    std::vector<Eigen::Triplet<double>> tripletList;
+    tripletList.reserve(11);//2 for the fi, 3 for xi three times
+
+    //||x-c||<=r
+    //implemented as s in SOC, s=[r,c1-x1,c2-x2]
+    //first a row of zeros in A and r in b
+    //then x+s==c
+    tripletList.emplace_back(1,2,1);
+    tripletList.emplace_back(2,3,1);
+    tripletList.emplace_back(3,4,1);
+
+    //||x-p1||<=f1
+    //first -f1+s=0
+    tripletList.emplace_back(4,0,-1);
+    //then -x+s=-p1
+    tripletList.emplace_back(5,2,-1);
+    tripletList.emplace_back(6,3,-1);
+    tripletList.emplace_back(7,4,-1);
+
+    //||x-p2||<=f2
+    //first -f2+s=0
+    tripletList.emplace_back(8,1,-1);
+    //then -x+s=-p2
+    tripletList.emplace_back(9,2,-1);
+    tripletList.emplace_back(10,3,-1);
+    tripletList.emplace_back(11,4,-1);
+
+    _insertion_problem_A.setFromTriplets(tripletList.cbegin(),tripletList.cend());
+
     insertion_problem_solver_ptr=new clarabel::DefaultSolver<double>(_insertion_problem_P,Eigen::Ref<Eigen::VectorXd>(_insertion_problem_q),
                                                               _insertion_problem_A,Eigen::Ref<Eigen::VectorXd>(_insertion_problem_initial_b),
                                                               _insertion_problem_cones,_insertion_problem_settings);
