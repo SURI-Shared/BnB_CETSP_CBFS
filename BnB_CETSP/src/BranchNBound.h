@@ -26,6 +26,7 @@
 #include"Data.h"
 #include"structs.h"
 #include"util.h"
+#include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
 
 using namespace std;
 
@@ -37,6 +38,7 @@ class BranchNBound{
       ~BranchNBound();
 
       vector< int > selectRoot ();
+      vector< int > selectRootClarabelWithRecycling (SolveSocpClarabelWithRecycling* solver_out_ptr);
       vector< int > selectRoot2 ();
       vector< int > selectRoot3 ();
       bool check_feasibility_Q(vector<double>& solX, vector<double>& solY, vector<double>& solZ);

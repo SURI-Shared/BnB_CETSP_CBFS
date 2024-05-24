@@ -113,7 +113,7 @@ int main(int argc, char** argv)
       if (argc >= 13) use_fsi = (atoi(argv[12]) > 0);
    }
    cout<<"Use LAH: "<<use_lah<<endl;
-   cout<<"Use Concorde Feasible Solution improvement"<<use_fsi<<endl;
+   cout<<"Use Concorde Feasible Solution improvement: "<<use_fsi<<endl;
    Data *dataptr = new Data( arqInstancia, option, overlap, argc, argv );
 
    int sizeInst = dataptr->getSizeInst();
@@ -179,7 +179,8 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRoot();
+   SolveSocpClarabelWithRecycling *solveSocpPtr;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -188,10 +189,11 @@ int main(int argc, char** argv)
       cout << root->pts[ i ] << " ";
    }
    cout << endl;
+   delete solveSocpPtr;//segmentation faults if I try to just keep using the SolveSocpClarabelWithRecycling created inside selectRootClarabelWithRecycling
+   solveSocpPtr=new SolveSocpClarabelWithRecycling(dataptr,root->pts);
    //####################################
    std::unordered_map<int,BnBNodeForWarmStart> nodes_for_warmstart;
    WarmStartHandler warm_start_handler;
-   SolveSocpClarabelWithRecycling *solveSocpPtr = new SolveSocpClarabelWithRecycling( dataptr, root->pts );
    //solve model
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();

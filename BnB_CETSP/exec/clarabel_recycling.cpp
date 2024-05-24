@@ -178,7 +178,8 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRoot();
+   SolveSocpClarabelWithRecycling *solveSocpPtr;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -187,9 +188,10 @@ int main(int argc, char** argv)
       cout << root->pts[ i ] << " ";
    }
    cout << endl;
+   delete solveSocpPtr;//segmentation faults if I try to just keep using the SolveSocpClarabelWithRecycling created inside selectRootClarabelWithRecycling
+   solveSocpPtr=new SolveSocpClarabelWithRecycling(dataptr,root->pts);
    //####################################
 
-   SolveSocpClarabelWithRecycling *solveSocpPtr = new SolveSocpClarabelWithRecycling( dataptr, root->pts );
    //solve model
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();

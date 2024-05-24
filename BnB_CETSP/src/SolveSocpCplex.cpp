@@ -91,7 +91,7 @@ double SolveSocpCplex::getSolutionZ( int i )
 
 void SolveSocpCplex::solveSOCP( vector< int >& sequence )
 {
-
+   cout<<"Solve w/ CPLEX"<<endl;
    static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 
    createModel( sequence );
@@ -460,6 +460,7 @@ void SolveSocpCplex::clear_removable_constraints(int prev_pos, int curr_pos)
 
 void SolveSocpCplex::solveSOCP()
 {
+   cout<<"Solve w/ CPLEX no argument"<<endl;
    static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
    // if (m_num_solves != 0)
    // {
