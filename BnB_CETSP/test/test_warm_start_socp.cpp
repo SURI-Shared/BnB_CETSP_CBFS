@@ -67,6 +67,13 @@ int main(int argc, char** argv)
 
     solver_handle.solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data());
 
+    // Eigen::Array2Xd primal_comp(primal_guess.size());
+    // for(size_t i=0;i<primal_guess.size();i++){
+    //     primal_comp.row(0)[i]=primal_guess.at(i);
+    // }
+    // primal_comp.row(1)=solver_handle.primals();
+    // cout<<"Primal Guess vs Primal Sol"<<endl;
+    // cout<<primal_comp<<endl;
     cout<<"Primal Guess: ";
     print_vector(primal_guess.data(),primal_guess.size());
     cout<<endl;
