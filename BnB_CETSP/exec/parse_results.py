@@ -103,6 +103,8 @@ def scatter_plot_percent_delta_vs_size(size_value_nominal,size_value_modified,ke
                 y.append(percent_delta)
                 x.append(size)
     ax.scatter(x,y)
+    ax.grid(True,"major","y")
     if ylabel is not None:
         ax.set_ylabel(ylabel)
+    ax.set_xlabel("Number of Neighborhoods")
     return ax
