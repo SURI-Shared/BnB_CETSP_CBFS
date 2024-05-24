@@ -1,6 +1,20 @@
 #include "warm_start_socp.h"
 #include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
 
+void print_vector(double* vector, size_t length){
+    for(size_t i=0;i<length-1;i++){
+        cout<<vector[i]<<" ";
+    }
+    cout<<vector[length-1];
+}
+
+void print_vector(Eigen::Map<Eigen::VectorXd> vector, size_t length){
+    for(size_t i=0;i<length-1;i++){
+        cout<<vector[i]<<" ";
+    }
+    cout<<vector[length-1];
+}
+
 int main(int argc, char** argv) 
 {
     //Data constructor demands command line arguments
@@ -48,14 +62,31 @@ int main(int argc, char** argv)
     std::vector<double> dual_guess;
     warm_start_handler.construct_initial_guess(child_sequence,parent,dataptr,primal_guess,slack_guess,dual_guess);
 
-    cout<<"Primal Guess length: "<<primal_guess.size()<<endl;
-    cout<<"Slack Guess length: "<<slack_guess.size()<<endl;
-    cout<<"Dual Guess length: "<<dual_guess.size()<<endl;
-
     solver_handle.clear_removable_constraints(0, 0);
     solver_handle.populate_removable_constraints(child_sequence, 0, 0);
 
     solver_handle.solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data());
+
+    cout<<"Primal Guess: ";
+    print_vector(primal_guess.data(),primal_guess.size());
+    cout<<endl;
+    cout<<"Primal Solut: ";
+    print_vector(solver_handle.primals(),primal_guess.size());
+    cout<<endl;
+
+    cout<<"Slack Guess: ";
+    print_vector(slack_guess.data(),slack_guess.size());
+    cout<<endl;
+    cout<<"Slack Solut: ";
+    print_vector(solver_handle.slacks(),slack_guess.size());
+    cout<<endl;
+
+    cout<<"Dual Guess: ";
+    print_vector(dual_guess.data(),dual_guess.size());
+    cout<<endl;
+    cout<<"Dual Solut: ";
+    print_vector(solver_handle.duals(),dual_guess.size());
+    cout<<endl;
 
     solver_handle.printSolution(child_sequence);
     return 0;
