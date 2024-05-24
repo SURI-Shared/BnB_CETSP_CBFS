@@ -28,7 +28,8 @@ CCFLAGS = $(CCOPT) -I$(INCLUDE) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDE
 #############################
 
 #### flags do linker
-CCLNFLAGS = -L$(CONCORDELIBDIR) -lconcorde -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -lqsopt -L${CLARABEL_LIBDIR} -lclarabel_c
+CCLNFLAGS = -L$(CONCORDELIBDIR) -lconcorde -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -lqsopt
+CLARABELLINFLAGS = -L${CLARABEL_LIBDIR} -lclarabel_c
 #############################
 
 #### diretorios com os source files e com os objs files
@@ -52,24 +53,24 @@ TEST_OBJS = $(patsubst $(EXECDIR)/%.cpp, $(OBJDIR)/exec/%.o, $(EXEC_SRCS))
 #### regra principal, gera o executavel
 exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -o run/$@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 ############################
 
 clarabel_dropin: $(OBJDIR)/exec/clarabel_dropin.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_dropin.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_dropin.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 
 clarabel_recycling: $(OBJDIR)/exec/clarabel_recycling.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycling.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycling.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 
 clarabel_warmstart: $(OBJDIR)/exec/clarabel_warmstart.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_warmstart.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_warmstart.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 
 #includes dependency files
 -include $(OBJS:.o=.d)
