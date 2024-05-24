@@ -189,7 +189,7 @@ int main(int argc, char** argv)
    }
    cout << endl;
    //####################################
-   std::vector<BnBNodeForWarmStart> nodes_for_warmstart;
+   std::unordered_map<int,BnBNodeForWarmStart> nodes_for_warmstart;
    WarmStartHandler warm_start_handler;
    SolveSocpClarabelWithRecycling *solveSocpPtr = new SolveSocpClarabelWithRecycling( dataptr, root->pts );
    //solve model
@@ -208,9 +208,6 @@ int main(int argc, char** argv)
    solveSocpPtr->finishSOCP();
    solveSocpPtr->printSolution( root->pts );
    somaTeste += solveSocpPtr->violation;
-
-   nodes_for_warmstart.emplace_back(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals());
-
    
    // check feasibility
    bool feasibilityTest = false;
@@ -222,6 +219,8 @@ int main(int argc, char** argv)
       tempY.push_back( solveSocpPtr-> getSolutionY( i ) );
       tempZ.push_back( solveSocpPtr-> getSolutionZ( i ) );
    }
+   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals()));
+
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
 
    cout << endl;
@@ -640,7 +639,7 @@ int main(int argc, char** argv)
 
                      child->lb = max(curr_child_socp_lb, max(child_temp_lb, max(temp_uncovered_lb, current->lb)));
 
-                     nodes_for_warmstart.emplace_back(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals());
+                     nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals()));
                      
                      if (child->lb >= best_ub - dbl_compare_constant)
                      {

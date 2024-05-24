@@ -57,13 +57,13 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     Eigen::Vector3d last_tp=depot;
     Eigen::Vector3d next_tp;
     for(size_t i=0;i<m;i++){//first entry in sequence is just the depot
-        if (not_yet_inserted){
+        if (i<m-1&&not_yet_inserted){
             cnid=current_sequence.at(i+1);
             pnid=parent_sequence.at(i+1);
             pidx=i+1;
             not_in_parent=pnid!=cnid;
             //once the neighborhood in current_sequence differs from that in parent, we have found the spot where a new neighborhood was inserted
-            not_yet_inserted=not_in_parent;
+            not_yet_inserted=!not_in_parent;
         }else{
             cnid=current_sequence.at(i+1);
             pnid=parent_sequence.at(i);
