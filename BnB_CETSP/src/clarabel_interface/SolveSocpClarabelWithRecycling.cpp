@@ -139,4 +139,5 @@ void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* sl
     f_value=solution.obj_val;
     violation=solution.r_prim;
     m_num_solves+=1;
+    accumulate_info();
 }
