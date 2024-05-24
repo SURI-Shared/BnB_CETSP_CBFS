@@ -179,7 +179,7 @@ int main(int argc, char** argv)
 
    //### root node selection strategy ###
    SolveSocpClarabelWithRecycling *solveSocpPtr;
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(solveSocpPtr);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(&solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -188,8 +188,6 @@ int main(int argc, char** argv)
       cout << root->pts[ i ] << " ";
    }
    cout << endl;
-   delete solveSocpPtr;//segmentation faults if I try to just keep using the SolveSocpClarabelWithRecycling created inside selectRootClarabelWithRecycling
-   solveSocpPtr=new SolveSocpClarabelWithRecycling(dataptr,root->pts);
    //####################################
 
    //solve model
@@ -983,6 +981,28 @@ int main(int argc, char** argv)
    cout << "Iterations to incumbent: " << itToIncum << endl;
 
    cout << endl << "#################" << endl;	
+
+
+   double solve_time=solveSocpPtr->solve_time;
+   double setup_time=solveSocpPtr->setup_time;
+   double equilibration_time=solveSocpPtr->equilibration_time;
+   double kktinit_time=solveSocpPtr->kktinit_time;
+   double initialization_time=solveSocpPtr->initialization_time;
+   double ip_iteration_time=solveSocpPtr->ip_iteration_time;
+   double kkt_update_time=solveSocpPtr->kkt_update_time;
+   double kkt_solve_time=solveSocpPtr->kkt_solve_time;
+   uint32_t iterations=solveSocpPtr->iterations;
+
+   cout << "SOCPs solved: "<<solveSocpPtr->m_num_solves<<endl;
+   cout << "SOCP Internal Iterations: "<<iterations<<endl;
+   cout << "SOCP Internal Solve Time: "<<solve_time<<endl;
+   cout << "SOCP Setup Time: "<<setup_time<<endl;
+   cout << "    SOCP Equilibration Time: "<<equilibration_time<<endl;
+   cout << "    SOCP KKT init Time: "<<kktinit_time<<endl;
+   cout << "SOCP initialization Time: "<<initialization_time<<endl;
+   cout << "SOCP IP Iteration Time: "<<ip_iteration_time<<endl;
+   cout << "    SOCP KKT Update Time: "<<kkt_update_time<<endl;
+   cout << "    SOCP KKT Solve Time: "<<kkt_solve_time<<endl;
    
    //  for (auto it = open.begin(); it != open.end(); it++)
    //  {
