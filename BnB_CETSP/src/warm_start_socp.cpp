@@ -167,7 +167,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
         if (index_in_parent.at(i+1)>=0){//first entry in sequence is just the depot
             //reuse dual values for SOC constraints bounding the magnitude of ci-xi
             for(size_t j=0;j<per_turn;j++){
-                out_duals[i*per_turn+j]=parent_dual[index_in_parent.at(i+1)*per_turn+j];
+                out_duals[i*per_turn+j]=parent_dual[(index_in_parent.at(i+1)-1)*per_turn+j];
             }
         }else{
             //SOC constraints enforcing ||ci-xi||<=ri
