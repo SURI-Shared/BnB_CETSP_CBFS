@@ -65,7 +65,7 @@ int main(int argc, char** argv)
     solver_handle.clear_removable_constraints(0, 0);
     solver_handle.populate_removable_constraints(child_sequence, 0, 0);
 
-    solver_handle.solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data());
+    solver_handle.solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data(),0,1);
 
     // Eigen::Array2Xd primal_comp(primal_guess.size());
     // for(size_t i=0;i<primal_guess.size();i++){

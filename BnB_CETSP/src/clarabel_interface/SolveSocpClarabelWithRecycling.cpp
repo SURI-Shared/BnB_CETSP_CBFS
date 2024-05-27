@@ -127,14 +127,18 @@ Parameters: primal_guess : double *
                 guess for the slack variables. MUST be the correct length (# of rows in constraint matrix). Copied, not mutated.
             dual_guess : double *
                 guess for the dual variables. MUST be the correct length (# of rows in constraint matrix). Copied, not muted.
+            mode : int
+                how to use the initial guess. See Clarabel implementation for up to date options. If the value is unrecognized, it SHOULD default to just copying the guess and adjusting it slightly to be feasible.
+            lambda : double
+                for initializations that combine the guess with some other initialization, like Skajaa 2013, lambda is the weight to place on the guess and 1-lambda the weight to place on the other initialization
 Mutates:    solution
             f_value
             violation
             m_num_solves
             *solver_ptr
 */
-void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess){
-    solver_ptr->solve_warm(primal_guess,slack_guess,dual_guess);
+void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess, int mode, double lambda){
+    solver_ptr->solve_warm(primal_guess,slack_guess,dual_guess,mode,lambda);
     new (&solution) clarabel::DefaultSolution<double>(solver_ptr->solution());
     f_value=solution.obj_val;
     violation=solution.r_prim;
