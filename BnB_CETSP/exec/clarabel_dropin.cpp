@@ -178,10 +178,11 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRoot();
+   SolveSocpClarabel *solveSocpPtr;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabel(&solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
-
+   delete solveSocpPtr;
    cout << "Initial root: ";
    for ( int i = 0; i <root->pts.size() ; i++ ){
       cout << root->pts[ i ] << " ";
@@ -189,7 +190,7 @@ int main(int argc, char** argv)
    cout << endl;
    //####################################
 
-   SolveSocpClarabel *solveSocpPtr = new SolveSocpClarabel( dataptr, root->pts );
+   solveSocpPtr = new SolveSocpClarabel( dataptr, root->pts );
    //solve model
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();
