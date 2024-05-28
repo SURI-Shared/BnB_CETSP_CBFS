@@ -632,7 +632,7 @@ int main(int argc, char** argv)
                         solveSocpPtr->clear_removable_constraints(prev_insert_pos, curr_insert_pos);
                         solveSocpPtr->populate_removable_constraints(child->pts, prev_insert_pos, curr_insert_pos);
                      }
-                     solveSocpPtr->solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data(),0,1);
+                     solveSocpPtr->solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data(),3,.35);
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
                      count_SOCP_solved++;
