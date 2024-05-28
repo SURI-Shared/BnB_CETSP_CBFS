@@ -108,3 +108,23 @@ def scatter_plot_percent_delta_vs_size(size_value_nominal,size_value_modified,ke
         ax.set_ylabel(ylabel)
     ax.set_xlabel("Number of Neighborhoods")
     return ax
+
+def scatter_plot_case1_vs_case2(size_value1,size_value2,key,xlabel,ylabel=None,ax=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    x=[]
+    for size in size_value1:
+        for instance in size_value1[size]:
+            nominal=size_value1[size][instance][key]
+            modified=size_value2[size][instance][key]
+            x.append(nominal)
+            y.append(modified)
+    ax.scatter(x,y)
+    ax.plot([min(x+y),max(x+y)],[min(x+y),max(x+y)],":")
+    ax.grid(True,"major","both")
+    ax.set_ylabel(ylabel)
+    ax.set_xlabel(xlabel)
+    ax.axis("equal")
+    return ax
