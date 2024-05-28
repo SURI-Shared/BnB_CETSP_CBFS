@@ -1,14 +1,14 @@
 #include "SolveSocpClarabelWithRecycling.h"
 
 //constructors
-SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, vector<int>& in_sequence):
-    SolveSocpClarabel(instance,in_sequence),
+SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, vector<int>& in_sequence, bool reduced_first_correction):
+    SolveSocpClarabel(instance,in_sequence,reduced_first_correction),
     solve_time(0),setup_time(0),equilibration_time(0),kktinit_time(0),initialization_time(0),ip_iteration_time(0),kkt_update_time(0),kkt_solve_time(0),iterations(0){
     solvers.insert({in_sequence.size(),solver_ptr});
 }
 
-SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, int size_seq):
-    SolveSocpClarabel(instance,size_seq),
+SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, int size_seq, bool reduced_first_correction):
+    SolveSocpClarabel(instance,size_seq,reduced_first_correction),
     solve_time(0),setup_time(0),equilibration_time(0),kktinit_time(0),initialization_time(0),ip_iteration_time(0),kkt_update_time(0),kkt_solve_time(0),iterations(0){}
 //methods
 /*

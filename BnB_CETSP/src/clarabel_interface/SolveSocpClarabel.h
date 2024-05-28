@@ -27,7 +27,9 @@ class SolveSocpClarabel{
 
       //construtor	
       SolveSocpClarabel( Data *, vector< int >& ); //constructor
+      SolveSocpClarabel( Data *, vector< int >& , bool); //constructor
       SolveSocpClarabel( Data *,int);
+      SolveSocpClarabel( Data *,int, bool);
       //functions
       virtual void solveSOCP( vector< int >& );
       virtual void solveSOCP();

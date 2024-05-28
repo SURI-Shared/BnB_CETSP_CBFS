@@ -53,10 +53,25 @@ SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):
     createModel(sequence);
 }
 
+SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence, bool reduced_first_correction):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),solver_ptr(){
+    settings=clarabel::DefaultSettings<double>::default_settings();
+    settings.verbose=false;
+    settings.presolve_enable=false;
+    settings.reduced_first_correction=reduced_first_correction;
+    createModel(sequence);
+}
+
 SolveSocpClarabel::SolveSocpClarabel(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),solver_ptr(){
     settings=clarabel::DefaultSettings<double>::default_settings();
     settings.verbose=false;
     settings.presolve_enable=false;
+}
+
+SolveSocpClarabel::SolveSocpClarabel(Data * instance, int size_seq, bool reduced_first_correction):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),solver_ptr(){
+    settings=clarabel::DefaultSettings<double>::default_settings();
+    settings.verbose=false;
+    settings.presolve_enable=false;
+    settings.reduced_first_correction=reduced_first_correction;
 }
 
 /*
