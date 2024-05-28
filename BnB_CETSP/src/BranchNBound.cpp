@@ -89,8 +89,8 @@ vector< int > BranchNBound::selectRoot()
 }
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
-//solves the SOCP to pick the last node using a SolveSocpClarabelWithRecycling that is output via solver_out_ptr, which should have been passed as nullptr
-vector< int > BranchNBound::selectRootClarabel(SolveSocpClarabel** solver_out_ptr)
+//solves the SOCP to pick the last node using a SolveSocpClarabel
+vector< int > BranchNBound::selectRootClarabel()
 {
    //	escolher os elementos que entram na raiz
    double greatestSolution = 0;
@@ -108,12 +108,13 @@ vector< int > BranchNBound::selectRootClarabel(SolveSocpClarabel** solver_out_pt
    tempSequence[ 0 ] = 0;
    tempSequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
 
-   *solver_out_ptr=new SolveSocpClarabel(objectOfData,3);
+   
 
    for ( int i = 1; i < sizeInst; i++ ){
       tempSequence[ 2 ] = i;
-      (*solver_out_ptr)->solveSOCP(tempSequence);
-      temp = (*solver_out_ptr)->getF_value();
+      SolveSocpClarabel *solver_out_ptr=new SolveSocpClarabel(objectOfData,tempSequence);
+      solver_out_ptr->solveSOCP();
+      temp = solver_out_ptr->getF_value();
       if ( temp > greatestSolution ){
          greatestSolution = temp;
          sequence[ 2 ] = i;
