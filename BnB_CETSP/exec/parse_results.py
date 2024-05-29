@@ -74,6 +74,31 @@ def statistics_by_instance_size(size_to_list_of_dicts,key):
     stats["medians"]={s:np.median(grouped[s]) for s in grouped}
     return stats
 
+def shifted_geometric_mean(values,shift=1):
+    N=len(values)
+    return np.prod(values+shift)**(1/N)-shift
+
+def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    x=[]
+    x=list(sorted(size_data_dict.keys()))
+    for size in x:
+        v=[]
+        for data in size_data_dict[size].values():
+            v.append(data[key])
+        v=np.array(v)
+        shm=shifted_geometric_mean(v,shift)
+        y.append(shm)
+    if linespec is not None:
+        ax.plot(x,y,linespec,label=label)
+    else:
+        ax.plot(x,y,label=label)
+    ax.set_xlabel("Number of Neighborhoods")
+    return ax
+
 def bar_plot_vs_size(size_value_dict,bar_index=0,num_bars=1,ax=None,log=False,ylabel=None,label=None):
     if ax is None:
         fig=pyplot.figure()
