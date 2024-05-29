@@ -632,7 +632,7 @@ int main(int argc, char** argv)
                      }
                      info_struct.solvers_made++;
                      solveSocpPtr2->solveSOCP();
-                     solveSocpPtr->accumulate_info(info_struct);
+                     solveSocpPtr2->accumulate_info(info_struct);
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
                      count_SOCP_solved++;

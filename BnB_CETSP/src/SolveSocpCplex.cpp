@@ -482,7 +482,9 @@ void SolveSocpCplex::solveSOCP()
    // {
    //    SOCP.setStart(m_allvarvals, m_allvar_redcosts, m_allvars, 0, 0, 0);
    // }
+   double t0=wallClock();
    SOCP.solve();
+   last_solve_time=wallClock()-t0;
    SOCP.getStatus();
    violation = SOCP.getQuality(IloCplex::SumScaledPrimalInfeas);
    f_value = SOCP.getObjValue();
