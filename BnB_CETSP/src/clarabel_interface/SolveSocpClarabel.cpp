@@ -44,6 +44,21 @@ std::ostream& operator<<(std::ostream& os, const clarabel::SolverStatus& status_
     }
     return os;
 }
+
+std::ostream& operator<<(std::ostream& os, const SolveSocpClarabelStatistics& info_struct){
+    cout << "SOCPs solved: "<<info_struct.m_num_solves<<endl;
+    cout << "Solvers made: "<<info_struct.solvers_made<<endl;
+    cout << "SOCP Internal Iterations: "<<info_struct.iterations<<endl;
+    cout << "SOCP Internal Solve Time: "<<info_struct.solve_time<<endl;
+    cout << "SOCP Setup Time: "<<info_struct.setup_time<<endl;
+    cout << "    SOCP Equilibration Time: "<<info_struct.equilibration_time<<endl;
+    cout << "    SOCP KKT init Time: "<<info_struct.kktinit_time<<endl;
+    cout << "SOCP initialization Time: "<<info_struct.initialization_time<<endl;
+    cout << "SOCP IP Iteration Time: "<<info_struct.ip_iteration_time<<endl;
+    cout << "    SOCP KKT Update Time: "<<info_struct.kkt_update_time<<endl;
+    cout << "    SOCP KKT Solve Time: "<<info_struct.kkt_solve_time<<endl;
+    return os;
+}
 typedef Eigen::Triplet<double> Triplet;
 
 SolveSocpClarabel::SolveSocpClarabel(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),solver_ptr(){
@@ -228,6 +243,19 @@ void SolveSocpClarabel::solveSOCP(){
 }
 
 void SolveSocpClarabel::finishSOCP(){};//nothing to do, provided to match API of SolveSocpCplex
+
+void SolveSocpClarabel::accumulate_info(SolveSocpClarabelStatistics& info_struct){
+    info_struct.m_num_solves++;
+    info_struct.solve_time+=get_latest_solve_time();
+    info_struct.setup_time+=get_latest_setup_time();
+    info_struct.equilibration_time+=get_latest_equilibration_time();
+    info_struct.kktinit_time+=get_latest_kktinit_time();
+    info_struct.initialization_time+=get_latest_initialization_time();
+    info_struct.ip_iteration_time+=get_latest_ip_iteration_time();
+    info_struct.kkt_update_time+=get_latest_kkt_update_time();
+    info_struct.kkt_solve_time+=get_latest_kkt_solve_time();
+    info_struct.iterations+=get_latest_iterations();
+}
 
 double SolveSocpClarabel::getF_value(){
     return f_value;

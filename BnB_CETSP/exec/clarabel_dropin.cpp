@@ -178,7 +178,8 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabel();
+   SolveSocpClarabelStatistics info_struct;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabel(info_struct);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -218,6 +219,7 @@ int main(int argc, char** argv)
       tempZ.push_back( solveSocpPtr-> getSolutionZ( i ) );
    }
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
+   solveSocpPtr->accumulate_info(info_struct);
    delete solveSocpPtr;
 
    cout << endl;
@@ -628,6 +630,7 @@ int main(int argc, char** argv)
                         solveSocpPtr2->populate_removable_constraints(child->pts, prev_insert_pos, curr_insert_pos);
                      }
                      solveSocpPtr2->solveSOCP();
+                     solveSocpPtr2->accumulate_info(info_struct);
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
                      count_SOCP_solved++;
@@ -987,6 +990,7 @@ int main(int argc, char** argv)
    cout << "Iterations to incumbent: " << itToIncum << endl;
 
    cout << endl << "#################" << endl;	
+   cout << info_struct<<endl;
    
    //  for (auto it = open.begin(); it != open.end(); it++)
    //  {

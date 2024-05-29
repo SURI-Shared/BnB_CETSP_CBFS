@@ -21,6 +21,21 @@ using namespace std;
 
 #define SOCP_NDIM 3//TODO: template the SOCP solvers on the dimension of the space
 
+struct SolveSocpClarabelStatistics{
+   public:
+      size_t m_num_solves=0;
+      size_t solvers_made=0;
+      double solve_time=0;
+      double setup_time=0;
+      double equilibration_time=0;
+      double kktinit_time=0;
+      double initialization_time=0;
+      double ip_iteration_time=0;
+      double kkt_update_time=0;
+      double kkt_solve_time=0;
+      uint32_t iterations=0;
+};
+std::ostream& operator<<(std::ostream& os, const SolveSocpClarabelStatistics& info_struct);
 class SolveSocpClarabel{
 
    public:
@@ -49,6 +64,8 @@ class SolveSocpClarabel{
       void set_init_point_values();
       double violation;
       int m_num_solves = 0;
+
+      void accumulate_info(SolveSocpClarabelStatistics&);
 
       Eigen::Map<Eigen::VectorXd> primals(){return solution.x;}
       Eigen::Map<Eigen::VectorXd> duals(){return solution.z;}

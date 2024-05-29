@@ -3,13 +3,13 @@
 //constructors
 SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, vector<int>& in_sequence, bool reduced_first_correction):
     SolveSocpClarabel(instance,in_sequence,reduced_first_correction),
-    solve_time(0),setup_time(0),equilibration_time(0),kktinit_time(0),initialization_time(0),ip_iteration_time(0),kkt_update_time(0),kkt_solve_time(0),iterations(0){
+    info_struct(){
     solvers.insert({in_sequence.size(),solver_ptr});
 }
 
 SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, int size_seq, bool reduced_first_correction):
     SolveSocpClarabel(instance,size_seq,reduced_first_correction),
-    solve_time(0),setup_time(0),equilibration_time(0),kktinit_time(0),initialization_time(0),ip_iteration_time(0),kkt_update_time(0),kkt_solve_time(0),iterations(0){}
+    info_struct(){}
 //methods
 /*
 void SolveSocpClarabel::createModel(vector<int>& sequence)
@@ -28,6 +28,7 @@ void SolveSocpClarabelWithRecycling::createModel(vector<int>& sequence){
     }else{
         SolveSocpClarabel::createModel(sequence);
         solvers.insert({sizeProblem,solver_ptr});
+        info_struct.solvers_made++;
     }
 }
 void SolveSocpClarabelWithRecycling::solveSOCP(){
@@ -35,15 +36,7 @@ void SolveSocpClarabelWithRecycling::solveSOCP(){
     accumulate_info();
 }
 void SolveSocpClarabelWithRecycling::accumulate_info(){
-    solve_time+=get_latest_solve_time();
-    setup_time+=get_latest_setup_time();
-    equilibration_time+=get_latest_equilibration_time();
-    kktinit_time+=get_latest_kktinit_time();
-    initialization_time+=get_latest_initialization_time();
-    ip_iteration_time+=get_latest_ip_iteration_time();
-    kkt_update_time+=get_latest_kkt_update_time();
-    kkt_solve_time+=get_latest_kkt_solve_time();
-    iterations+=get_latest_iterations();
+    SolveSocpClarabel::accumulate_info(info_struct);
 }
 void SolveSocpClarabelWithRecycling::update_b(){
     size_t m=sequence.size()-1;

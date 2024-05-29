@@ -18,15 +18,7 @@ class SolveSocpClarabelWithRecycling: public SolveSocpClarabel{
       using SolveSocpClarabel::solveSOCP;
       virtual void solveSOCP() override;
 
-      double solve_time;
-      double setup_time;
-      double equilibration_time;
-      double kktinit_time;
-      double initialization_time;
-      double ip_iteration_time;
-      double kkt_update_time;
-      double kkt_solve_time;
-      uint32_t iterations;
+      SolveSocpClarabelStatistics info_struct;
    protected:
       unordered_map<size_t,clarabel::DefaultSolver<double>*> solvers;
       void createModel( vector< int >& ) override;
