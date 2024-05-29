@@ -83,7 +83,6 @@ def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None):
         fig=pyplot.figure()
         ax=fig.gca()
     y=[]
-    x=[]
     x=list(sorted(size_data_dict.keys()))
     for size in x:
         v=[]
@@ -99,6 +98,36 @@ def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None):
     ax.set_xlabel("Number of Neighborhoods")
     return ax
 
+def plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labels,ylabel,ax=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    x=list(sorted(nominal_size_data_dict.keys()))
+    for size in x:
+        v=[]
+        for data in nominal_size_data_dict[size].values():
+            v.append(data[key])
+        v=np.array(v)
+        shm=shifted_geometric_mean(v,shift)
+        y.append(shm)
+    nominal_shm=np.array(y)
+
+    for i,size_data_dict in enumerate(size_data_dicts):
+        y=[]
+        for size in x:
+            v=[]
+            for data in size_data_dict[size].values():
+                v.append(data[key])
+            v=np.array(v)
+            shm=shifted_geometric_mean(v,shift)
+            y.append(shm)
+        normalized_shm=np.array(y)/nominal_shm
+        ax.plot(x,normalized_shm,label=labels[i])
+    ax.set_xlabel("Number of Neighborhoods")
+    ax.set_ylabel(ylabel)
+    ax.legend()
+    return ax
 def bar_plot_vs_size(size_value_dict,bar_index=0,num_bars=1,ax=None,log=False,ylabel=None,label=None):
     if ax is None:
         fig=pyplot.figure()
