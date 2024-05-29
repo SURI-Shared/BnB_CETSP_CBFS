@@ -37,6 +37,7 @@ void SolveSocpClarabelWithRecycling::solveSOCP(){
 }
 void SolveSocpClarabelWithRecycling::accumulate_info(){
     SolveSocpClarabel::accumulate_info(info_struct);
+    info_struct.solvers_made=solvers.size();
 }
 void SolveSocpClarabelWithRecycling::update_b(){
     size_t m=sequence.size()-1;

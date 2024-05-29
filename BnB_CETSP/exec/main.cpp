@@ -112,7 +112,7 @@ int main(int argc, char** argv)
       if (argc >= 13) use_fsi = (atoi(argv[12]) > 0);
    }
    cout<<"Use LAH: "<<use_lah<<endl;
-   cout<<"Use Concorde Feasible Solution improvement"<<use_fsi<<endl;
+   cout<<"Use Concorde Feasible Solution improvement: "<<use_fsi<<endl;
    Data *dataptr = new Data( arqInstancia, option, overlap, argc, argv );
 
    int sizeInst = dataptr->getSizeInst();
@@ -178,7 +178,8 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRoot();
+   SolveSocpCplexStatistics info_struct;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRoot(info_struct);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
@@ -194,6 +195,8 @@ int main(int argc, char** argv)
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();
    solveSocpPtr->solveSOCP( root->pts );
+   solveSocpPtr->accumulate_info(info_struct);
+   info_struct.solvers_made++;
    totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
    count_SOCP_solved++;
 
@@ -627,7 +630,9 @@ int main(int argc, char** argv)
                         solveSocpPtr2->clear_removable_constraints(prev_insert_pos, curr_insert_pos);
                         solveSocpPtr2->populate_removable_constraints(child->pts, prev_insert_pos, curr_insert_pos);
                      }
+                     info_struct.solvers_made++;
                      solveSocpPtr2->solveSOCP();
+                     solveSocpPtr->accumulate_info(info_struct);
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
                      count_SOCP_solved++;
@@ -988,6 +993,7 @@ int main(int argc, char** argv)
 
    cout << endl << "#################" << endl;	
    
+   cout << info_struct <<endl;
    //  for (auto it = open.begin(); it != open.end(); it++)
    //  {
    //      delete (*it);

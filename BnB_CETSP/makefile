@@ -51,9 +51,9 @@ TEST_OBJS = $(patsubst $(EXECDIR)/%.cpp, $(OBJDIR)/exec/%.o, $(EXEC_SRCS))
 #############################
 
 #### regra principal, gera o executavel
-exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS)
+exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
 ############################
 
 clarabel_dropin: $(OBJDIR)/exec/clarabel_dropin.o $(OBJS) $(CLARABEL_OBJS)

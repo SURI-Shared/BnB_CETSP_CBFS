@@ -1,6 +1,16 @@
 #include "SolveSocpCplex.h"
+#include "util.h"
 
 ILOSTLBEGIN // import namespace std
+
+
+std::ostream& operator<<(std::ostream& os, const SolveSocpCplexStatistics& info_struct){
+    cout << "SOCPs solved: "<<info_struct.m_num_solves<<endl;
+    cout << "Solvers made: "<<info_struct.solvers_made<<endl;
+    cout << "SOCP Internal Iterations: "<<info_struct.iterations<<endl;
+    cout << "SOCP Internal Solve Time: "<<info_struct.solve_time<<endl;
+    return os;
+}
 
 SolveSocpCplex::SolveSocpCplex( Data *dataObject, vector< int >& sequence )
 : objectData( dataObject ), model( env ), SOCP( model ), xCoord( env ), yCoord( env ), zCoord( env ), x(env, sequence.size(), -IloInfinity, IloInfinity), y(env, sequence.size(), -IloInfinity, IloInfinity), z(env, sequence.size(), -IloInfinity, IloInfinity)
@@ -36,6 +46,12 @@ SolveSocpCplex::SolveSocpCplex(Data* data, int size_seq) : objectData(data), siz
 SolveSocpCplex::~SolveSocpCplex()
 {
    env.end();
+}
+
+void SolveSocpCplex::accumulate_info(SolveSocpCplexStatistics& info_struct){
+   info_struct.iterations+=SOCP.getNbarrierIterations();
+   info_struct.solve_time+=last_solve_time;
+   info_struct.m_num_solves++;
 }
 
 int SolveSocpCplex::setSizeProblem( vector< int >& sequence )
@@ -91,7 +107,6 @@ double SolveSocpCplex::getSolutionZ( int i )
 
 void SolveSocpCplex::solveSOCP( vector< int >& sequence )
 {
-   cout<<"Solve w/ CPLEX"<<endl;
    static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
 
    createModel( sequence );
@@ -99,7 +114,9 @@ void SolveSocpCplex::solveSOCP( vector< int >& sequence )
    SOCP.setParam( IloCplex::BarQCPEpComp,  1e-12 );
    SOCP.setParam( IloCplex::Threads, 1 );
    SOCP.setParam( IloCplex::ParallelMode, 1 );
+   double t0=wallClock();
    SOCP.solve();
+   last_solve_time=wallClock()-t0;
    SOCP.getStatus();
    violation = SOCP.getQuality(IloCplex::SumScaledPrimalInfeas);
    setF_value();
@@ -460,7 +477,6 @@ void SolveSocpCplex::clear_removable_constraints(int prev_pos, int curr_pos)
 
 void SolveSocpCplex::solveSOCP()
 {
-   cout<<"Solve w/ CPLEX no argument"<<endl;
    static pthread_mutex_t cs_mutex = PTHREAD_MUTEX_INITIALIZER;
    // if (m_num_solves != 0)
    // {

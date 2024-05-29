@@ -38,6 +38,7 @@ class BranchNBound{
       ~BranchNBound();
 
       vector< int > selectRoot ();
+      vector< int > selectRoot (SolveSocpCplexStatistics&);
       vector< int > selectRootClarabel (SolveSocpClarabelStatistics&);
       vector< int > selectRootRedundantClarabel (SolveSocpClarabelStatistics&);
       vector< int > selectRootClarabelWithRecycling (SolveSocpClarabelWithRecycling** solver_out_ptr, bool reduced_first_correction);

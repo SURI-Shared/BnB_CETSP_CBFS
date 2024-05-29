@@ -89,6 +89,48 @@ vector< int > BranchNBound::selectRoot()
 
 }
 
+vector< int > BranchNBound::selectRoot(SolveSocpCplexStatistics& info_struct)
+{
+   //	escolher os elementos que entram na raiz
+   double greatestSolution = 0;
+   double temp = 0;
+   vector < int > tempSequence;
+   vector < int > sequence;
+   tempSequence.resize( 3 );
+   sequence.resize( 3 );
+
+   int sizeInst = objectOfData->getSizeInst();
+
+   sequence[ 0 ] = 0;
+   sequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
+
+   tempSequence[ 0 ] = 0;
+   tempSequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
+
+   for ( int i = 1; i < sizeInst; i++ ){
+      tempSequence[ 2 ] = i;
+      SolveSocpCplex *solveCplexSGR = new SolveSocpCplex( objectOfData, tempSequence );
+      solveCplexSGR->solveSOCP( tempSequence );
+      solveCplexSGR->accumulate_info(info_struct);
+      info_struct.solvers_made++;
+      temp = solveCplexSGR->getF_value();
+      if ( temp > greatestSolution ){
+         greatestSolution = temp;
+         sequence[ 2 ] = i;
+      }
+      delete solveCplexSGR;
+   }
+
+   cout << "Raiz: ";
+   for ( int i = 0; i < 3; i++ ){
+      cout << sequence[ i ] << " ";
+   }
+   cout << endl;
+
+   return sequence;
+
+}
+
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
 //solves the SOCP to pick the last node using a SolveRedundantSocpClarabel
@@ -117,6 +159,7 @@ vector< int > BranchNBound::selectRootRedundantClarabel(SolveSocpClarabelStatist
       SolveRedundantSocpClarabel *solver_out_ptr=new SolveRedundantSocpClarabel(objectOfData,tempSequence.size());
       solver_out_ptr->solveSOCP(tempSequence);
       solver_out_ptr->accumulate_info(info_struct);
+      info_struct.solvers_made++;
       temp = solver_out_ptr->getF_value();
       if ( temp > greatestSolution ){
          greatestSolution = temp;
@@ -161,6 +204,7 @@ vector< int > BranchNBound::selectRootClarabel(SolveSocpClarabelStatistics& info
       SolveSocpClarabel *solver_out_ptr=new SolveSocpClarabel(objectOfData,tempSequence);
       solver_out_ptr->solveSOCP();
       solver_out_ptr->accumulate_info(info_struct);
+      info_struct.solvers_made++;
       temp = solver_out_ptr->getF_value();
       if ( temp > greatestSolution ){
          greatestSolution = temp;

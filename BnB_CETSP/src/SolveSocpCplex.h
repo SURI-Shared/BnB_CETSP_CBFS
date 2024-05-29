@@ -21,6 +21,16 @@
 
 using namespace std;
 
+struct SolveSocpCplexStatistics{
+   public:
+      size_t m_num_solves=0;
+      size_t solvers_made=0;
+      double solve_time=0;
+      uint32_t iterations=0;
+};
+
+std::ostream& operator<<(std::ostream& os, const SolveSocpCplexStatistics& info_struct);
+
 class SolveSocpCplex{
 
    public:
@@ -49,6 +59,8 @@ class SolveSocpCplex{
       void set_init_point_values();
       IloNum violation;
       int m_num_solves = 0;
+
+      void accumulate_info(SolveSocpCplexStatistics&);
 
    private:
 
@@ -87,6 +99,8 @@ class SolveSocpCplex{
       int setSizeProblem( vector< int >& );		
       void createModel( vector< int >& );
       void setF_value();
+
+      double last_solve_time;
 
 };
 
