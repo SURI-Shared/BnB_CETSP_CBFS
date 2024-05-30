@@ -59,6 +59,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
     this->construct_initial_guess(current_sequence,parent.sequence,parent.primals,
     parent.slacks,
     parent.duals,instanceData,out_primals,out_slacks,out_duals);
+    // this->construct_initial_guess(current_sequence,parent.sequence,parent.turning_points(),parent.duals,instanceData,out_primals,out_slacks,out_duals);
     construct_time+=cpuTime()-start;
 }
 
@@ -403,6 +404,15 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
     std::memcpy(in_neighborhood_dual_out,solution.z.data(),(1+WARM_START_NDIM)*sizeof(double));
     std::memcpy(fa_dual_out,solution.z.data()+1+WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
     std::memcpy(fb_dual_out,solution.z.data()+2+2*WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
+
+    //the full problem has opposite sign for the ||x-pb||<=fb constraint's LHS than the insertion problem does
+    //as a result the trailing elements of the slack and dual need to flip sign
+    //it would be better to reformulate the insertion problem to match, but when I tried on 5/30/24 it broke everything somehow.
+    //so we manually flip signs of these terms
+    for(size_t i=1;i<WARM_START_NDIM+1;i++){
+        fb_slack_out[i]*=-1;
+        fb_dual_out[i]*=-1;
+    }
 
     solve_time+=cpuTime()-start;
 }

@@ -180,7 +180,7 @@ int main(int argc, char** argv)
 
    //### root node selection strategy ###
    SolveSocpClarabelWithRecycling *solveSocpPtr;
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(&solveSocpPtr,false);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(&solveSocpPtr,true);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
