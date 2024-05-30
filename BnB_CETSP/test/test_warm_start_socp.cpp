@@ -39,10 +39,10 @@ int main(int argc, char** argv)
         cout<<i<<" ";
     }
     cout<<endl;
-    SolveSocpClarabelWithRecycling solver_handle=SolveSocpClarabelWithRecycling(dataptr,in_order);
+    SolveSocpClarabelWithRecycling solver_handle=SolveSocpClarabelWithRecycling(dataptr,in_order,true);
     solver_handle.solveSOCP();
 
-    BnBNodeForWarmStart parent(in_order,solver_handle.primals(),solver_handle.duals());
+    BnBNodeForWarmStart parent(in_order,solver_handle.primals(),solver_handle.duals(),solver_handle.slacks());
 
     vector<int> child_sequence;
     for(int i=0;i<size;i++){

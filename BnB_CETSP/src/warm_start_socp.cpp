@@ -302,7 +302,7 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
             if(i+2>=current_sequence.size()){
                 next_tp=depot;
             }else{
-                next_tp=parent_primal.segment<3>(p_xstart+ndim*(pidx+1));
+                next_tp=parent_primal.segment<3>(p_xstart+ndim*pidx);
             }
             Eigen::Vector3d center={instanceData->getCoordx(cnid),instanceData->getCoordy(cnid),instanceData->getCoordz(cnid)};
             double radius=instanceData->getRadius(cnid);
@@ -334,6 +334,13 @@ void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_s
             }
             last_was_new=false;
         }
+        cout<<endl;
+    }
+    if(!last_was_new){
+        //f from last turn to depot will not have been set
+        out_primals[m]=parent_primal[p_m];cout<<" Set f"<<m<<endl;
+        std::memcpy(out_slacks.data()+wmagstart+m*per_turn,parent_slack.data()+p_wmagstart+p_m*per_turn,4*sizeof(double));
+        std::memcpy(out_duals.data()+wmagstart+m*per_turn,parent_dual.data()+p_wmagstart+p_m*per_turn,4*sizeof(double));
     }
 }
 /*
