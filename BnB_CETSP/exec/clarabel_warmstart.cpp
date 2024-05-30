@@ -993,6 +993,10 @@ int main(int argc, char** argv)
 
    cout << endl << "#################" << endl;	
 
+   cout << "Warm Start Time: "<<warm_start_handler.get_total_time()<<endl;
+   cout << "    init Time: "<<warm_start_handler.get_init_time()<<endl;
+   cout << "    construct Time: "<<warm_start_handler.get_construct_time()<<endl;
+   cout << "        solve Time: "<<warm_start_handler.get_solve_time()<<endl;
    cout << solveSocpPtr->info_struct<<endl;
    
    
