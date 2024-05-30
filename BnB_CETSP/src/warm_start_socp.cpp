@@ -2,6 +2,8 @@
 #include "util.h"
 #include <algorithm>
 
+#define WARM_START_NDIM 3//TODO: template WarmStartHandler on the dimension of the turning points
+
 WarmStartHandler::WarmStartHandler():init_time(0),solve_time(0),construct_time(0){
     double start=cpuTime();
     //global matrices for the tiny insertion problem
@@ -54,8 +56,9 @@ WarmStartHandler::~WarmStartHandler(){
 void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const BnBNodeForWarmStart& parent,
                                                Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
     double start=cpuTime();
-    std::vector<Eigen::Vector3d> parent_turning_points=parent.turning_points();
-    this->construct_initial_guess(current_sequence,parent.sequence,parent_turning_points,parent.duals,instanceData,out_primals,out_slacks,out_duals);
+    this->construct_initial_guess(current_sequence,parent.sequence,parent.primals,
+    parent.slacks,
+    parent.duals,instanceData,out_primals,out_slacks,out_duals);
     construct_time+=cpuTime()-start;
 }
 
@@ -241,9 +244,166 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
     solve_time+=cpuTime()-start;
 }
 
+void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const std::vector<int>& parent_sequence,
+                                               const Eigen::Ref<const Eigen::VectorX<double>>& parent_primal, const Eigen::Ref<const Eigen::VectorX<double>>& parent_slack, const Eigen::Ref<const Eigen::VectorX<double>>& parent_dual,
+                                               Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
+    //the actual decision variables are [fi...xi], which are the travel distances and the turning point coordinates respectively
+    //we use wi as shorthand for the displacement vector between x(i-1) and xi, wi=xi-x(i-1)
+    //and vi as shorthand for the displacement vector from xi to ci (the center of neighborhood i), vi=ci-xi
+    size_t ndim=3;
+    size_t per_turn=ndim+1;
+    size_t m=current_sequence.size()-1;
+    size_t nf=m+1;
+    size_t nx=ndim*m;
+    size_t nvar=nf+nx;
+    size_t nw=ndim*nf;
+    size_t nslack=nx+m+nw+nf;
+    size_t ndual=nslack;
+    size_t xstart=nf;
+    size_t wmagstart=nx+m;
+
+    size_t p_m=m-1;
+    size_t p_nf=p_m+1;
+    size_t p_nx=ndim*p_m;
+    size_t p_xstart=p_nf;
+    size_t p_wmagstart=p_nx+p_m;
+
+    out_primals.resize(nvar);//TODO: might be able to get away with some kind of reserve shenanigans to avoid default initializing the output in construct_initial_guess
+    out_slacks.resize(nslack);
+    out_duals.resize(ndual);
+
+    //figure out guesses for turning points (either copied from parent, or via a small SOCP)
+    //for the new turning point, also computes the dual variable related to the constraint that the turning point stay in the neighborhood
+    bool not_yet_inserted=true;
+    bool not_in_parent=false;
+    int cnid;
+    int pnid;
+    int pidx;
+    Eigen::Vector3d depot={instanceData->getCoordx(current_sequence[0]),instanceData->getCoordy(current_sequence[0]),instanceData->getCoordz(current_sequence[0])};
+    Eigen::Vector3d last_tp=depot;
+    Eigen::Vector3d next_tp;
+    bool last_was_new=false;
+    for(size_t i=0;i<m;i++){//first entry in sequence is just the depot
+        if (i<m-1&&not_yet_inserted){
+            cnid=current_sequence.at(i+1);
+            pnid=parent_sequence.at(i+1);
+            pidx=i;
+            not_in_parent=pnid!=cnid;
+            //once the neighborhood in current_sequence differs from that in parent, we have found the spot where a new neighborhood was inserted
+            not_yet_inserted=!not_in_parent;
+        }else{
+            cnid=current_sequence.at(i+1);
+            pnid=parent_sequence.at(i);
+            not_in_parent=pnid!=cnid;
+            pidx=i-1;
+        }
+        if(not_in_parent){
+            //guess the turning point to be at the optimal location if all other turning points are held fixed
+            if(i+2>=current_sequence.size()){
+                next_tp=depot;
+            }else{
+                next_tp=parent_primal.segment<3>(p_xstart+ndim*(pidx+1));
+            }
+            Eigen::Vector3d center={instanceData->getCoordx(cnid),instanceData->getCoordy(cnid),instanceData->getCoordz(cnid)};
+            double radius=instanceData->getRadius(cnid);
+            double* fa_out=out_primals.data()+i;
+            double* fb_out=out_primals.data()+i+1;
+            double* xout=out_primals.data()+xstart+ndim*i;
+            double* in_neighborhood_slack_out=out_slacks.data()+i*per_turn;
+            double* fa_slack_out=out_slacks.data()+wmagstart+i*per_turn;
+            double* fb_slack_out=out_slacks.data()+wmagstart+(i+1)*per_turn;
+            double* in_neighborhood_dual_out=out_duals.data()+i*per_turn;
+            double* fa_dual_out=out_duals.data()+wmagstart+i*per_turn;
+            double* fb_dual_out=out_duals.data()+wmagstart+(i+1)*per_turn;
+            solve_insertion_problem(last_tp,next_tp,center,radius,fa_out,fb_out,xout,in_neighborhood_slack_out,fa_slack_out,fb_slack_out,in_neighborhood_dual_out,fa_dual_out,fb_dual_out);
+            last_was_new=true;
+        }
+        else{
+            //turning points in previously considered neighborhoods are guessed to not change
+            last_tp=parent_primal.segment<3>(p_xstart+ndim*pidx);
+
+            std::memcpy(out_primals.data()+xstart+ndim*i,parent_primal.data()+p_xstart+ndim*pidx,3*sizeof(double));
+            std::memcpy(out_slacks.data()+i*per_turn,parent_slack.data()+pidx*per_turn,4*sizeof(double));
+            std::memcpy(out_duals.data()+i*per_turn,parent_dual.data()+pidx*per_turn,4*sizeof(double));
+
+            if(!last_was_new){
+                //reuse f
+                out_primals[i]=parent_primal[pidx];
+                std::memcpy(out_slacks.data()+wmagstart+i*per_turn,parent_slack.data()+p_wmagstart+pidx*per_turn,4*sizeof(double));
+                std::memcpy(out_duals.data()+wmagstart+i*per_turn,parent_dual.data()+p_wmagstart+pidx*per_turn,4*sizeof(double));
+            }
+            last_was_new=false;
+        }
+    }
+}
+/*
+compute the point in a sphere that is closest to point1 and point2
+
+Parameters: point1 : const Eigen::Vector3d& 
+                first point
+            point2 : const Eigen::Vector3d&
+                second point
+            center : const Eigen::Vector3d&
+                center of the sphere
+            radius : double
+                radius of the sphere
+            fa_out : double* MUTATED
+                store the distance from optimal point to point1 at this address
+            fb_out : double* MUTATED
+                store the distance from optimal point to point2 at this address
+            x_out : double* MUTATED (length 3)
+                store optimal point at this address
+            in_neighborhood_slack_out : double* MUTATED (length 4)
+                store the SOC slack variable for the constraint that point be in the neighborhood at this address
+            fa_slack_out : double* MUTATED (length 4)
+                store the SOC slack variable for the constraint that fa>=norm(point-point1) at this address
+            fb_slack_out : double* MUTATED (length 4)
+                store the SOC slack variable for the constraint that fb>=norm(point-point2) at this address
+            in_neighborhood_dual_out : double* MUTATED (length 4)
+                store the SOC dual variable for the constraint that point be in the neighborhood at this address
+            fa_dual_out : double* MUTATED (length 4)
+                store the SOC dual variable for the constraint that fa>=norm(point-point1) at this address
+            fb_dual_out : double* MUTATED (length 4)
+                store the SOC dual variable for the constraint that fb>=norm(point-point2) at this address
+            
+Mutated:    this->insertion_problem_solver (calls this->insertion_problem_solver.update_b(), this->insertion_problem_solver.solve(), this->insertion_problem_solver.solution())
+*/
+void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2, const Eigen::Vector3d& center, double radius,
+                             double* fa_out, double* fb_out, double* x_out, 
+                             double* in_neighborhood_slack_out, double* fa_slack_out, double* fb_slack_out, 
+                             double* in_neighborhood_dual_out, double* fa_dual_out,double* fb_dual_out){
+    double start=cpuTime();
+    Eigen::Vector<double,12> new_b;
+    new_b[0]=radius;
+    new_b.segment<3>(1)=center;
+    new_b[4]=0;
+    new_b.segment<3>(5)=-point1;
+    new_b[8]=0;
+    new_b.segment<3>(9)=-point2;
+    insertion_problem_solver_ptr->update_b(new_b);
+
+    insertion_problem_solver_ptr->solve();
+    clarabel::DefaultSolution<double> solution=insertion_problem_solver_ptr->solution();
+
+    //copy primals
+    *fa_out=solution.x[0];
+    *fb_out=solution.x[1];
+    std::memcpy(x_out,solution.x.data()+2,WARM_START_NDIM*sizeof(double));
+    //copy slacks
+    std::memcpy(in_neighborhood_slack_out,solution.s.data(),(1+WARM_START_NDIM)*sizeof(double));
+    std::memcpy(fa_slack_out,solution.s.data()+1+WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
+    std::memcpy(fb_slack_out,solution.s.data()+2+2*WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
+    //copy duals
+    std::memcpy(in_neighborhood_dual_out,solution.z.data(),(1+WARM_START_NDIM)*sizeof(double));
+    std::memcpy(fa_dual_out,solution.z.data()+1+WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
+    std::memcpy(fb_dual_out,solution.z.data()+2+2*WARM_START_NDIM,(1+WARM_START_NDIM)*sizeof(double));
+
+    solve_time+=cpuTime()-start;
+}
+
 BnBNodeForWarmStart::BnBNodeForWarmStart(const std::vector<int>& sequence_in,
-                                        const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals):
-                                        sequence(sequence_in),primals(primals),duals(duals){}
+                                        const Eigen::Map<Eigen::VectorX<double>>& primals,const Eigen::Map<Eigen::VectorX<double>>& duals,const Eigen::Map<Eigen::VectorX<double>>& slacks):
+                                        sequence(sequence_in),primals(primals),duals(duals),slacks(slacks){}
 
 std::vector<Eigen::Vector3d> BnBNodeForWarmStart::turning_points() const{
     size_t ndim=3;

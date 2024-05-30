@@ -220,7 +220,7 @@ int main(int argc, char** argv)
       tempY.push_back( solveSocpPtr-> getSolutionY( i ) );
       tempZ.push_back( solveSocpPtr-> getSolutionZ( i ) );
    }
-   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals()));
+   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
 
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
 
@@ -632,7 +632,7 @@ int main(int argc, char** argv)
                         solveSocpPtr->clear_removable_constraints(prev_insert_pos, curr_insert_pos);
                         solveSocpPtr->populate_removable_constraints(child->pts, prev_insert_pos, curr_insert_pos);
                      }
-                     solveSocpPtr->solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data(),3,.35);
+                     solveSocpPtr->solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data(),0,1);
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
                      count_SOCP_solved++;
@@ -640,7 +640,7 @@ int main(int argc, char** argv)
 
                      child->lb = max(curr_child_socp_lb, max(child_temp_lb, max(temp_uncovered_lb, current->lb)));
 
-                     nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals()));
+                     nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
                      
                      if (child->lb >= best_ub - dbl_compare_constant)
                      {
