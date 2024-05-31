@@ -3,36 +3,33 @@ LABEL author=ggutow@andrew.cmu.edu
 
 #branch and bound
 WORKDIR /src
-COPY BnB_CETSP_CBFS .
+COPY . .
 
 #Eigen
 WORKDIR /src/BnB_CETSP_CBFS
-RUN tar xf eigen-3.4.0.tar.gz
+RUN tar xf /src/BnB_CETSP_CBFS/eigen-3.4.0.tar.gz
 
 #CPLEX
 WORKDIR /src
-COPY cplex_studio2211.linux_x86_64.bin .
-RUN cplex_studio2211.linux_x86_64.bin
+RUN chmod u+x cplex_studio2211.linux_x86_64.bin
+RUN ./cplex_studio2211.linux_x86_64.bin -f cplex_install_response_file.properties
 
 #Concorde
 WORKDIR /src/BnB_CETSP_CBFS
 RUN gunzip co031219.tgz
 RUN tar xf co031219.tar
 WORKDIR /src/BnB_CETSP_CBFS/concorde/concorde_build
-RUN ../configure --with-qsopt=/src/BnB_CETSP_CBFS/QSOPT
+RUN /src/BnB_CETSP_CBFS/configure --with-qsopt=/src/BnB_CETSP_CBFS/QSOPT
 RUN make
 
 #Clarabel
-WORKDIR /src
-COPY Clarabel.cpp .
-
 WORKDIR /src/Clarabel.cpp/build
-RUN cmake ..
+RUN cmake /src/Clarabel.cpp
 RUN make
 
 #GMP BigNum
 WORKDIR /src/BnB_CETSP_CBFS
-RUN tar xz gmp-6.3.0.tar.xz
+RUN tar xz /src/BnB_CETSP_CBFS/gmp-6.3.0.tar.xz
 WORKDIR /src/gmp-6.3.0
 RUN configure
 RUN make
