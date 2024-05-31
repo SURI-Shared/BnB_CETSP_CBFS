@@ -19,7 +19,7 @@ WORKDIR /src/BnB_CETSP_CBFS
 RUN gunzip co031219.tgz
 RUN tar xf co031219.tar
 WORKDIR /src/BnB_CETSP_CBFS/concorde/concorde_build
-RUN /src/BnB_CETSP_CBFS/configure --with-qsopt=/src/BnB_CETSP_CBFS/QSOPT
+RUN /src/BnB_CETSP_CBFS/concorde/configure --with-qsopt=/src/BnB_CETSP_CBFS/QSOPT
 RUN make
 
 #Clarabel
