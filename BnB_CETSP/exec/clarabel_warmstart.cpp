@@ -345,7 +345,7 @@ int main(int argc, char** argv)
       else if (is_soft_limit_reached && temp_memory > memory_hard_limit)
       {
          // terminate if more than memory_hard_limit memory is used
-         optimalFound = 1;
+         optimalFound = 2;
          break;
       }
 
@@ -949,6 +949,20 @@ int main(int argc, char** argv)
    best = min(best, bestKnown);
    cout << endl;
    cout << "### Final Log ###" << endl << endl;
+   cout<< "Termination Reason: ";
+   switch (optimalFound){
+      case(0):
+         cout << "Optimal"<<endl;
+         break;
+      case(1):
+         cout << "TimeLimit"<<endl;
+         break;
+      case(2):
+         cout << "MemoryLimit"<<endl;
+         break;
+      default:
+         cout << optimalFound<<endl;
+   }
    if( optimalFound == 0 ){
       cout << "OPTIMAL SOLUTION FOUND" << endl;
       cout << "Function objective value: " << setiosflags (ios::fixed | ios::showpoint) << setprecision( 15 ) << best << endl;
