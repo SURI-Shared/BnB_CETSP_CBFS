@@ -8,7 +8,7 @@ RUN tar xvf eigen-3.4.0.tar.gz
 
 #CPLEX
 WORKDIR /src
-COPY cplex_studio2211.linux_x86_64.bin .
+COPY ../cplex_studio2211.linux_x86_64.bin .
 RUN cplex_studio2211.linux_x86_64.bin
 
 #QSOPT
@@ -26,7 +26,7 @@ RUN make
 
 #Clarabel
 WORKDIR /src
-COPY Clarabel.cpp .
+COPY ../Clarabel.cpp .
 
 WORKDIR /src/Clarabel.cpp/build
 RUN cmake ..
@@ -43,7 +43,7 @@ RUN make install
 
 #branch and bound
 WORKDIR /src
-COPY BnB_CETSP_CBFS .
+COPY ../BnB_CETSP_CBFS .
 
 WORKDIR /src/BnB_CETSP_CBFS
 RUN make exeCVXHULL
