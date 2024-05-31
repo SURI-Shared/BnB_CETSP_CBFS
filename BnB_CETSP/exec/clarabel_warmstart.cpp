@@ -470,6 +470,7 @@ int main(int argc, char** argv)
                   temp = ( quantity/temp )*100;
                   cbfs->delNode(current);
                   delete current;
+                  nodes_for_warmstart.erase(current->id);
                   continue;
                }
                else if (aux_cetsp_flag == 1)
@@ -639,8 +640,6 @@ int main(int argc, char** argv)
                      curr_child_socp_lb = solveSocpPtr->getF_value();
 
                      child->lb = max(curr_child_socp_lb, max(child_temp_lb, max(temp_uncovered_lb, current->lb)));
-
-                     nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
                      
                      if (child->lb >= best_ub - dbl_compare_constant)
                      {
@@ -652,6 +651,7 @@ int main(int argc, char** argv)
                      else
                      {
                         tempSbStr.sum += child->lb;
+                        nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
                      }
 
                      somaTeste += solveSocpPtr->violation;
@@ -927,6 +927,7 @@ int main(int argc, char** argv)
       iterCount++;
       cbfs->delNode(current);
       delete current;
+      nodes_for_warmstart.erase(current->id);
       if(new_incumbent_found)
          cbfs->clean_up(best_ub);
    }
