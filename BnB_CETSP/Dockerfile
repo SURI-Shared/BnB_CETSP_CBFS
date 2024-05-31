@@ -1,22 +1,23 @@
 FROM rust 
 LABEL author=ggutow@andrew.cmu.edu 
 
-#system dependencies
-RUN apt-get install eigen
+#Eigen
+WORKDIR /src
+COPY eigen-3.4.0.tar.gz .
+RUN tar xvf eigen-3.4.0.tar.gz
 
 #CPLEX
 WORKDIR /src
-COPY cplex_installer.bin .
-RUN cplex_installer.bin
+COPY cplex_studio2211.linux_x86_64.bin .
+RUN cplex_studio2211.linux_x86_64.bin
 
 #QSOPT
-WORKDIR /src/QSOPT
-RUN wget https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/ubuntu/qsopt.h
-RUN wget https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/ubuntu/qsopt.a
+WORKDIR /src
+COPY QSOPT /src/
 
 #Concorde
 WORKDIR /src
-RUN wget https://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz
+COPY co031219.tgz .
 RUN gunzip co031219.tgz
 RUN tar xvf co031219.tar
 WORKDIR /src/concorde/concorde_build
@@ -33,7 +34,7 @@ RUN make
 
 #GMP BigNum
 WORKDIR /src
-RUN wget https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz
+COPY gmp-6.3.0.tar.xz .
 RUN tar xz gmp-6.3.0.tar.xz
 WORKDIR /src/gmp-6.3.0
 RUN configure
