@@ -4,7 +4,7 @@ LABEL author=ggutow@andrew.cmu.edu
 #Eigen
 WORKDIR /src
 COPY eigen-3.4.0.tar.gz .
-RUN tar xvf eigen-3.4.0.tar.gz
+RUN tar xf eigen-3.4.0.tar.gz
 
 #CPLEX
 WORKDIR /src
@@ -19,7 +19,7 @@ COPY QSOPT /src/
 WORKDIR /src
 COPY co031219.tgz .
 RUN gunzip co031219.tgz
-RUN tar xvf co031219.tar
+RUN tar xf co031219.tar
 WORKDIR /src/concorde/concorde_build
 RUN ../configure --with-qsopt=/src/QSOPT
 RUN make
