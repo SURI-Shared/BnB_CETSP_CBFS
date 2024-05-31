@@ -10,6 +10,12 @@ SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, 
 SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, int size_seq, bool reduced_first_correction):
     SolveSocpClarabel(instance,size_seq,reduced_first_correction),
     info_struct(){}
+
+SolveSocpClarabelWithRecycling::~SolveSocpClarabelWithRecycling(){
+    for(auto ptr: solvers){
+        delete ptr.second;
+    }
+}
 //methods
 /*
 void SolveSocpClarabel::createModel(vector<int>& sequence)

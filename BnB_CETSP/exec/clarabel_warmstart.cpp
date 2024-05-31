@@ -1029,6 +1029,6 @@ int main(int argc, char** argv)
    delete bnbPtr;
    delete cbfs;
    delete dataptr;
-   
+   delete solveSocpPtr;
    return 0;
 }

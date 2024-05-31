@@ -9,6 +9,7 @@ class SolveSocpClarabelWithRecycling: public SolveSocpClarabel{
       //constructor
       SolveSocpClarabelWithRecycling( Data *, vector< int >&, bool);
       SolveSocpClarabelWithRecycling( Data *,int, bool);
+      ~SolveSocpClarabelWithRecycling();
       //functions
       void clear_removable_constraints();
       void clear_removable_constraints(int prev_pos, int curr_pos);
