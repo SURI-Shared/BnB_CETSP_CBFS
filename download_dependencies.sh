@@ -1,0 +1,9 @@
+cd .
+wget https://gitlab.com/libeigen/eigen/-/archive/3.4.0/eigen-3.4.0.tar.gz
+mkdir QSOPT
+cd QSOPT
+wget https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/ubuntu/qsopt.h
+wget https://www.math.uwaterloo.ca/~bico/qsopt/downloads/codes/ubuntu/qsopt.a
+cd ..
+wget https://www.math.uwaterloo.ca/tsp/concorde/downloads/codes/src/co031219.tgz
+wget https://gmplib.org/download/gmp/gmp-6.3.0.tar.xz
