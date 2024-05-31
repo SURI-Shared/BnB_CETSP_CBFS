@@ -78,11 +78,13 @@ def shifted_geometric_mean(values,shift=1):
     N=len(values)
     return np.prod(values+shift)**(1/N)-shift
 
-def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None):
+def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None,show_range=False):
     if ax is None:
         fig=pyplot.figure()
         ax=fig.gca()
     y=[]
+    ymin=[]
+    ymax=[]
     x=list(sorted(size_data_dict.keys()))
     for size in x:
         v=[]
@@ -91,10 +93,48 @@ def plot_shm_vs_size(size_data_dict,key,shift,label,ax=None,linespec=None):
         v=np.array(v)
         shm=shifted_geometric_mean(v,shift)
         y.append(shm)
+        ymin.append(min(v))
+        ymax.append(max(v))
     if linespec is not None:
-        ax.plot(x,y,linespec,label=label)
+        if not show_range:
+            ax.plot(x,y,linespec,label=label)
+        else:
+            ax.errorbar(x,y,[ymin,ymax],linespec,label=label)
     else:
-        ax.plot(x,y,label=label)
+        if not show_range:
+            ax.plot(x,y,label=label)
+        else:
+            ax.errorbar(x,y,[ymin,ymax],label=label)
+    ax.set_xlabel("Number of Neighborhoods")
+    return ax
+
+def bar_plot_shm_vs_size(size_data_dict,key,shift,label,bar_index=0,num_bars=1,ax=None,show_range=False,log=False):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    ymin=[]
+    ymax=[]
+    sizes=list(sorted(size_data_dict.keys()))
+
+    for size in sizes:
+        v=[]
+        for data in size_data_dict[size].values():
+            v.append(data[key])
+        v=np.array(v)
+        shm=shifted_geometric_mean(v,shift)
+        y.append(shm)
+        ymin.append(min(v))
+        ymax.append(max(v))
+
+    x=np.arange(len(sizes))
+    bar_width=1/(num_bars+1)
+    if not show_range:
+        yerr=None
+    else:
+        yerr=[ymin,ymax]
+    ax.bar(x+bar_width*bar_index,y,bar_width,yerr=yerr,label=label,log=log)
+    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
     ax.set_xlabel("Number of Neighborhoods")
     return ax
 
