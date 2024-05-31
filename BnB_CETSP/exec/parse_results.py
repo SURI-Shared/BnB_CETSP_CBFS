@@ -168,6 +168,58 @@ def plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labe
     ax.set_ylabel(ylabel)
     ax.legend()
     return ax
+
+def bar_plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labels,ylabel,ax=None,show_range=False,min_size=0):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    sizes=[size for size in sorted(nominal_size_data_dict.keys()) if size>=min_size]
+    nominal_value_arrays_by_size=dict()
+    for size in sizes:
+        v=[]
+        for data in nominal_size_data_dict[size].values():
+            v.append(data[key])
+        v=np.array(v)
+        shm=shifted_geometric_mean(v,shift)
+        y.append(shm)
+        nominal_value_arrays_by_size[size]=v
+    nominal_shm=np.array(y)
+
+    num_bars=len(size_data_dicts)
+    x=np.arange(len(sizes))
+    bar_width=1/(num_bars+1)
+
+    for i,size_data_dict in enumerate(size_data_dicts):
+        y=[]
+        ymin=[]
+        ymax=[]
+        for size in sizes:
+            v=[]
+            ratio=[]
+            for instance,data in size_data_dict[size].items():
+                v.append(data[key])
+                nominal=nominal_size_data_dict[size][instance][key]
+                ratio.append(data[key]/nominal)
+            v=np.array(v)
+            shm=shifted_geometric_mean(v,shift)
+            y.append(shm)
+            ymin.append(min(ratio))
+            ymax.append(max(ratio))
+        normalized_shm=np.array(y)/nominal_shm
+        normalized_min=np.array(ymin)
+        normalized_max=np.array(ymax)
+        if not show_range:
+            yerr=None
+        else:
+            yerr=[normalized_min,normalized_max]
+        ax.bar(x+bar_width*i,normalized_shm,bar_width,yerr=yerr,label=labels[i])
+    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
+    ax.set_xlabel("Number of Neighborhoods")
+    ax.set_ylabel(ylabel)
+    ax.legend()
+    return ax
+
 def bar_plot_vs_size(size_value_dict,bar_index=0,num_bars=1,ax=None,log=False,ylabel=None,label=None):
     if ax is None:
         fig=pyplot.figure()
