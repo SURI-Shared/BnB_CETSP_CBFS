@@ -468,9 +468,9 @@ int main(int argc, char** argv)
                   quantity += mpz_class(sizeOfTree)/levels[current->pts.size() - 3] - 1;
                   temp = mpz_class( sizeOfTree );
                   temp = ( quantity/temp )*100;
+                  nodes_for_warmstart.erase(current->id);
                   cbfs->delNode(current);
                   delete current;
-                  nodes_for_warmstart.erase(current->id);
                   continue;
                }
                else if (aux_cetsp_flag == 1)
