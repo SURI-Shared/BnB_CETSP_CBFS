@@ -27,5 +27,5 @@ RUN make clarabel_dropin
 RUN make clarabel_recycling
 RUN make clarabel_warmstart
 
-RUN apt-get install pip
-RUN pip install --break-system-packages git-python
+RUN apt-get install -qq pip
+RUN pip install --break-system-packages --no-cache-dir git-python
