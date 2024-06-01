@@ -5,9 +5,13 @@
 #include <stdio.h>
 #include <ilcplex/ilocplex.h>
 #include <pthread.h>
+#define new concorde_new//workaround for use of new and class as argument names
+#define class concorde_class
 extern "C" {
 #include <concorde.h>
 }
+#undef new
+#undef class
 #include "subgraph.h"
 
 using namespace std;
