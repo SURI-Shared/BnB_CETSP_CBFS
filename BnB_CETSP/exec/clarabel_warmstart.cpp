@@ -923,11 +923,11 @@ int main(int argc, char** argv)
       }
       temp = mpz_class( sizeOfTree );
       temp = ( quantity/temp )*100;
+      nodes_for_warmstart.erase(current->id);
 
       iterCount++;
       cbfs->delNode(current);
       delete current;
-      nodes_for_warmstart.erase(current->id);
       if(new_incumbent_found)
          cbfs->clean_up(best_ub);
    }
