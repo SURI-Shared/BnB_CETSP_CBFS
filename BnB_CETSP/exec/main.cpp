@@ -1004,6 +1004,7 @@ int main(int argc, char** argv)
    cout << "Time S.B: " << sbComputationTime << endl;
    cout << "Time SOCP: "<< totalSocpCompTime << endl;
    cout << "Iterations to incumbent: " << itToIncum << endl;
+   cout << "Peak Memory Consumption: "<< get_curr_memory_consumption();
 
    cout << endl << "#################" << endl;	
    
