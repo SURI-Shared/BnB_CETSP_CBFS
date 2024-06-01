@@ -26,3 +26,6 @@ RUN make clarabel_redundant
 RUN make clarabel_dropin
 RUN make clarabel_recycling
 RUN make clarabel_warmstart
+
+RUN apt-get install pip
+RUN pip install --break-system-packages git-python
