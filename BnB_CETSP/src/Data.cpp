@@ -153,15 +153,12 @@ Data::~Data()
 
 void Data::setSizeInst( char * instancePath )
 {
-   char * pch;
-   int count = 0;
-   pch = strtok ( instancePath, "/-");
-   while ( pch != NULL ){
-      count++;
-      pch = strtok ( NULL, "/-");
-      if( count == 3 ) sizeInst = atoi( pch ); 
-   }
-   //  	count on the DEPOT
+   string path=instancePath;
+   string::size_type last_slash = path.find_last_of("/");
+   string::size_type first_dash=path.find_first_of("-",last_slash);
+   string::size_type last_dash =path.find_last_of("-",last_slash);
+   
+   sizeInst=stoi(path.substr(first_dash+1,last_dash-first_dash));
    sizeInst++;
 }
 
