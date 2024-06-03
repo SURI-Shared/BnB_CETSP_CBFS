@@ -4,6 +4,7 @@ from collections import defaultdict
 
 import numpy as np
 from matplotlib import pyplot
+import pickle
 
 def convert_to(key,type,dict):
     dict[key]=type(dict[key])
@@ -61,6 +62,57 @@ def load_folder_by_instance_name(folder):
     for p in parsed:
         by_name[p["Name"]]=p
     return by_name
+
+def load_folder_by_instance_name_recursive(folder):
+    logfiles=glob.glob(os.path.join(folder,"**/*.log"),recursive=True)
+    parsed=[parse_log(lf) for lf in logfiles]
+    by_name=dict()
+    for i,p in enumerate(parsed):
+        folder=os.path.dirname(logfiles[i])
+        by_name[os.path.join(folder,p["Name"])]=p
+    return by_name
+
+def human_input_lbs(instance_names,save_path,existing_optimal=None,existing_best_alg=None,existing_best_lb=None):
+    if existing_optimal is not None:
+        oldoptimal=existing_optimal
+        oldbestalg=existing_best_alg
+        oldbestlb=existing_best_lb
+    else:
+        oldoptimal=dict()
+        oldbestalg=dict()
+        oldbestlb=dict()
+    try:
+        for path in sorted(instance_names):
+            if path in oldoptimal:
+                continue
+            ok=False
+            while not ok:
+                wasoptimal=input(f"Was {path} optimal: ")
+                try:
+                    oldoptimal[path]=bool(int(wasoptimal))
+                    ok=True
+                except:
+                    ok=False
+                    print("Try again.")
+            if bool(int(wasoptimal)):
+                continue
+            alg=input(f"Best alg for {path}: ")
+            oldbestalg[path]=alg
+            ok=False
+            while not ok:
+                try:
+                    lb=input(f"Best lb for {path}: ")
+                    oldbestlb[path]=float(lb)
+                    ok=True
+                except:
+                    ok=False
+                    print("Try again.")
+    except:
+        pass
+    finally:
+        with open(save_path,"wb") as fh:
+            pickle.dump({"oldoptimal":oldoptimal,"oldbestalg":oldbestalg,"oldbestlb":oldbestlb},fh)
+    return {"oldoptimal":oldoptimal,"oldbestalg":oldbestalg,"oldbestlb":oldbestlb}
 
 def statistics_by_instance_size(size_to_list_of_dicts,key):
     grouped=dict()
