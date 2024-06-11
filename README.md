@@ -17,12 +17,12 @@ git clone --recurse-submodules git@github.com:SURI-Shared/Clarabel.cpp.git
 ### Eigen, QSOPT, Concorde, and GMP BigNum
 tar files and archives of these dependencies can be obtained by running download_dependencies.sh
 
-## CPLEX
+### CPLEX
 CPLEX is used only by the baseline approach. You will need to obtain a CPLEX install to build the rest of the code, however.
 
 ## Building an executable
 
-# Locally
+### Locally
 1. Build concorde following the instructions at https://www.math.uwaterloo.ca/tsp/concorde/DOC/README.html
 2. Build gmp_bignum (this is SLOW)
 3. Build Clarabel.cpp using cmake (We recommend doing a Release build)
@@ -38,7 +38,7 @@ clarabel_reuse: as clarabel_reduce_, but reuses the Clarabel solvers between nod
 clarabel_recycle: as clarabel_reuse, but warm starts Clarabel by solving a small SOCP.
 
 
-# Docker
+### Docker
 The docker folder contains Dockerfiles for building images that can then be derived from to build the actual codebase.
 1. build concorde.Dockerfile
 2. build gmp_bignum.Dockerfile (this is SLOW)
