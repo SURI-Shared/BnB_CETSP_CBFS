@@ -1,0 +1,63 @@
+Use LAH: 0
+Use Concorde Feasible Solution improvement: 0
+Name: bubbles2
+directory: 2D
+option: 2D
+OPTION 2D ACTIVATED, Z COORDINATES BECAME 0
+Instance Size: 77
+Initial Upper Bound: 428.27918494
+Average radius size: 10.00000000
+Using variable selection rule #1!
+Size of the tree: 9.55319582e+110
+Raiz: 0 67 37 
+Initial root: 0 67 37 
+Value of objective function: 2.57321375e+02
+SolverStatus: Solved
+Solution: 
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+( 1.43273272e+02, 1.47600599e+02, 0.00000000e+00 )
+( 5.67267279e+01, 5.23994007e+01, 0.00000000e+00 )
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+
+Not covered in root: 58 48 47 11 57 76 12 46 36 10 56 75 13 45 59 9 35 21 55 74 14 44 60 8 34 22 54 73 15 43 61 7 33 23 53 72 16 42 62 6 32 24 52 71 17 41 63 5 31 25 51 70 18 40 64 4 30 26 50 69 19 39 65 3 28 27 20 1 2 49 29 68 66 38 
+INFEASIBLE ROOT
+
+Using variable selection rule #1!
+F. value	BestUB	        BestLB	        GAP%(I)	        Level	#Uncov	#Solved	 open	        Tree (%)	
+350.15279		- 	257.32137		- 	002	048	0000004	 000000000002	0.0000000%
+
+### Final Log ###
+
+Termination Reason: Optimal
+OPTIMAL SOLUTION FOUND
+Function objective value: 428.279184936043976
+Sum of infeasibilities: 0.000000002437773
+Sequence: 
+Solution: 
+
+Number of Resolved Nodes: 122
+Pruned tree percentage: 0.000000000000000%
+Computed Tree Percentage: 0.000000000000000%
+Total: 0.000000000000000
+Time total: 0.050467000000000
+Time S.B: 0.034376000000000
+Time SOCP: 0.031783000000000
+Iterations to incumbent: 0
+Peak Memory Consumption: 17652
+#################
+Warm Start Time: 0.007534000000000
+    init Time: 0.000053000000000
+    construct Time: 0.007481000000000
+        solve Time: 0.007356000000000
+SOCPs solved: 198
+Solvers made: 6
+SOCP Internal Iterations: 1465
+SOCP Internal Solve Time: 0.058350634000000
+SOCP Setup Time: 0.020296510000000
+    SOCP Equilibration Time: 0.002393139000000
+    SOCP KKT init Time: 0.015191913000000
+SOCP initialization Time: 0.001328042000000
+SOCP IP Iteration Time: 0.036677697000000
+    SOCP KKT Update Time: 0.016523205000000
+    SOCP KKT Solve Time: 0.013616809000000
+

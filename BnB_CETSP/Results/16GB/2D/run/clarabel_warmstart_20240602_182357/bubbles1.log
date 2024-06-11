@@ -1,0 +1,63 @@
+Use LAH: 0
+Use Concorde Feasible Solution improvement: 0
+Name: bubbles1
+directory: 2D
+option: 2D
+OPTION 2D ACTIVATED, Z COORDINATES BECAME 0
+Instance Size: 37
+Initial Upper Bound: 349.13477405
+Average radius size: 10.00000000
+Using variable selection rule #1!
+Size of the tree: 1.91315331e+41
+Raiz: 0 1 20 
+Initial root: 0 1 20 
+Value of objective function: 2.14772198e+02
+SolverStatus: Solved
+Solution: 
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+( 5.72701859e+01, 6.18661777e+01, 0.00000000e+00 )
+( 1.33158076e+02, 1.37706985e+02, 0.00000000e+00 )
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+
+Not covered in root: 10 11 21 9 36 12 22 8 35 13 23 7 34 14 24 6 33 15 25 5 32 16 26 4 31 17 27 3 30 18 19 28 29 2 
+INFEASIBLE ROOT
+
+Using variable selection rule #1!
+F. value	BestUB	        BestLB	        GAP%(I)	        Level	#Uncov	#Solved	 open	        Tree (%)	
+288.22337		- 	214.77220		- 	002	023	0000004	 000000000002	0.0000000%
+
+### Final Log ###
+
+Termination Reason: Optimal
+OPTIMAL SOLUTION FOUND
+Function objective value: 349.134774047349026
+Sum of infeasibilities: 0.000000002669759
+Sequence: 
+Solution: 
+
+Number of Resolved Nodes: 67
+Pruned tree percentage: 0.000000000000000%
+Computed Tree Percentage: 0.000000000000000%
+Total: 0.000000000000000
+Time total: 0.020635000000000
+Time S.B: 0.017052000000000
+Time SOCP: 0.016568000000000
+Iterations to incumbent: 0
+Peak Memory Consumption: 17652
+#################
+Warm Start Time: 0.004002000000000
+    init Time: 0.000039000000000
+    construct Time: 0.003963000000000
+        solve Time: 0.003892000000000
+SOCPs solved: 103
+Solvers made: 6
+SOCP Internal Iterations: 771
+SOCP Internal Solve Time: 0.021390994000000
+SOCP Setup Time: 0.006361013000000
+    SOCP Equilibration Time: 0.000723057000000
+    SOCP KKT init Time: 0.004731266000000
+SOCP initialization Time: 0.000295480000000
+SOCP IP Iteration Time: 0.014713951000000
+    SOCP KKT Update Time: 0.006725874000000
+    SOCP KKT Solve Time: 0.005405118000000
+

@@ -1,0 +1,64 @@
+Use LAH: 0
+Use Concorde Feasible Solution improvement: 0
+Name: rotatingDiamonds1
+directory: 2D
+option: 2D
+OPTION 2D ACTIVATED, Z COORDINATES BECAME 0
+Instance Size: 21
+Initial Upper Bound: 32.38901983
+Average radius size: 2.00000000
+Using variable selection rule #1!
+Size of the tree: 1.28066375e+18
+Raiz: 0 3 13 
+Initial root: 0 3 13 
+Value of objective function: 2.02842712e+01
+SolverStatus: Solved
+Solution: 
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+( 1.03585786e+02, 9.64142136e+01, 0.00000000e+00 )
+( 9.64142136e+01, 1.03585786e+02, 0.00000000e+00 )
+( 1.00000000e+02, 1.00000000e+02, 0.00000000e+00 )
+
+Not covered in root: 8 18 7 9 19 17 6 16 10 20 11 5 1 15 12 4 2 14 
+INFEASIBLE ROOT
+
+Using variable selection rule #1!
+F. value	BestUB	        BestLB	        GAP%(I)	        Level	#Uncov	#Solved	 open	        Tree (%)	
+26.965380		- 	20.284271		- 	002	011	0000004	 000000000002	0.0000000%
+31.806718		- 	31.224239		- 	004	002	0000036	 000000000005	0.0000000%
+
+### Final Log ###
+
+Termination Reason: Optimal
+OPTIMAL SOLUTION FOUND
+Function objective value: 32.389019832526202
+Sum of infeasibilities: 0.000000000141157
+Sequence: 
+Solution: 
+
+Number of Resolved Nodes: 60
+Pruned tree percentage: 0.000000000000000%
+Computed Tree Percentage: 0.000000000000005%
+Total: 0.000000000000005
+Time total: 0.025696000000000
+Time S.B: 0.020991000000000
+Time SOCP: 0.020598000000000
+Iterations to incumbent: 0
+Peak Memory Consumption: 17652
+#################
+Warm Start Time: 0.004817000000000
+    init Time: 0.000041000000000
+    construct Time: 0.004776000000000
+        solve Time: 0.004697000000000
+SOCPs solved: 80
+Solvers made: 5
+SOCP Internal Iterations: 595
+SOCP Internal Solve Time: 0.029031854000000
+SOCP Setup Time: 0.009096111000000
+    SOCP Equilibration Time: 0.001049380000000
+    SOCP KKT init Time: 0.006792766000000
+SOCP initialization Time: 0.000481901000000
+SOCP IP Iteration Time: 0.019422843000000
+    SOCP KKT Update Time: 0.008789014000000
+    SOCP KKT Solve Time: 0.007182626000000
+
