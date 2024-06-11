@@ -25,7 +25,7 @@
 #include "PrintFunctions.h"
 #include "Data.h"
 #include "BranchNBound.h"
-#include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
+#include "clarabel_interface/SolveSocpClarabelWithReuse.h"
 #include "structs.h"
 #include "CBFS.h"
 #include "subgraph.h"
@@ -179,8 +179,8 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   SolveSocpClarabelWithRecycling *solveSocpPtr;
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithRecycling(&solveSocpPtr,true);
+   SolveSocpClarabelWithReuse *solveSocpPtr;
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootClarabelWithReuse(&solveSocpPtr,true);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 

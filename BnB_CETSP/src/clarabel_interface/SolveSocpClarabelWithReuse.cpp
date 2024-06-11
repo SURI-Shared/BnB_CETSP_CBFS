@@ -1,17 +1,17 @@
-#include "SolveSocpClarabelWithRecycling.h"
+#include "SolveSocpClarabelWithReuse.h"
 
 //constructors
-SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, vector<int>& in_sequence, bool reduced_first_correction):
+SolveSocpClarabelWithReuse::SolveSocpClarabelWithReuse(Data * instance, vector<int>& in_sequence, bool reduced_first_correction):
     SolveSocpClarabel(instance,in_sequence,reduced_first_correction),
     info_struct(){
     solvers.insert({in_sequence.size(),solver_ptr});
 }
 
-SolveSocpClarabelWithRecycling::SolveSocpClarabelWithRecycling(Data * instance, int size_seq, bool reduced_first_correction):
+SolveSocpClarabelWithReuse::SolveSocpClarabelWithReuse(Data * instance, int size_seq, bool reduced_first_correction):
     SolveSocpClarabel(instance,size_seq,reduced_first_correction),
     info_struct(){}
 
-SolveSocpClarabelWithRecycling::~SolveSocpClarabelWithRecycling(){
+SolveSocpClarabelWithReuse::~SolveSocpClarabelWithReuse(){
     for(auto ptr: solvers){
         delete ptr.second;
     }
@@ -25,7 +25,7 @@ store a clarabel::DefaultSolver in this->solver and populate its data for the SO
 Parameters: sequence : vector<int>&
                 the order to visit neighborhoods in. The first element must be the depot, of radius 0. The path returns to the depot after visiting sequence[-1]
 */
-void SolveSocpClarabelWithRecycling::createModel(vector<int>& sequence){
+void SolveSocpClarabelWithReuse::createModel(vector<int>& sequence){
     sizeProblem=sequence.size();
     if (solvers.count(sizeProblem)){
         solver_ptr=solvers.at(sizeProblem);
@@ -37,15 +37,15 @@ void SolveSocpClarabelWithRecycling::createModel(vector<int>& sequence){
         info_struct.solvers_made++;
     }
 }
-void SolveSocpClarabelWithRecycling::solveSOCP(){
+void SolveSocpClarabelWithReuse::solveSOCP(){
     SolveSocpClarabel::solveSOCP();
     accumulate_info();
 }
-void SolveSocpClarabelWithRecycling::accumulate_info(){
+void SolveSocpClarabelWithReuse::accumulate_info(){
     SolveSocpClarabel::accumulate_info(info_struct);
     info_struct.solvers_made=solvers.size();
 }
-void SolveSocpClarabelWithRecycling::update_b(){
+void SolveSocpClarabelWithReuse::update_b(){
     size_t m=sequence.size()-1;
     size_t nf=m+1;
     size_t nx=SOCP_NDIM*m;
@@ -117,8 +117,8 @@ void SolveSocpClarabelWithRecycling::update_b(){
     }
     solver_ptr->update_b(b);
 }
-void SolveSocpClarabelWithRecycling::clear_removable_constraints(){}
-void SolveSocpClarabelWithRecycling::clear_removable_constraints(int prev_pos, int curr_pos){}
+void SolveSocpClarabelWithReuse::clear_removable_constraints(){}
+void SolveSocpClarabelWithReuse::clear_removable_constraints(int prev_pos, int curr_pos){}
 
 /*provide a warm start to Clarabel
 Parameters: primal_guess : double *
@@ -137,7 +137,7 @@ Mutates:    solution
             m_num_solves
             *solver_ptr
 */
-void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess, int mode, double lambda){
+void SolveSocpClarabelWithReuse::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess, int mode, double lambda){
     solver_ptr->solve_warm(primal_guess,slack_guess,dual_guess,mode,lambda);
     new (&solution) clarabel::DefaultSolution<double>(solver_ptr->solution());
     f_value=solution.obj_val;

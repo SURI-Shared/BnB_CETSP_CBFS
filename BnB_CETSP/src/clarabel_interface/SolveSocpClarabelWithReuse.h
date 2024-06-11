@@ -1,15 +1,15 @@
-#ifndef SOLVESOCPCLARABELRECYCLING_H
-#define SOLVESOCPCLARABELRECYCLING_H
+#ifndef SOLVESOCPCLARABELREUSE_H
+#define SOLVESOCPCLARABELREUSE_H
 
 #include "SolveSocpClarabel.h"
 #include <unordered_map>
 
-class SolveSocpClarabelWithRecycling: public SolveSocpClarabel{
+class SolveSocpClarabelWithReuse: public SolveSocpClarabel{
    public:
       //constructor
-      SolveSocpClarabelWithRecycling( Data *, vector< int >&, bool);
-      SolveSocpClarabelWithRecycling( Data *,int, bool);
-      ~SolveSocpClarabelWithRecycling();
+      SolveSocpClarabelWithReuse( Data *, vector< int >&, bool);
+      SolveSocpClarabelWithReuse( Data *,int, bool);
+      ~SolveSocpClarabelWithReuse();
       //functions
       void clear_removable_constraints();
       void clear_removable_constraints(int prev_pos, int curr_pos);
