@@ -34,7 +34,7 @@ The executable targets are:
 * exeCVXHULL: As in (https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711), with some additional logging
 * clarabel_redundant: Replaces CPLEX with Clarabel, but no other changes from exeCVXHULL
 * clarabel_reduce: Uses Clarabel to solve RSOCP not MSOCP (see the paper)
-* clarabel_reuse: as clarabel_reduce_, but reuses the Clarabel solvers between nodes in the B&B tree
+* clarabel_reuse: as clarabel_reduce, but reuses the Clarabel solvers between nodes in the B&B tree
 * clarabel_recycle: as clarabel_reuse, but warm starts Clarabel by solving a small SOCP.
 
 
