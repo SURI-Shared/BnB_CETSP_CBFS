@@ -1,6 +1,6 @@
 # BnB_CETSP
 
-A branch-and-bound algorithm for the CETSP based the [original work by Walton Pereira Coutinho](https://github.com/waltonpcoutinho/BnB_CETSP) and [Wenda Zhang] (https://github.com/UranusR/BnB_CETSP_CBFS)
+A branch-and-bound algorithm for the CETSP based the [original work by Walton Pereira Coutinho](https://github.com/waltonpcoutinho/BnB_CETSP) and [Wenda Zhang](https://github.com/UranusR/BnB_CETSP_CBFS)
 
 This code accompanies the paper "Reduce, Reuse, Recycle: Efficient Second-Order Cone Programming for the CLose Enough Traveling Salesman Problem," submitted to WAFR 2024.
 
@@ -31,11 +31,11 @@ CPLEX is used only by the baseline approach. You will need to obtain a CPLEX ins
 For help compiling things, look at the various docker files for hints.
 
 The executable targets are:
-exeCVXHULL: As in (https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711), with some additional logging
-clarabel_redundant: Replaces CPLEX with Clarabel, but no other changes from exeCVXHULL
-clarabel_reduce: Uses Clarabel to solve RSOCP not MSOCP (see the paper)
-clarabel_reuse: as clarabel_reduce_, but reuses the Clarabel solvers between nodes in the B&B tree
-clarabel_recycle: as clarabel_reuse, but warm starts Clarabel by solving a small SOCP.
+* exeCVXHULL: As in (https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711), with some additional logging
+* clarabel_redundant: Replaces CPLEX with Clarabel, but no other changes from exeCVXHULL
+* clarabel_reduce: Uses Clarabel to solve RSOCP not MSOCP (see the paper)
+* clarabel_reuse: as clarabel_reduce_, but reuses the Clarabel solvers between nodes in the B&B tree
+* clarabel_recycle: as clarabel_reuse, but warm starts Clarabel by solving a small SOCP.
 
 
 ### Docker
@@ -44,6 +44,7 @@ The docker folder contains Dockerfiles for building images that can then be deri
 2. build gmp_bignum.Dockerfile (this is SLOW)
 3. build clarabelcpp's Docker image using the Dockerfile from https://github.com/SURI-Shared/Clarabel.cpp
 4. Update the image tags in BnB_CETSP_CBFS/Dockerfile and build
+
 To run, attach interactively to the running container produced by step 4. Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
 
 To build an executable, run the following command from the project root directory "BnB_CETSP":
