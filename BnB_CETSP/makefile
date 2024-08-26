@@ -83,7 +83,7 @@ test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
 
 scs_dropin: $(OBJDIR)/exec/scs_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_dropin.o -Wl,-rpath,${SCS_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
 
 #includes dependency files
 -include $(OBJS:.o=.d)
