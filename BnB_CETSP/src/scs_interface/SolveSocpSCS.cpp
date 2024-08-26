@@ -40,6 +40,13 @@ SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq):sequence(),objectData(
     settings.verbose=false;
 }
 
+SolveSocpSCS::~SolveSocpSCS(){
+    scs_finish(workspace_ptr);
+    free(solution.x);
+    free(solution.y);
+    free(solution.s);
+}
+
 /*
 void SolveSocpSCS::createModel(vector<int>& sequence)
 
@@ -213,13 +220,7 @@ void SolveSocpSCS::solveSOCP(){
     m_num_solves+=1;
 }
 
-void SolveSocpSCS::finishSOCP(){
-    scs_finish(workspace_ptr);
-    free(solution.x);
-    free(solution.y);
-    free(solution.s);
-    sizeProblem=0;
-};
+void SolveSocpSCS::finishSOCP(){}//nothing to do, delegate to destructor
 
 void SolveSocpSCS::accumulate_info(SolveSocpSCSStatistics& info_struct){
     info_struct.m_num_solves++;

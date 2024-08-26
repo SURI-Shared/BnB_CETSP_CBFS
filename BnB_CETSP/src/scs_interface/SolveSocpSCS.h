@@ -42,9 +42,8 @@ class SolveSocpSCS{
 
       //construtor	
       SolveSocpSCS( Data *, vector< int >& ); //constructor
-      SolveSocpSCS( Data *, vector< int >& , bool); //constructor
       SolveSocpSCS( Data *,int);
-      SolveSocpSCS( Data *,int, bool);
+      ~SolveSocpSCS();
       //functions
       virtual void solveSOCP( vector< int >& );
       virtual void solveSOCP();
