@@ -36,6 +36,8 @@ struct SolveSocpSCSStatistics{
       uint32_t iterations=0;
 };
 std::ostream& operator<<(std::ostream& os, const SolveSocpSCSStatistics& info_struct);
+size_t compute_nvar(size_t);
+size_t compute_ncon(size_t);
 class SolveSocpSCS{
 
    public:

@@ -47,6 +47,16 @@ SolveSocpSCS::~SolveSocpSCS(){
     free(solution.s);
 }
 
+size_t compute_nvar(size_t neighborhoods){
+    return neighborhoods+1+SOCP_NDIM*neighborhoods;
+}
+
+size_t compute_ncon(size_t neighborhoods){
+    size_t m=neighborhoods;
+    size_t nf=m+1;
+    return m*SOCP_NDIM+m+nf*SOCP_NDIM+nf;
+}
+
 /*
 void SolveSocpSCS::createModel(vector<int>& sequence)
 

@@ -85,6 +85,10 @@ scs_dropin: $(OBJDIR)/exec/scs_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
 
+scs_recycling: $(OBJDIR)/exec/scs_recycling.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+
 #includes dependency files
 -include $(OBJS:.o=.d)
 
