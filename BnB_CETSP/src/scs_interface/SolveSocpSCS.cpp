@@ -38,8 +38,6 @@ SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence):sequence(i
 SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),workspace_ptr(),settings(){
     scs_set_default_settings(&settings);
     settings.verbose=false;
-    //TODO make sure SCS tolerances are comparable to Clarabel
-    createModel(sequence);
 }
 
 /*
