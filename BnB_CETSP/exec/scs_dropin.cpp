@@ -204,7 +204,6 @@ int main(int argc, char** argv)
    root->id = 0; root->depth = 1;
    root->intersect_tol = lah_intersect_tol_init;
    solveSocpPtr->printF_value();
-   solveSocpPtr->finishSOCP();
    solveSocpPtr->printSolution( root->pts );
    somaTeste += solveSocpPtr->violation;
    
@@ -220,6 +219,7 @@ int main(int argc, char** argv)
    }
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
    solveSocpPtr->accumulate_info(info_struct);
+   solveSocpPtr->finishSOCP();
    delete solveSocpPtr;
 
    cout << endl;

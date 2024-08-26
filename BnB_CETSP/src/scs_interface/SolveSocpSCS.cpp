@@ -179,6 +179,7 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
     workspace_ptr=scs_init(&data,&cones,&settings);
     free(b);
     free(q);
+    free(cones.q);
     delete data.A;
 }
 
@@ -211,7 +212,9 @@ void SolveSocpSCS::solveSOCP(){
 
 void SolveSocpSCS::finishSOCP(){
     scs_finish(workspace_ptr);
-    workspace_ptr=nullptr;
+    free(solution.x);
+    free(solution.y);
+    free(solution.s);
     sizeProblem=0;
 };
 
