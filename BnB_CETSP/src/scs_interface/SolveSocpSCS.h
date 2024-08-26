@@ -14,7 +14,7 @@
 #include<algorithm>
 #include<stdio.h>
 #include <pthread.h>
-#include "scs.h"
+#include <scs.h>
 #include"Data.h"
 #include <Eigen/Dense>
 #include <Eigen/SparseCore>
@@ -67,9 +67,9 @@ class SolveSocpSCS{
 
       void accumulate_info(SolveSocpSCSStatistics&);
 
-      Eigen::Map<Eigen::VectorXd> primals(){return Eigen::Map<Eigen::VectorXd>(solution.x);}
-      Eigen::Map<Eigen::VectorXd> duals(){return Eigen::Map<Eigen::VectorXd>(solution.y);}
-      Eigen::Map<Eigen::VectorXd> slacks(){return Eigen::Map<Eigen::VectorXd>(solution.s);}
+      Eigen::Map<Eigen::VectorXd> primals(){return Eigen::Map<Eigen::VectorXd>(solution.x,nvar);}
+      Eigen::Map<Eigen::VectorXd> duals(){return Eigen::Map<Eigen::VectorXd>(solution.y,ncon);}
+      Eigen::Map<Eigen::VectorXd> slacks(){return Eigen::Map<Eigen::VectorXd>(solution.s,ncon);}
       int get_latest_iterations(){return info.iter;}
       double get_latest_solve_time(){return info.solve_time;}
       double get_latest_setup_time(){return info.setup_time;}
@@ -82,6 +82,9 @@ class SolveSocpSCS{
       ScsWork* workspace_ptr;
       ScsSolution solution;
       ScsInfo info;
+
+      size_t ncon;
+      size_t nvar;
 
       Data *objectData;
 

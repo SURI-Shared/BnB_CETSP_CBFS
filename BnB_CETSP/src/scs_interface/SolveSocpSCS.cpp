@@ -54,7 +54,7 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
     size_t m=sequence.size()-1;
     size_t nf=m+1;
     size_t nx=SOCP_NDIM*m;
-    size_t nvar=nf+nx;
+    nvar=nf+nx;
     size_t xstart=nf;
     sizeProblem=nf;
     this->sequence=sequence;
@@ -73,8 +73,9 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
     //each such constraint requires 1+2*ndim non-zeros in A
     //A is thus (m*ndim+m+nf*ndim+nf,nvar)
     //A will have m*ndim+nf*(1+2*ndim) nonzeros
-    Eigen::SparseMatrix<double> A(m*SOCP_NDIM+m+nf*SOCP_NDIM+nf,nvar);
-    scs_float* b=(scs_float*)malloc(sizeof(scs_float)*(m*SOCP_NDIM+m+nf*SOCP_NDIM+nf));
+    ncon=m*SOCP_NDIM+m+nf*SOCP_NDIM+nf;
+    Eigen::SparseMatrix<double> A(ncon,nvar);
+    scs_float* b=(scs_float*)malloc(sizeof(scs_float)*(ncon));
     std::vector<Eigen::Triplet<double>> tripletList;
     tripletList.reserve(m*SOCP_NDIM+nf*(1+2*SOCP_NDIM));
     size_t row=0;
