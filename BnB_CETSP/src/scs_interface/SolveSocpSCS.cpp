@@ -167,15 +167,19 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
     cones.z=0;
     cones.l=0;
     cones.bsize=0;
+    cones.bu=nullptr;
+    cones.bl=nullptr;
     cones.qsize=m+nf;
     cones.q=(scs_int*)malloc((m+nf)*sizeof(scs_int));
     for(size_t i=0;i<m+nf;i++){
         cones.q[i]=SOCP_NDIM+1;
     }
     cones.ssize=0;
+    cones.s=nullptr;
     cones.ep=0;
     cones.ed=0;
     cones.psize=0;
+    cones.p=nullptr;
     workspace_ptr=scs_init(&data,&cones,&settings);
     free(b);
     free(q);
@@ -186,7 +190,6 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
 void SolveSocpSCS::initialize_model(){}//nothing to do, provided to match API of SolveSocpCplex
 void SolveSocpSCS::clear_removable_constraints(){
     scs_finish(workspace_ptr);
-    workspace_ptr=nullptr;
     sizeProblem=0;
 }
 void SolveSocpSCS::clear_removable_constraints(int prev_pos, int curr_pos){

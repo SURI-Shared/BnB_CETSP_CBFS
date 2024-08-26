@@ -194,7 +194,7 @@ int main(int argc, char** argv)
    //solve model
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();
-   solveSocpPtr->solveSOCP( root->pts );
+   solveSocpPtr->solveSOCP( );
    totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
    count_SOCP_solved++;
 
