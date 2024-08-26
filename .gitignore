@@ -4,3 +4,5 @@ BnB_CETSP/exeCVXHULL
 *.d
 c_cpp_properties.json
 **.pyc
+**.log
+**.txt
