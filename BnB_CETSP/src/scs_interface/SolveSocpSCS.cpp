@@ -18,13 +18,14 @@ std::ostream& operator<<(std::ostream& os, const SolveSocpSCSStatistics& info_st
 typedef Eigen::Triplet<double> Triplet;
 
 ScsMatrix* no_copy_eigen_SparseMatrix_to_ScsMatrix(Eigen::SparseMatrix<double>& in){
-    in.makeCompressed();
+    // in.makeCompressed();
     ScsMatrix* out=new ScsMatrix();
     out->m=in.rows();
     out->n=in.cols();
     out->p=in.outerIndexPtr();
     out->i=in.innerIndexPtr();
     out->x=in.valuePtr();
+    return out;
 }
 
 SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),workspace_ptr(),settings(){
@@ -173,6 +174,10 @@ void SolveSocpSCS::createModel(vector<int>& sequence){
     for(size_t i=0;i<m+nf;i++){
         cones.q[i]=SOCP_NDIM+1;
     }
+    cones.ssize=0;
+    cones.ep=0;
+    cones.ed=0;
+    cones.psize=0;
     workspace_ptr=scs_init(&data,&cones,&settings);
     free(b);
     free(q);
