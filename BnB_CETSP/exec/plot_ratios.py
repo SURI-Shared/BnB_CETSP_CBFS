@@ -2,11 +2,11 @@ from exec import parse_results
 import os
 
 #specify the baseline run first, followed by the run to use for each variant
-folder=["exeCVXHULL_20240529_125208",
-        "clarabel_redundant_20240529_115148",
-        "clarabel_dropin_20240528_201056",
-        "clarabel_recycling_20240524_192136",
-        "clarabel_warmstart_20240530_203854",
+folder=["exeCVXHULL_20240827_164534",
+        "clarabel_redundant_20240827_164556",
+        "clarabel_dropin_20240827_164609",
+        "clarabel_recycling_20240827_164619",
+        "clarabel_warmstart_20240827_164633",
         "scs_dropin_20240827_161712",
         "scs_recycling_20240827_161857",
         "scs_warmstart_20240827_161844",
