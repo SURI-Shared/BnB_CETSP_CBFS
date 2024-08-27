@@ -67,9 +67,10 @@ void SolveSocpSCSWithRecycling::update_b(){
     size_t m=sequence.size()-1;
     size_t nf=m+1;
     size_t nx=SOCP_NDIM*m;
-    size_t nvar=nf+nx;
+    nvar=nf+nx;
+    ncon=m*SOCP_NDIM+m+nf*SOCP_NDIM+nf;
     size_t xstart=nf;
-    Eigen::VectorXd b(m*SOCP_NDIM+m+nf*SOCP_NDIM+nf);
+    Eigen::VectorXd b(ncon);
     size_t row=0;
 
     /*||xi-ci||_2<=radii[i] thus becomes s==[radii[i]] in K_SOC
