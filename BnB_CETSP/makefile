@@ -89,6 +89,10 @@ scs_recycling: $(OBJDIR)/exec/scs_recycling.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJ
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
+scs_warmstart: $(OBJDIR)/exec/scs_warmstart.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+
 #includes dependency files
 -include $(OBJS:.o=.d)
 
