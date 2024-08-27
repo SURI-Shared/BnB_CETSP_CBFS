@@ -32,7 +32,7 @@
 #include "tsp_lb.h"
 #include "local_search.h"
 #include "cetsp_solver.h"
-#include "warm_start_socp.h"
+#include "warm_start_socp_scs.h"
 
 using namespace std;
 
@@ -192,7 +192,7 @@ int main(int argc, char** argv)
 
    //####################################
    std::unordered_map<int,BnBNodeForWarmStart> nodes_for_warmstart;
-   WarmStartHandler warm_start_handler;
+   SCSWarmStartHandler warm_start_handler(false);
    //solve model
    double totalSocpCompTime = 0;
    double initialSocpCompTime = cpuTime();
@@ -220,7 +220,7 @@ int main(int argc, char** argv)
       tempY.push_back( solveSocpPtr-> getSolutionY( i ) );
       tempZ.push_back( solveSocpPtr-> getSolutionZ( i ) );
    }
-   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
+   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks(),false));
 
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
 
@@ -651,7 +651,7 @@ int main(int argc, char** argv)
                      else
                      {
                         tempSbStr.sum += child->lb;
-                        nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks()));
+                        nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks(),false));
                      }
 
                      somaTeste += solveSocpPtr->violation;
