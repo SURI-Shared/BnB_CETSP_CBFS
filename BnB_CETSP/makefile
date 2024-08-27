@@ -97,6 +97,10 @@ scs_warmstart: $(OBJDIR)/exec/scs_warmstart.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJ
 scs_tridiag_dropin: $(OBJDIR)/exec/scs_tridiag_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+
+scs_tridiag_recycling: $(OBJDIR)/exec/scs_tridiag_recycling.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 #includes dependency files
 -include $(OBJS:.o=.d)
 
