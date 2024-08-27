@@ -190,6 +190,35 @@ def bar_plot_shm_vs_size(size_data_dict,key,shift,label,bar_index=0,num_bars=1,a
     ax.set_xlabel("Number of Neighborhoods")
     return ax
 
+def bar_plot_avg_vs_size(size_data_dict,key,label,bar_index=0,num_bars=1,ax=None,show_range=False,log=False):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    y=[]
+    ymin=[]
+    ymax=[]
+    sizes=list(sorted(size_data_dict.keys()))
+
+    for size in sizes:
+        v=[]
+        for data in size_data_dict[size].values():
+            v.append(data[key])
+        v=np.array(v)
+        y.append(np.mean(v))
+        ymin.append(min(v))
+        ymax.append(max(v))
+
+    x=np.arange(len(sizes))
+    bar_width=1/(num_bars+1)
+    if not show_range:
+        yerr=None
+    else:
+        yerr=[ymin,ymax]
+    ax.bar(x+bar_width*bar_index,y,bar_width,yerr=yerr,label=label,log=log)
+    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
+    ax.set_xlabel("Number of Neighborhoods")
+    return ax
+
 def plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labels,ylabel,ax=None):
     if ax is None:
         fig=pyplot.figure()
