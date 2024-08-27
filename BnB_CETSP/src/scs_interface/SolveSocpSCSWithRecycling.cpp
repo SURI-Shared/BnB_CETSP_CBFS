@@ -22,6 +22,27 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
     solution.y=(double*)calloc(max_ncon,sizeof(double));
 }
 
+SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int>& in_sequence, bool use_tridiagonal):
+    SolveSocpSCS(instance,in_sequence,use_tridiagonal),
+    info_struct(){
+    solvers.insert({in_sequence.size(),workspace_ptr});
+    size_t max_nvar=compute_nvar(instance->getSizeInst());
+    size_t max_ncon=compute_ncon(instance->getSizeInst());
+    solution.x=(double*)calloc(nvar,sizeof(double));
+    solution.s=(double*)calloc(ncon,sizeof(double));
+    solution.y=(double*)calloc(ncon,sizeof(double));
+}
+
+SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_seq, bool use_tridiagonal):
+    SolveSocpSCS(instance,size_seq, use_tridiagonal),
+    info_struct(){
+    size_t max_nvar=compute_nvar(instance->getSizeInst());
+    size_t max_ncon=compute_ncon(instance->getSizeInst());
+    solution.x=(double*)calloc(max_nvar,sizeof(double));
+    solution.s=(double*)calloc(max_ncon,sizeof(double));
+    solution.y=(double*)calloc(max_ncon,sizeof(double));
+}
+
 SolveSocpSCSWithRecycling::~SolveSocpSCSWithRecycling(){
     for(auto ptr: solvers){
         scs_finish(ptr.second);

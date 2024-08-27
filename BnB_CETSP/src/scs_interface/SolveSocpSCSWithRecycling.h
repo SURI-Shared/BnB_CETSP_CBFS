@@ -9,6 +9,8 @@ class SolveSocpSCSWithRecycling: public SolveSocpSCS{
       //constructor
       SolveSocpSCSWithRecycling( Data *, vector< int >&);
       SolveSocpSCSWithRecycling( Data *,int);
+      SolveSocpSCSWithRecycling( Data *, vector< int >&,bool);
+      SolveSocpSCSWithRecycling( Data *,int,bool);
       ~SolveSocpSCSWithRecycling();
       //functions
       void clear_removable_constraints();

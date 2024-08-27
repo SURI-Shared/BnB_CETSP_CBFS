@@ -44,7 +44,9 @@ class SolveSocpSCS{
 
       //construtor	
       SolveSocpSCS( Data *, vector< int >& ); //constructor
+      SolveSocpSCS( Data *, vector< int >& ,bool); //constructor
       SolveSocpSCS( Data *,int);
+      SolveSocpSCS( Data *,int,bool);
       ~SolveSocpSCS();
       //functions
       virtual void solveSOCP( vector< int >& );
@@ -93,8 +95,12 @@ class SolveSocpSCS{
       double f_value;
       vector<int> sequence;
 
+      bool as_tridiagonal;
+
       //functions for solving SOCP
       virtual void createModel( vector< int >& );
+      virtual void createRegularModel( vector< int >&);
+      virtual void createTridiagonalModel( vector< int >& );
 };
 
 #endif
