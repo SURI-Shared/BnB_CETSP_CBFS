@@ -315,6 +315,24 @@ def bar_plot_vs_size(size_value_dict,bar_index=0,num_bars=1,ax=None,log=False,yl
         ax.set_ylabel(ylabel)
     return ax
 
+def scatter_plot_vs_baseline_value(nominal_size_data_dict,size_data_dicts,key,labels,xlabel,ylabel,ax=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    sizes=[size for size in sorted(nominal_size_data_dict.keys())]
+    nominal_values=np.array([entry[key] for size in sizes for entry in nominal_size_data_dict[size].values()])
+    sorted_indices=np.argsort(nominal_values)
+    sorted_nominals=nominal_values[sorted_indices]
+
+    for i,size_data_dict in enumerate(size_data_dicts):
+        y=np.array([entry[key] for size in sizes for entry in size_data_dict[size].values()])
+
+        ax.scatter(sorted_nominals,y[sorted_indices],label=labels[i])
+    ax.set_xlabel(xlabel)
+    ax.set_ylabel(ylabel)
+    ax.legend()
+    return ax
+
 def scatter_plot_percent_delta_vs_size(size_value_nominal,size_value_modified,key,ax=None,ylabel=None,tol=1e-6):
     if ax is None:
         fig=pyplot.figure()
