@@ -179,7 +179,7 @@ int main(int argc, char** argv)
 
    //### root node selection strategy ###
    SolveSocpSCSStatistics info_struct;
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCS(info_struct);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCStridiag(info_struct);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
 
