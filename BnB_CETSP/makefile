@@ -33,6 +33,7 @@ CCFLAGS = $(CCOPT) -I$(INCLUDE) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDE
 CCLNFLAGS = -L$(CONCORDELIBDIR) -lconcorde -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -lqsopt
 CLARABELLINFLAGS = -L${CLARABEL_LIBDIR} -lclarabel_c
 SCSDIRECTLINFLAGS = -L${SCS_LIBDIR} -lscsdir#link to generic direct SCS solver
+SCSTRIDIAGLINFLAGS = -L${SCS_LIBDIR} -lscstridir#link to tridiagonal direct SCS solver
 #############################
 
 #### diretorios com os source files e com os objs files
@@ -93,6 +94,9 @@ scs_warmstart: $(OBJDIR)/exec/scs_warmstart.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJ
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
+scs_tridiag_dropin: $(OBJDIR)/exec/scs_tridiag_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 #includes dependency files
 -include $(OBJS:.o=.d)
 

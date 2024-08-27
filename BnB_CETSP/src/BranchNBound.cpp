@@ -224,6 +224,53 @@ vector< int > BranchNBound::selectRootSCS(SolveSocpSCSStatistics& info_struct)
    return sequence;
 
 }
+
+//select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
+//solves the SOCP to pick the last node using a SolveSocpSCS
+vector< int > BranchNBound::selectRootSCStridiag(SolveSocpSCSStatistics& info_struct)
+{
+   //	escolher os elementos que entram na raiz
+   double greatestSolution = 0;
+   double temp = 0;
+   vector < int > tempSequence;
+   vector < int > sequence;
+   tempSequence.resize( 3 );
+   sequence.resize( 3 );
+
+   int sizeInst = objectOfData->getSizeInst();
+
+   sequence[ 0 ] = 0;
+   sequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
+
+   tempSequence[ 0 ] = 0;
+   tempSequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
+
+   
+
+   for ( int i = 1; i < sizeInst; i++ ){
+      tempSequence[ 2 ] = i;
+      SolveSocpSCS *solver_out_ptr=new SolveSocpSCS(objectOfData,tempSequence,true);
+      solver_out_ptr->solveSOCP();
+      solver_out_ptr->accumulate_info(info_struct);
+      info_struct.solvers_made++;
+      temp = solver_out_ptr->getF_value();
+      if ( temp > greatestSolution ){
+         greatestSolution = temp;
+         sequence[ 2 ] = i;
+      }
+      solver_out_ptr->finishSOCP();
+      delete solver_out_ptr;
+   }
+
+   cout << "Raiz: ";
+   for ( int i = 0; i < 3; i++ ){
+      cout << sequence[ i ] << " ";
+   }
+   cout << endl;
+
+   return sequence;
+
+}
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
 //solves the SOCP to pick the last node using a SolveSocpClarabel
 vector< int > BranchNBound::selectRootClarabel(SolveSocpClarabelStatistics& info_struct)
