@@ -28,26 +28,26 @@ ScsMatrix* no_copy_eigen_SparseMatrix_to_ScsMatrix(Eigen::SparseMatrix<double>& 
     return out;
 }
 
-SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(false){
+SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(false),info(){
     scs_set_default_settings(&settings);
     settings.verbose=false;
     //TODO make sure SCS tolerances are comparable to Clarabel
     createModel(sequence);
 }
 
-SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(false){
+SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(false),info(){
     scs_set_default_settings(&settings);
     settings.verbose=false;
 }
 
-SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence,bool use_tridiagonal):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(use_tridiagonal){
+SolveSocpSCS::SolveSocpSCS(Data * instance, vector<int>& in_sequence,bool use_tridiagonal):sequence(in_sequence),objectData(instance),sizeProblem(in_sequence.size()),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(use_tridiagonal),info(){
     scs_set_default_settings(&settings);
     settings.verbose=false;
     //TODO make sure SCS tolerances are comparable to Clarabel
     createModel(sequence);
 }
 
-SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq, bool use_tridiagonal):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(use_tridiagonal){
+SolveSocpSCS::SolveSocpSCS(Data * instance, int size_seq, bool use_tridiagonal):sequence(),objectData(instance),sizeProblem(size_seq),f_value(0),solution(),workspace_ptr(),settings(),as_tridiagonal(use_tridiagonal),info(){
     scs_set_default_settings(&settings);
     settings.verbose=false;
 }
@@ -400,6 +400,10 @@ void SolveSocpSCS::solveSOCP(vector<int>& sequence){//only call this if we used 
 }
 
 void SolveSocpSCS::solveSOCP(){
+    info.solve_time=0;
+    info.setup_time=0;
+    info.init_lin_sys_time=0;
+    info.lin_sys_time=0;
     scs_solve(workspace_ptr,&solution,&info,false);
     f_value=info.pobj;
     violation=info.res_pri;
@@ -409,7 +413,7 @@ void SolveSocpSCS::solveSOCP(){
 void SolveSocpSCS::finishSOCP(){}//nothing to do, delegate to destructor
 
 void SolveSocpSCS::accumulate_info(SolveSocpSCSStatistics& info_struct){
-    info_struct.m_num_solves++;
+    info_struct.m_num_solves+=1;
     info_struct.solve_time+=get_latest_solve_time();
     info_struct.setup_time+=get_latest_setup_time();
     info_struct.kktinit_time+=get_latest_kktinit_time();

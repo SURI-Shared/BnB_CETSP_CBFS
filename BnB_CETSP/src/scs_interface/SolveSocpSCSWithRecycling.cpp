@@ -4,6 +4,14 @@
 SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int>& in_sequence):
     SolveSocpSCS(instance,in_sequence),
     info_struct(){
+    //zero out the info struct entries
+    info_struct.m_num_solves=0;
+    info_struct.solvers_made=0;
+    info_struct.solve_time=0;
+    info_struct.setup_time=0;
+    info_struct.kktinit_time=0;
+    info_struct.kkt_solve_time=0;
+    info_struct.iterations=0;
     solvers.insert({in_sequence.size(),workspace_ptr});
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());
@@ -15,6 +23,14 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
 SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_seq):
     SolveSocpSCS(instance,size_seq),
     info_struct(){
+    //zero out the info struct entries
+    info_struct.m_num_solves=0;
+    info_struct.solvers_made=0;
+    info_struct.solve_time=0;
+    info_struct.setup_time=0;
+    info_struct.kktinit_time=0;
+    info_struct.kkt_solve_time=0;
+    info_struct.iterations=0;
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());
     solution.x=(double*)calloc(max_nvar,sizeof(double));
@@ -25,6 +41,14 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
 SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int>& in_sequence, bool use_tridiagonal):
     SolveSocpSCS(instance,in_sequence,use_tridiagonal),
     info_struct(){
+    //zero out the info struct entries
+    info_struct.m_num_solves=0;
+    info_struct.solvers_made=0;
+    info_struct.solve_time=0;
+    info_struct.setup_time=0;
+    info_struct.kktinit_time=0;
+    info_struct.kkt_solve_time=0;
+    info_struct.iterations=0;
     solvers.insert({in_sequence.size(),workspace_ptr});
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());
@@ -36,6 +60,14 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
 SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_seq, bool use_tridiagonal):
     SolveSocpSCS(instance,size_seq, use_tridiagonal),
     info_struct(){
+    //zero out the info struct entries
+    info_struct.m_num_solves=0;
+    info_struct.solvers_made=0;
+    info_struct.solve_time=0;
+    info_struct.setup_time=0;
+    info_struct.kktinit_time=0;
+    info_struct.kkt_solve_time=0;
+    info_struct.iterations=0;
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());
     solution.x=(double*)calloc(max_nvar,sizeof(double));
