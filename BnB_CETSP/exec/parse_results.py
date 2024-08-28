@@ -38,7 +38,7 @@ def parse_log(filepath):
             convert_to(key,int,parsed)
     to_float=['Size of the tree','Initial Upper Bound','Average radius size','Value of objective function','Function objective value','Sum of infeasibilities','Total',
               'Time total','Time S.B','Time SOCP','Warm Start Time','    init Time','    construct Time','        solve Time',
-              'SOCP Internal Solve Time','SOCP Setup Time','    SOCP Equilibration Time','    SOCP KKT init Time','SOCP initialization Time','SOCP IP Iteration Time','    SOCP KKT Update Time','    SOCP KKT Solve Time']
+              'SOCP Internal Solve Time','SOCP Setup Time','    SOCP Equilibration Time','    SOCP KKT init Time','SOCP initialization Time','SOCP IP Iteration Time','SOCP Iteration Time','    SOCP KKT Update Time','    SOCP KKT Solve Time']
     for key in to_float:
         if key in parsed:
             convert_to_float(key,parsed)
