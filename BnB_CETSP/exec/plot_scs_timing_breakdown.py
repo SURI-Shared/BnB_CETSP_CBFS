@@ -28,13 +28,39 @@ names=["Clarabel",
 #load data
 data=[parse_results.load_folder(os.path.join("Results/medium_2D_Behdani_CETSPs/radius_0.25/run/",f)) for f in folder]
 
-ax=parse_results.compare_bar_plot_stacked_keys_shm_vs_size([data[5],data[6],data[7],
+#convert times to milliseconds
+
+#all Clarabel times are in seconds
+time_keys=["SOCP Setup Time","SOCP IP Iteration Time","Warm Start Time",'SOCP initialization Time']
+clarabel_indices=list(range(2,5))
+for itemid in clarabel_indices:
+    for size in data[itemid].keys():
+        for case in data[itemid][size]:
+            for key in time_keys:
+                if key in data[itemid][size][case]:
+                    data[itemid][size][case][key]*=1000
+
+#SCS Warm Start Time is in seconds, internals times are already milliseconds
+scs_indices=list(range(5,11))
+for itemid in scs_indices:
+    for size in data[itemid].keys():
+        for case in data[itemid][size]:
+            if "Warm Start Time" in data[itemid][size][case]:
+                data[itemid][size][case]["Warm Start Time"]*=1000
+
+
+ax=parse_results.compare_bar_plot_stacked_keys_shm_vs_size([data[2],data[3],data[4],
+                                                            data[5],data[6],data[7],
                                                             data[8],data[9],data[10]],
-                                                           ["SCS+Reduce","SCS+Reduce+Reuse","SCS+Reduce+Reuse+Recycle",
+                                                           ["Clarabel+Reduce","Clarabel+Reduce+Reuse","Clarabel+Reduce+Reuse+Recycle",
+                                                            "SCS+Reduce","SCS+Reduce+Reuse","SCS+Reduce+Reuse+Recycle",
                                                             "TSCS+Reduce","TSCS+Reduce+Reuse","TSCS+Reduce+Reuse+Recycle"],
+                                                           [["SOCP Setup Time", 'SOCP initialization Time',"SOCP IP Iteration Time"],
+                                                            ["SOCP Setup Time",'SOCP initialization Time',"SOCP IP Iteration Time"],
+                                                            ["SOCP Setup Time",'SOCP initialization Time',"SOCP IP Iteration Time","Warm Start Time"]]+
                                                          2*[["SOCP Setup Time", "SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time","Warm Start Time"]],
-                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"g","Warm Start Time":"b"},
-                                                            scale_factors_by_key={"Warm Start Time":1000},log=False)
+                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"g","SOCP IP Iteration Time":"g","Warm Start Time":"b",'SOCP initialization Time':'y'},
+                                                            log=False)
 ax.set_xlabel("Geometric Mean CPU Time (ms)")
