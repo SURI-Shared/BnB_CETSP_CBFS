@@ -313,6 +313,55 @@ def bar_plot_compare_multiple_keys_shms_vs_size(size_data_dicts,case_names,keys,
     ax.legend()
     return ax
 
+def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_for_each_case,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    
+    num_bars=len(size_data_dicts)
+
+    for i in range(len(size_data_dicts)):
+        ax=bar_plot_stacked_keys_shm_vs_size(size_data_dicts[i],case_names[i],keys_for_each_case[i],num_bars,i,shift,ax,show_range,log,scale_factors_by_key)
+    return ax
+
+def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,num_bars,bar_index,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+
+    sizes=list(sorted(size_data_dict.keys()))
+
+    x=np.arange(len(sizes))
+    bar_width=1/(num_bars+1)
+
+    bottom=np.zeros(len(sizes))
+    for key in keys:
+        y=[]
+        ymin=[]
+        ymax=[]
+        for size in sizes:
+            v=[]
+            for data in size_data_dict[size].values():
+                v.append(data[key])
+            v=np.array(v)
+            if scale_factors_by_key is not None and key in scale_factors_by_key:
+                v*=scale_factors_by_key[key]
+            y.append(shifted_geometric_mean(v,shift))
+            ymin.append(min(v))
+            ymax.append(max(v))
+
+        if not show_range:
+            yerr=None
+        else:
+            yerr=[ymin,ymax]
+        ax.bar(x+bar_width*bar_index,y,bar_width,bottom=bottom,yerr=yerr,label=key+" "+case_name,log=log)
+        bottom+=y
+
+    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
+    ax.set_xlabel("Number of Neighborhoods")
+    ax.legend()
+    return ax
+
 def plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labels,ylabel,ax=None):
     if ax is None:
         fig=pyplot.figure()
