@@ -313,18 +313,26 @@ def bar_plot_compare_multiple_keys_shms_vs_size(size_data_dicts,case_names,keys,
     ax.legend()
     return ax
 
-def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_for_each_case,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
+def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_for_each_case,colors_by_key,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
     if ax is None:
         fig=pyplot.figure()
         ax=fig.gca()
     
     num_bars=len(size_data_dicts)
 
+    tick_locations=[]
+    tick_names=[]
+    artists=dict()
     for i in range(len(size_data_dicts)):
-        ax=bar_plot_stacked_keys_shm_vs_size(size_data_dicts[i],case_names[i],keys_for_each_case[i],num_bars,i,shift,ax,show_range,log,scale_factors_by_key)
+        ax,ticklocs,ticklabels,keys2artists=bar_plot_stacked_keys_shm_vs_size(size_data_dicts[i],case_names[i],keys_for_each_case[i],colors_by_key,num_bars,i,shift,ax,show_range,log,scale_factors_by_key)
+        tick_locations.extend(ticklocs)
+        tick_names.extend(ticklabels)
+        artists.update(keys2artists)
+    ax.set_yticks(tick_locations,tick_names,horizontalalignment='right',verticalalignment='center')
+    ax.legend(artists.values(),artists.keys())
     return ax
 
-def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,num_bars,bar_index,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
+def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,colors_by_key,num_bars,bar_index,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
     if ax is None:
         fig=pyplot.figure()
         ax=fig.gca()
@@ -335,6 +343,7 @@ def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,num_bars,bar
     bar_width=1/(num_bars+1)
 
     bottom=np.zeros(len(sizes))
+    artists=dict()
     for key in keys:
         y=[]
         ymin=[]
@@ -354,13 +363,15 @@ def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,num_bars,bar
             yerr=None
         else:
             yerr=[ymin,ymax]
-        ax.bar(x+bar_width*bar_index,y,bar_width,bottom=bottom,yerr=yerr,label=key+" "+case_name,log=log)
+        bar=ax.barh(x+bar_width*bar_index,y,bar_width,left=bottom,xerr=yerr,label=key,log=log,color=colors_by_key[key],edgecolor="k")
+        artists[key]=bar
         bottom+=y
+    ax.bar_label(bar,labels=sizes,label_type='edge')
 
-    ax.set_xticks(x+bar_width*(num_bars-1)/2,sizes)
-    ax.set_xlabel("Number of Neighborhoods")
-    ax.legend()
-    return ax
+    ticklocs=x+bar_width*bar_index
+    ticklabels=[case_name]*len(sizes)
+
+    return ax,ticklocs,ticklabels,artists
 
 def plot_reductions_in_shm(nominal_size_data_dict,size_data_dicts,key,shift,labels,ylabel,ax=None):
     if ax is None:
