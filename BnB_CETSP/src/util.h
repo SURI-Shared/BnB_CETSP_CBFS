@@ -30,6 +30,8 @@ double doubleRandom(const double maxValue);
 
 double wallClock();
 
+double monotonicClock();
+
 double cpuTime();
 
 string convert_seq_to_string(vector<int>& sequence);

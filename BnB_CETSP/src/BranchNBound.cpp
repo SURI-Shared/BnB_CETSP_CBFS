@@ -473,7 +473,7 @@ vector< int > BranchNBound::selectRoot2()
             solveCplexSGR->finishSOCP();
             delete solveCplexSGR;
 
-            if( cpuTime() > 1800 ){
+            if( monotonicClock() > 1800 ){
                return sequence;
             }	
          }					
@@ -546,7 +546,7 @@ vector< int > BranchNBound::selectRoot3()
             delete solveCplexSGR3;
             delete BnB;
 
-            if( cpuTime() > 1800 ){
+            if( monotonicClock() > 1800 ){
                return sequence;
             }	
          }					

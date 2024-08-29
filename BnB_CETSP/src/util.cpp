@@ -138,6 +138,12 @@ double wallClock() {
 	return mili;
 }
 
+double monotonicClock() {
+	timespec now;
+	clock_gettime(CLOCK_MONOTONIC,&now);
+	return (double)now.tv_sec+(((double)now.tv_nsec)/((double)1e9));
+}
+
 double cpuTime() {
 	static struct rusage usage;
 	getrusage(RUSAGE_SELF, &usage);

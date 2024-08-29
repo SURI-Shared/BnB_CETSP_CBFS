@@ -33,7 +33,7 @@ CETSP_solver::CETSP_solver(Data* d, CETSP_Options& option)
 
 bool CETSP_solver::init_root_node()
 {
-    m_init_total_bnb_time = cpuTime();
+    m_init_total_bnb_time = monotonicClock();
     if( m_root_select_rule == 1 ) m_root_node->pts = m_bnbPtr->selectRoot();
     if( m_root_select_rule == 2 ) m_root_node->pts = m_bnbPtr->selectRoot2();
     if( m_root_select_rule == 3 ) m_root_node->pts = m_bnbPtr->selectRoot3();
@@ -48,9 +48,9 @@ bool CETSP_solver::init_root_node()
     }
     
     SolveSocpCplex *solveSocpPtr = new SolveSocpCplex(m_data, m_root_node->pts);
-    m_init_socp_time = cpuTime();
+    m_init_socp_time = monotonicClock();
     solveSocpPtr->solveSOCP( m_root_node->pts );
-    m_total_socp_time += ( cpuTime() - m_init_socp_time );
+    m_total_socp_time += ( monotonicClock() - m_init_socp_time );
     m_count_SOCP_solved++;
 
     m_root_node->lb = solveSocpPtr->getF_value();
@@ -102,7 +102,7 @@ bool CETSP_solver::init_root_node()
         m_solution_coords.clear();
         m_solution_coords.push_back(tempX); m_solution_coords.push_back(tempY); m_solution_coords.push_back(tempZ);
         
-        m_computation_time = cpuTime() - m_init_total_bnb_time;
+        m_computation_time = monotonicClock() - m_init_total_bnb_time;
         m_gap_root = ((m_best_ub - m_root_lb)/ m_best_ub)*100;
 
         delete m_root_node;
@@ -209,10 +209,10 @@ int CETSP_solver::solve()
     vectorOfChildren.resize(1);
     all_children_seqs.resize(1);
     vector<int>::iterator stBrchit;
-    m_init_total_bnb_time = cpuTime();
+    m_init_total_bnb_time = monotonicClock();
     // begin iteration
-    // while (!open.empty() && cpuTime() - m_init_total_bnb_time <= m_time_limit)
-    while (cbfs->m_num_unexplrd_nodes != 0 && cpuTime() - m_init_total_bnb_time <= m_time_limit)
+    // while (!open.empty() && monotonicClock() - m_init_total_bnb_time <= m_time_limit)
+    while (cbfs->m_num_unexplrd_nodes != 0 && monotonicClock() - m_init_total_bnb_time <= m_time_limit)
     {
         node* current;
         if (m_branching_strategy == 4)
@@ -232,7 +232,7 @@ int CETSP_solver::solve()
             //     strongBranchingSize -= current->pts.size() - 3;
             //     strongBranchingSize = max(1, strongBranchingSize);
             // }
-            double initialTimeSB = cpuTime();
+            double initialTimeSB = monotonicClock();
             // if (strongBranchingSize > 1 && m_print_results_on)
             // {
             //     cout << "Doing Strong Branching: " << strongBranchingSize << endl;
@@ -268,7 +268,7 @@ int CETSP_solver::solve()
                         child->pts = current->pts;
                         child->pts.insert(child->pts.begin() + (pos+1), insert_id);
 
-                        m_init_socp_time = cpuTime();
+                        m_init_socp_time = monotonicClock();
                         if (solveSocpPtr2->m_num_solves == 0)
                         {
                             solveSocpPtr2->populate_removable_constraints(child->pts);
@@ -281,7 +281,7 @@ int CETSP_solver::solve()
                         solveSocpPtr2->solveSOCP();
                         // solveSocpPtr2->clear_removable_constraints();
                         prev_insert_pos = curr_insert_pos;
-                        m_total_socp_time += ( cpuTime() - m_init_socp_time );
+                        m_total_socp_time += ( monotonicClock() - m_init_socp_time );
                         m_count_SOCP_solved++;
                         child->lb = solveSocpPtr2->getF_value();
                         // child->lb = max(child->lb, current->lb);
@@ -351,7 +351,7 @@ int CETSP_solver::solve()
                 vectorOfChildren[0] = tempSbStr;
                 delete solveSocpPtr2;
             }
-            m_sb_computation_time +=  cpuTime() - initialTimeSB;
+            m_sb_computation_time +=  monotonicClock() - initialTimeSB;
 
             int pos = 0;
 
@@ -379,7 +379,7 @@ int CETSP_solver::solve()
         cbfs->delNode(current);
         delete current;
     }
-    m_computation_time = cpuTime() - m_init_total_bnb_time;
+    m_computation_time = monotonicClock() - m_init_total_bnb_time;
     if (m_computation_time > m_time_limit) optimalFound = 1;
     
     // update all lbs based on the recoreded lb info
@@ -453,9 +453,9 @@ int CETSP_solver::solve_keep_node()
     // all_children_seqs.resize(1);
     vector<int>::iterator stBrchit;
     // vector<node*> temp_store_all_nodes;
-    m_init_total_bnb_time = cpuTime();
+    m_init_total_bnb_time = monotonicClock();
     // begin iteration
-    while (cbfs->m_num_unexplrd_nodes != 0 && cpuTime() - m_init_total_bnb_time <= m_time_limit)
+    while (cbfs->m_num_unexplrd_nodes != 0 && monotonicClock() - m_init_total_bnb_time <= m_time_limit)
     {
         node* current;
         if (m_branching_strategy == 4)
@@ -468,7 +468,7 @@ int CETSP_solver::solve_keep_node()
         if (!current->notCovered.empty() && current->lb < m_best_ub)
         {
             stBrchit = current->notCovered.begin();
-            double initialTimeSB = cpuTime();
+            double initialTimeSB = monotonicClock();
             // string parent_seq = convert_seq_to_string(current->pts);
             for (int t = 0; t < strongBranchingSize && t < current->notCovered.size(); t++)
             {
@@ -500,7 +500,7 @@ int CETSP_solver::solve_keep_node()
                         child->pts = current->pts;
                         child->pts.insert(child->pts.begin() + (pos+1), insert_id);
 
-                        m_init_socp_time = cpuTime();
+                        m_init_socp_time = monotonicClock();
                         if (solveSocpPtr2->m_num_solves == 0)
                         {
                             solveSocpPtr2->populate_removable_constraints(child->pts);
@@ -512,7 +512,7 @@ int CETSP_solver::solve_keep_node()
                         }
                         solveSocpPtr2->solveSOCP();
                         prev_insert_pos = curr_insert_pos;
-                        m_total_socp_time += ( cpuTime() - m_init_socp_time );
+                        m_total_socp_time += ( monotonicClock() - m_init_socp_time );
                         m_count_SOCP_solved++;
                         child->lb = solveSocpPtr2->getF_value();
                         // LAH records
@@ -591,7 +591,7 @@ int CETSP_solver::solve_keep_node()
                 vectorOfChildren[0] = tempSbStr;
                 delete solveSocpPtr2;
             }
-            m_sb_computation_time +=  cpuTime() - initialTimeSB;
+            m_sb_computation_time +=  monotonicClock() - initialTimeSB;
 
             int pos = 0;
             // m_sequence_children[parent_seq] = all_children_seqs[pos];
@@ -616,7 +616,7 @@ int CETSP_solver::solve_keep_node()
         cbfs->delNode(current);
         delete current;
     }
-    m_computation_time = cpuTime() - m_init_total_bnb_time;
+    m_computation_time = monotonicClock() - m_init_total_bnb_time;
     if (m_computation_time > m_time_limit) optimalFound = 1;
     
     if (optimalFound == 1)
@@ -713,9 +713,9 @@ int CETSP_solver::solve_keep_history()
     vector<int>::iterator stBrchit;
     vector<node*> temp_store_all_nodes;
     temp_store_all_nodes.push_back(m_root_node);
-    m_init_total_bnb_time = cpuTime();
+    m_init_total_bnb_time = monotonicClock();
     // begin iteration
-    while (cbfs->m_num_unexplrd_nodes != 0 && cpuTime() - m_init_total_bnb_time <= m_time_limit)
+    while (cbfs->m_num_unexplrd_nodes != 0 && monotonicClock() - m_init_total_bnb_time <= m_time_limit)
     {
         node* current;
         if (m_branching_strategy == 4)
@@ -727,7 +727,7 @@ int CETSP_solver::solve_keep_history()
         if (!current->notCovered.empty() && current->lb < m_best_ub)
         {
             stBrchit = current->notCovered.begin();
-            double initialTimeSB = cpuTime();
+            double initialTimeSB = monotonicClock();
             string parent_seq = convert_seq_to_string(current->pts);
             for (int t = 0; t < strongBranchingSize && t < current->notCovered.size(); t++)
             {
@@ -759,7 +759,7 @@ int CETSP_solver::solve_keep_history()
                         child->pts = current->pts;
                         child->pts.insert(child->pts.begin() + (pos+1), insert_id);
 
-                        m_init_socp_time = cpuTime();
+                        m_init_socp_time = monotonicClock();
                         if (solveSocpPtr2->m_num_solves == 0)
                         {
                             solveSocpPtr2->populate_removable_constraints(child->pts);
@@ -771,7 +771,7 @@ int CETSP_solver::solve_keep_history()
                         }
                         solveSocpPtr2->solveSOCP();
                         prev_insert_pos = curr_insert_pos;
-                        m_total_socp_time += ( cpuTime() - m_init_socp_time );
+                        m_total_socp_time += ( monotonicClock() - m_init_socp_time );
                         m_count_SOCP_solved++;
                         child->lb = solveSocpPtr2->getF_value();
                         // LAH records
@@ -846,7 +846,7 @@ int CETSP_solver::solve_keep_history()
                 vectorOfChildren[0] = tempSbStr;
                 delete solveSocpPtr2;
             }
-            m_sb_computation_time +=  cpuTime() - initialTimeSB;
+            m_sb_computation_time +=  monotonicClock() - initialTimeSB;
 
             int pos = 0;
             m_sequence_children[parent_seq] = all_children_seqs[pos];
@@ -870,7 +870,7 @@ int CETSP_solver::solve_keep_history()
         cbfs->delNode(current);
         // delete current;
     }
-    m_computation_time = cpuTime() - m_init_total_bnb_time;
+    m_computation_time = monotonicClock() - m_init_total_bnb_time;
     if (m_computation_time > m_time_limit) optimalFound = 1;
     
     if (optimalFound == 0)

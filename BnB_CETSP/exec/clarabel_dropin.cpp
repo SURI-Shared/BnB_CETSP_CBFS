@@ -160,7 +160,7 @@ int main(int argc, char** argv)
    double sbComputationTime = 0;
    // double dbl_compare_constant = 0.000001;
 
-   double initialTotalTimeBnB = cpuTime();
+   double initialTotalTimeBnB = monotonicClock();
    // Branch and bound function class initialization
    BranchNBound *bnbPtr = new BranchNBound( dataptr );
    // bnbPtr->set_branch_rule(force_branch_rule);
@@ -193,9 +193,9 @@ int main(int argc, char** argv)
    SolveSocpClarabel *solveSocpPtr = new SolveSocpClarabel( dataptr, root->pts );
    //solve model
    double totalSocpCompTime = 0;
-   double initialSocpCompTime = cpuTime();
+   double initialSocpCompTime = monotonicClock();
    solveSocpPtr->solveSOCP( root->pts );
-   totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
+   totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
    count_SOCP_solved++;
 
    root->lb = solveSocpPtr->getF_value();
@@ -238,7 +238,7 @@ int main(int argc, char** argv)
       cout << "FEASIBLE ROOT" << endl;
       best_lb = rootLB;
       best = rootLB;
-      double computationTime = cpuTime() - initialTotalTimeBnB;
+      double computationTime = monotonicClock() - initialTotalTimeBnB;
       double gap_root = ( ( best_ub - rootLB )/ best_ub )*100;
       printDataToFile( dataptr, option, overlap, sizeInst, bestKnown, best, best_lb, 0, count_SOCP_solved, 0, computationTime, 0, computationTime, 0, 0, 0, branchingStrategy );
       
@@ -319,7 +319,7 @@ int main(int argc, char** argv)
    vector<sbAuxStruct> vectorOfChildren;
    vector< int >::iterator stBrchit;
 
-   // while( !open.empty() && cpuTime() - initialTotalTimeBnB <= timeLimit )
+   // while( !open.empty() && monotonicClock() - initialTotalTimeBnB <= timeLimit )
    while(true)
    {
       long temp_memory = get_curr_memory_consumption();
@@ -335,7 +335,7 @@ int main(int argc, char** argv)
          optimalFound = 0;
          break;
       }
-      else if (cpuTime() - initialTotalTimeBnB > timeLimit)
+      else if (monotonicClock() - initialTotalTimeBnB > timeLimit)
       {
          optimalFound = 1;
          break;
@@ -491,7 +491,7 @@ int main(int argc, char** argv)
          //============================================================
 
          //begin strong branching
-         double initialTimeSB = cpuTime();
+         double initialTimeSB = monotonicClock();
 
          if ( strongBranchingSize > 1 )
          {
@@ -619,7 +619,7 @@ int main(int argc, char** argv)
                         }
                      }
                      
-                     initialSocpCompTime = cpuTime();
+                     initialSocpCompTime = monotonicClock();
                      if (solveSocpPtr2->m_num_solves == 0)
                      {
                         solveSocpPtr2->populate_removable_constraints(child->pts);
@@ -632,7 +632,7 @@ int main(int argc, char** argv)
                      solveSocpPtr2->solveSOCP();
                      solveSocpPtr2->accumulate_info(info_struct);
                      prev_insert_pos = curr_insert_pos;
-                     totalSocpCompTime += ( cpuTime() - initialSocpCompTime );
+                     totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
                      count_SOCP_solved++;
                      curr_child_socp_lb = solveSocpPtr2->getF_value();
 
@@ -853,7 +853,7 @@ int main(int argc, char** argv)
             solveSocpPtr2->finishSOCP();
             delete solveSocpPtr2;
          }
-         sbComputationTime += cpuTime() - initialTimeSB;
+         sbComputationTime += monotonicClock() - initialTimeSB;
 
          int pos = 0;
          //take the best sum when there are more than one set of candidates
@@ -932,7 +932,7 @@ int main(int argc, char** argv)
    mpf_class prctComp = mpz_class( sizeOfTree );
    prctComp = count_SOCP_solved/prctComp*100;
 
-   double computationTime = cpuTime() - initialTotalTimeBnB;
+   double computationTime = monotonicClock() - initialTotalTimeBnB;
 
    double gap_root = ( ( best_ub - rootLB )/ best_ub )*100;
    double gap_real = ( ( bestKnown - best_lb )/ bestKnown )*100;

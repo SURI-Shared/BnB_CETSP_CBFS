@@ -17,7 +17,7 @@ void Local_search_cetsp::solve()
     }
 
     int num_iter = 0;
-    double init_time = cpuTime();
+    double init_time = monotonicClock();
     double temp_sol = 0;
     double pre_sol = -1;
 
@@ -25,7 +25,7 @@ void Local_search_cetsp::solve()
     vector<double> temp_y(m_size_graph, 0);
     vector<double> temp_z(m_size_graph, 0);
 
-    while (num_iter < m_iter_lim && cpuTime() - init_time < m_time_lim)
+    while (num_iter < m_iter_lim && monotonicClock() - init_time < m_time_lim)
     {
         for (int i = 0; i < m_sequence.size(); i++)
         {

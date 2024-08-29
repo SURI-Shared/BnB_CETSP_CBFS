@@ -5,7 +5,7 @@
 #define WARM_START_NDIM 3//TODO: template WarmStartHandler on the dimension of the turning points
 
 WarmStartHandler::WarmStartHandler():init_time(0),solve_time(0),construct_time(0){
-    double start=cpuTime();
+    double start=monotonicClock();
     //global matrices for the tiny insertion problem
     Eigen::SparseMatrix<double> _insertion_problem_P(5,5);
     Eigen::SparseMatrix<double> _insertion_problem_A(12,5);
@@ -47,7 +47,7 @@ WarmStartHandler::WarmStartHandler():init_time(0),solve_time(0),construct_time(0
     insertion_problem_solver_ptr=new clarabel::DefaultSolver<double>(_insertion_problem_P,Eigen::Ref<Eigen::VectorXd>(_insertion_problem_q),
                                                               _insertion_problem_A,Eigen::Ref<Eigen::VectorXd>(_insertion_problem_initial_b),
                                                               _insertion_problem_cones,_insertion_problem_settings);
-    init_time=cpuTime()-start;
+    init_time=monotonicClock()-start;
 }
 
 WarmStartHandler::~WarmStartHandler(){
@@ -55,12 +55,12 @@ WarmStartHandler::~WarmStartHandler(){
 }
 void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const BnBNodeForWarmStart& parent,
                                                Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
-    double start=cpuTime();
+    double start=monotonicClock();
     this->construct_initial_guess(current_sequence,parent.sequence,parent.primals,
     parent.slacks,
     parent.duals,instanceData,out_primals,out_slacks,out_duals);
     // this->construct_initial_guess(current_sequence,parent.sequence,parent.turning_points(),parent.duals,instanceData,out_primals,out_slacks,out_duals);
-    construct_time+=cpuTime()-start;
+    construct_time+=monotonicClock()-start;
 }
 
 void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, 
@@ -225,7 +225,7 @@ Parameters: point1 : const Eigen::Vector3d&
 Mutated:    this->insertion_problem_solver (calls this->insertion_problem_solver.update_b(), this->insertion_problem_solver.solve(), this->insertion_problem_solver.solution())
 */
 void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2, const Eigen::Vector3d& center,double radius,double* out_turning_point,double* out_dual){
-    double start=cpuTime();
+    double start=monotonicClock();
     Eigen::Vector<double,12> new_b;
     new_b[0]=radius;
     new_b.segment<3>(1)=center;
@@ -242,7 +242,7 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
         out_turning_point[i]=solution.x[2+i];
     }
     *out_dual=solution.z[0];
-    solve_time+=cpuTime()-start;
+    solve_time+=monotonicClock()-start;
 }
 
 void WarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const std::vector<int>& parent_sequence,
@@ -379,7 +379,7 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
                              double* fa_out, double* fb_out, double* x_out, 
                              double* in_neighborhood_slack_out, double* fa_slack_out, double* fb_slack_out, 
                              double* in_neighborhood_dual_out, double* fa_dual_out,double* fb_dual_out){
-    double start=cpuTime();
+    double start=monotonicClock();
     Eigen::Vector<double,12> new_b;
     new_b[0]=radius;
     new_b.segment<3>(1)=center;
@@ -414,7 +414,7 @@ void WarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, co
         fb_dual_out[i]*=-1;
     }
 
-    solve_time+=cpuTime()-start;
+    solve_time+=monotonicClock()-start;
 }
 
 BnBNodeForWarmStart::BnBNodeForWarmStart(const std::vector<int>& sequence_in,

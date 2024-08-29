@@ -6,7 +6,7 @@
 #define WARM_START_NDIM 3//TODO: template WarmStartHandler on the dimension of the turning points
 
 SCSWarmStartHandler::SCSWarmStartHandler(bool use_tridiagonal):init_time(0),solve_time(0),construct_time(0),as_tridiagonal(use_tridiagonal),solution(){
-    double start=cpuTime();
+    double start=monotonicClock();
     //global matrices for the tiny insertion problem
     Eigen::SparseMatrix<double> _insertion_problem_P(5,5);
     Eigen::SparseMatrix<double> _insertion_problem_A(12,5);
@@ -78,7 +78,7 @@ SCSWarmStartHandler::SCSWarmStartHandler(bool use_tridiagonal):init_time(0),solv
     free(cones.q);
     delete data.A;
 
-    init_time=cpuTime()-start;
+    init_time=monotonicClock()-start;
 }
 
 SCSWarmStartHandler::~SCSWarmStartHandler(){
@@ -89,12 +89,12 @@ SCSWarmStartHandler::~SCSWarmStartHandler(){
 }
 void SCSWarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const BnBNodeForWarmStart& parent,
                                                Data* instanceData,std::vector<double>& out_primals,std::vector<double>& out_slacks, std::vector<double>& out_duals){
-    double start=cpuTime();
+    double start=monotonicClock();
     this->construct_initial_guess(current_sequence,parent.sequence,parent.primals,
     parent.slacks,
     parent.duals,instanceData,out_primals,out_slacks,out_duals);
     // this->construct_initial_guess(current_sequence,parent.sequence,parent.turning_points(),parent.duals,instanceData,out_primals,out_slacks,out_duals);
-    construct_time+=cpuTime()-start;
+    construct_time+=monotonicClock()-start;
 }
 
 void SCSWarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, 
@@ -288,7 +288,7 @@ Mutated:    this->insertion_problem_work_ptr, this->solution, this->info (calls 
             solve_time (adds duration of this method)
 */
 void SCSWarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1, const Eigen::Vector3d& point2, const Eigen::Vector3d& center,double radius,double* out_turning_point,double* out_dual){
-    double start=cpuTime();
+    double start=monotonicClock();
     Eigen::Vector<double,12> new_b;
     new_b[0]=radius;
     new_b.segment<3>(1)=center;
@@ -303,7 +303,7 @@ void SCSWarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1,
         out_turning_point[i]=solution.x[2+i];
     }
     *out_dual=solution.y[0];
-    solve_time+=cpuTime()-start;
+    solve_time+=monotonicClock()-start;
 }
 
 void SCSWarmStartHandler::construct_initial_guess(const std::vector<int>& current_sequence, const std::vector<int>& parent_sequence,
@@ -466,7 +466,7 @@ void SCSWarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1,
                              double* fa_out, double* fb_out, double* x_out, 
                              double* in_neighborhood_slack_out, double* fa_slack_out, double* fb_slack_out, 
                              double* in_neighborhood_dual_out, double* fa_dual_out,double* fb_dual_out){
-    double start=cpuTime();
+    double start=monotonicClock();
     Eigen::Vector<double,12> new_b;
     new_b[0]=radius;
     new_b.segment<3>(1)=center;
@@ -500,5 +500,5 @@ void SCSWarmStartHandler::solve_insertion_problem(const Eigen::Vector3d& point1,
         fb_dual_out[i]*=-1;
     }
 
-    solve_time+=cpuTime()-start;
+    solve_time+=monotonicClock()-start;
 }
