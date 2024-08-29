@@ -179,9 +179,12 @@ int main(int argc, char** argv)
 
    //### root node selection strategy ###
    SolveSocpSCSStatistics info_struct;
+   double totalSocpCompTime = 0;
+   double initialSocpCompTime = monotonicClock();
    if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCStridiag(info_struct);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
+   totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
 
    cout << "Initial root: ";
    for ( int i = 0; i <root->pts.size() ; i++ ){
@@ -192,8 +195,7 @@ int main(int argc, char** argv)
 
    SolveSocpSCS *solveSocpPtr = new SolveSocpSCS( dataptr, root->pts ,true);
    //solve model
-   double totalSocpCompTime = 0;
-   double initialSocpCompTime = monotonicClock();
+   initialSocpCompTime = monotonicClock();
    solveSocpPtr->solveSOCP( );
    totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
    count_SOCP_solved++;
