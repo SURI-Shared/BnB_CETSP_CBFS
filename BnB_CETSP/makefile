@@ -106,7 +106,11 @@ scs_tridiag_warmstart: $(OBJDIR)/exec/scs_tridiag_warmstart.o $(OBJS) $(SCS_OBJS
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 
-all: exeCVXHULL clarabel_dropin clarabel_redundant clarabel_recycling clarabel_warmstart scs_dropin scs_recycling scs_warmstart scs_tridiag_dropin scs_tridiag_recycling scs_tridiag_warmstart
+clarabel: clarabel_dropin clarabel_redundant clarabel_recycling clarabel_warmstart
+
+scs: scs_dropin scs_recycling scs_warmstart scs_tridiag_dropin scs_tridiag_recycling scs_tridiag_warmstart
+
+all: exeCVXHULL clarabel scs
 #includes dependency files
 -include $(OBJS:.o=.d)
 
