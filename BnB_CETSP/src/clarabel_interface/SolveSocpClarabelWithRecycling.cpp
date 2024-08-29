@@ -40,7 +40,7 @@ void SolveSocpClarabelWithRecycling::createModel(vector<int>& sequence){
 void SolveSocpClarabelWithRecycling::solveSOCP(){
     SolveSocpClarabel::solveSOCP();
     accumulate_info();
-    cout<<solution.setup_time<<endl;
+    solver_ptr->clear_setup_timers();
 }
 void SolveSocpClarabelWithRecycling::accumulate_info(){
     SolveSocpClarabel::accumulate_info(info_struct);
@@ -116,7 +116,6 @@ void SolveSocpClarabelWithRecycling::update_b(){
             }
         }
     }
-    solver_ptr->clear_setup_timers();
     solver_ptr->update_b(b);
 }
 void SolveSocpClarabelWithRecycling::clear_removable_constraints(){}
@@ -146,5 +145,5 @@ void SolveSocpClarabelWithRecycling::solve_warm(double* primal_guess, double* sl
     violation=solution.r_prim;
     m_num_solves+=1;
     accumulate_info();
-    cout<<solution.setup_time<<endl;
+    solver_ptr->clear_setup_timers();
 }
