@@ -74,10 +74,10 @@ class SolveSocpSCS{
       Eigen::Map<Eigen::VectorXd> duals(){return Eigen::Map<Eigen::VectorXd>(solution.y,ncon);}
       Eigen::Map<Eigen::VectorXd> slacks(){return Eigen::Map<Eigen::VectorXd>(solution.s,ncon);}
       int get_latest_iterations(){return info.iter;}
-      double get_latest_solve_time(){return info.solve_time;}
-      double get_latest_setup_time(){return info.setup_time;}
-      double get_latest_kktinit_time(){return info.init_lin_sys_time;}
-      double get_latest_kkt_solve_time(){return info.lin_sys_time;}
+      double get_latest_solve_time(){return info.solve_time/1000;}
+      double get_latest_setup_time(){return info.setup_time/1000;}
+      double get_latest_kktinit_time(){return info.init_lin_sys_time/1000;}
+      double get_latest_kkt_solve_time(){return info.lin_sys_time/1000;}
 
    protected:
       
