@@ -54,7 +54,7 @@ std::ostream& operator<<(std::ostream& os, const SolveSocpClarabelStatistics& in
     cout << "    SOCP Equilibration Time: "<<info_struct.equilibration_time<<endl;
     cout << "    SOCP KKT init Time: "<<info_struct.kktinit_time<<endl;
     cout << "SOCP initialization Time: "<<info_struct.initialization_time<<endl;
-    cout << "SOCP IP Iteration Time: "<<info_struct.ip_iteration_time<<endl;
+    cout << "SOCP Iteration Time: "<<info_struct.ip_iteration_time<<endl;
     cout << "    SOCP KKT Update Time: "<<info_struct.kkt_update_time<<endl;
     cout << "    SOCP KKT Solve Time: "<<info_struct.kkt_solve_time<<endl;
     return os;

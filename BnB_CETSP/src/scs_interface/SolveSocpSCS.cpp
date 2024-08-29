@@ -9,10 +9,13 @@ std::ostream& operator<<(std::ostream& os, const SolveSocpSCSStatistics& info_st
     cout << "SOCPs solved: "<<info_struct.m_num_solves<<endl;
     cout << "Solvers made: "<<info_struct.solvers_made<<endl;
     cout << "SOCP Internal Iterations: "<<info_struct.iterations<<endl;
-    cout << "SOCP Internal Solve Time: "<<info_struct.solve_time<<endl;
+    cout << "SOCP Internal Solve Time: "<<info_struct.solve_time+info_struct.setup_time<<endl;
     cout << "SOCP Setup Time: "<<info_struct.setup_time<<endl;
     cout << "    SOCP KKT init Time: "<<info_struct.kktinit_time<<endl;
-    cout << "SOCP Iteration Time: "<<info_struct.kkt_solve_time<<endl;
+    cout << "SOCP Iteration Time: "<<info_struct.solve_time<<endl;
+    cout << "    SOCP KKT Solve Time: "<<info_struct.kkt_solve_time<<endl;
+    cout << "    SOCP Cone Proj Time: "<<info_struct.cone_proj_time<<endl;
+    cout << "    Anderson Accel Time: "<<info_struct.accel_time<<endl;
     return os;
 }
 typedef Eigen::Triplet<double> Triplet;
@@ -418,6 +421,8 @@ void SolveSocpSCS::accumulate_info(SolveSocpSCSStatistics& info_struct){
     info_struct.setup_time+=get_latest_setup_time();
     info_struct.kktinit_time+=get_latest_kktinit_time();
     info_struct.kkt_solve_time+=get_latest_kkt_solve_time();
+    info_struct.cone_proj_time+=get_latest_cone_proj_time();
+    info_struct.accel_time+=get_latest_accel_time();
     info_struct.iterations+=get_latest_iterations();
 }
 

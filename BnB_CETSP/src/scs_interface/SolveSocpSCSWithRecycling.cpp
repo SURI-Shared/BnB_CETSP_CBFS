@@ -11,6 +11,8 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
     info_struct.setup_time=0;
     info_struct.kktinit_time=0;
     info_struct.kkt_solve_time=0;
+    info_struct.cone_proj_time=0;
+    info_struct.accel_time=0;
     info_struct.iterations=0;
     solvers.insert({in_sequence.size(),workspace_ptr});
     size_t max_nvar=compute_nvar(instance->getSizeInst());
@@ -30,6 +32,8 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
     info_struct.setup_time=0;
     info_struct.kktinit_time=0;
     info_struct.kkt_solve_time=0;
+    info_struct.cone_proj_time=0;
+    info_struct.accel_time=0;
     info_struct.iterations=0;
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());
@@ -48,6 +52,8 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
     info_struct.setup_time=0;
     info_struct.kktinit_time=0;
     info_struct.kkt_solve_time=0;
+    info_struct.cone_proj_time=0;
+    info_struct.accel_time=0;
     info_struct.iterations=0;
     solvers.insert({in_sequence.size(),workspace_ptr});
     size_t max_nvar=compute_nvar(instance->getSizeInst());
@@ -67,6 +73,8 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
     info_struct.setup_time=0;
     info_struct.kktinit_time=0;
     info_struct.kkt_solve_time=0;
+    info_struct.cone_proj_time=0;
+    info_struct.accel_time=0;
     info_struct.iterations=0;
     size_t max_nvar=compute_nvar(instance->getSizeInst());
     size_t max_ncon=compute_ncon(instance->getSizeInst());

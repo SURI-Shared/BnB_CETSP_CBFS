@@ -33,6 +33,8 @@ struct SolveSocpSCSStatistics{
       double setup_time=0;
       double kktinit_time=0;
       double kkt_solve_time=0;
+      double cone_proj_time=0;
+      double accel_time=0;
       uint32_t iterations=0;
 };
 std::ostream& operator<<(std::ostream& os, const SolveSocpSCSStatistics& info_struct);
@@ -78,6 +80,8 @@ class SolveSocpSCS{
       double get_latest_setup_time(){return info.setup_time/1000;}
       double get_latest_kktinit_time(){return info.init_lin_sys_time/1000;}
       double get_latest_kkt_solve_time(){return info.lin_sys_time/1000;}
+      double get_latest_cone_proj_time(){return info.cone_time/1000;}
+      double get_latest_accel_time(){return info.accel_time/1000;}
 
    protected:
       
