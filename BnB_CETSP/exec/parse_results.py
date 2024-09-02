@@ -332,7 +332,7 @@ def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_fo
     ax.legend(artists.values(),artists.keys())
     return ax
 
-def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_case_total_key,size_data_dicts,case_names,keys_for_each_case,colors_by_key,ax=None,scale_factors_by_key=None):
+def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_case_total_key,size_data_dicts,case_names,keys_for_each_case,total_key,name_for_other_category,colors_by_key,ax=None,scale_factors_by_key=None):
     if ax is None:
         fig=pyplot.figure()
         ax=fig.gca()
@@ -342,15 +342,20 @@ def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_
     for i in range(len(size_data_dicts)):
         size_data_dict=size_data_dicts[i]
         sizes=list(sorted(size_data_dict.keys()))
+        quantity_not_accounted_for=dict()
         for key in keys_for_each_case[i]:
             v=[]
             for size in sizes:
                 for instance in size_data_dict[size]:
                     v.append(size_data_dict[size][instance][key]/totals[instance])
+                    if instance not in quantity_not_accounted_for:
+                        quantity_not_accounted_for[instance]=size_data_dict[size][instance][total_key]/totals[instance]
+                    quantity_not_accounted_for[instance]-=size_data_dict[size][instance][key]/totals[instance]
             v=np.array(v)
             if scale_factors_by_key is not None and key in scale_factors_by_key:
                 v*=scale_factors_by_key[key]
             ratios_by_key[key][i]=np.mean(v)
+        ratios_by_key[name_for_other_category][i]=np.mean(list(quantity_not_accounted_for.values()))
 
     case_positions= np.arange(len(size_data_dicts))
     cumulative=np.zeros(len(size_data_dicts))
