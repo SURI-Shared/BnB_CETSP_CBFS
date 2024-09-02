@@ -49,7 +49,7 @@ data=[parse_results.load_folder(os.path.join("Results/medium_2D_Behdani_CETSPs/r
 #                 data[itemid][size][case]["Warm Start Time"]*=1000
 
 
-ax=parse_results.compare_bar_plot_stacked_keys_shm_vs_size([data[2],data[3],data[4],
+ax=parse_results.compare_bar_plot_stacked_keys_avg_ratio_all_sizes(data[0],"Time SOCP",[data[2],data[3],data[4],
                                                             data[5],data[6],data[7],
                                                             data[8],data[9],data[10]],
                                                            ["Clarabel+Reduce","Clarabel+Reduce+Reuse","Clarabel+Reduce+Reuse+Recycle",
@@ -61,6 +61,5 @@ ax=parse_results.compare_bar_plot_stacked_keys_shm_vs_size([data[2],data[3],data
                                                          2*[["SOCP Setup Time", "SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time","Warm Start Time"]],
-                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"g","Warm Start Time":"b",'SOCP initialization Time':'y'},
-                                                            log=False)
-ax.set_xlabel("Geometric Mean CPU Time (s)")
+                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"b","Warm Start Time":"g",'SOCP initialization Time':'y'})
+ax.set_xlabel("Avg Fraction of Cout+ SOCP Time")

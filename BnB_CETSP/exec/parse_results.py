@@ -332,6 +332,36 @@ def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_fo
     ax.legend(artists.values(),artists.keys())
     return ax
 
+def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_case_total_key,size_data_dicts,case_names,keys_for_each_case,colors_by_key,ax=None,scale_factors_by_key=None):
+    if ax is None:
+        fig=pyplot.figure()
+        ax=fig.gca()
+    
+    ratios_by_key=defaultdict(lambda:np.zeros(len(size_data_dicts)))
+    totals={instance:nominal_data_dict[size][instance][nominal_case_total_key] for size in nominal_data_dict for instance in nominal_data_dict[size]}
+    for i in range(len(size_data_dicts)):
+        size_data_dict=size_data_dicts[i]
+        sizes=list(sorted(size_data_dict.keys()))
+        for key in keys_for_each_case[i]:
+            v=[]
+            for size in sizes:
+                for instance in size_data_dict[size]:
+                    v.append(size_data_dict[size][instance][key]/totals[instance])
+            v=np.array(v)
+            if scale_factors_by_key is not None and key in scale_factors_by_key:
+                v*=scale_factors_by_key[key]
+            ratios_by_key[key][i]=np.mean(v)
+
+    case_positions= np.arange(len(size_data_dicts))
+    cumulative=np.zeros(len(size_data_dicts))
+    for key in ratios_by_key:
+        bar=ax.barh(case_positions,ratios_by_key[key],1,cumulative,label=key,log=False,color=colors_by_key[key],edgecolor="k")
+        cumulative+=ratios_by_key[key]
+        ax.bar_label(bar,labels=[f"{x*100:.1f}%" if x>0 else "" for x in ratios_by_key[key]],label_type="center")
+    ax.set_yticks(case_positions,case_names,horizontalalignment='right',verticalalignment='center')
+    ax.legend()
+    return ax
+
 def bar_plot_stacked_keys_shm_vs_size(size_data_dict,case_name,keys,colors_by_key,num_bars,bar_index,shift=0,ax=None,show_range=False,log=False,scale_factors_by_key=None):
     if ax is None:
         fig=pyplot.figure()
