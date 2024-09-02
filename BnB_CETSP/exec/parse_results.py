@@ -358,6 +358,7 @@ def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_
         bar=ax.barh(case_positions,ratios_by_key[key],1,cumulative,label=key,log=False,color=colors_by_key[key],edgecolor="k")
         cumulative+=ratios_by_key[key]
         ax.bar_label(bar,labels=[f"{x*100:.1f}%" if x>0 else "" for x in ratios_by_key[key]],label_type="center")
+    ax.bar_label(bar,labels=[f"{cum*100:.1f}%" for cum in cumulative])
     ax.set_yticks(case_positions,case_names,horizontalalignment='right',verticalalignment='center')
     ax.legend()
     return ax
