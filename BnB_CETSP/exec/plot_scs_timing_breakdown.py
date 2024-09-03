@@ -52,14 +52,14 @@ data=[parse_results.load_folder(os.path.join("Results/medium_2D_Behdani_CETSPs/r
 ax=parse_results.compare_bar_plot_stacked_keys_avg_ratio_all_sizes(data[1],"Time total",[data[2],data[3],data[4],
                                                             data[5],data[6],data[7],
                                                             data[8],data[9],data[10]],
-                                                           ["CRB+Reduce","CRB+Reduce+Reuse","CRB+Reduce+Reuse+Recycle",
-                                                            "SCS+Reduce","SCS+Reduce+Reuse","SCS+Reduce+Reuse+Recycle",
-                                                            "TSCS+Reduce","TSCS+Reduce+Reuse","TSCS+Reduce+Reuse+Recycle"],
+                                                           ["CRB+Red","CRB+Red+Reu","CRB+Red+Reu+Rec",
+                                                            "SCS+Red","SCS+Red+Reu","SCS+Red+Reu+Rec",
+                                                            "TSCS+Red","TSCS+Red+Reu","TSCS+Red+Reu+Rec"],
                                                            [["SOCP Setup Time", 'SOCP initialization Time',"SOCP Iteration Time"],
                                                             ["SOCP Setup Time",'SOCP initialization Time',"SOCP Iteration Time"],
                                                             ["SOCP Setup Time",'SOCP initialization Time',"SOCP Iteration Time","Warm Start Time"]]+
                                                          2*[["SOCP Setup Time", "SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time","Warm Start Time"]],"Time total","Other",
-                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"b","Warm Start Time":"g",'SOCP initialization Time':'y',"Other":'m'})
+                                                            {"SOCP Setup Time":"r","SOCP Iteration Time":"b","Warm Start Time":"g",'SOCP initialization Time':'y',"Other":'m'},{"SOCP initialization Time":"edge"})
 ax.set_xlabel("Avg Fraction of Cout+Clarabel Wall Time")

@@ -332,11 +332,11 @@ def compare_bar_plot_stacked_keys_shm_vs_size(size_data_dicts,case_names,keys_fo
     ax.legend(artists.values(),artists.keys())
     return ax
 
-def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_case_total_key,size_data_dicts,case_names,keys_for_each_case,total_key,name_for_other_category,colors_by_key,ax=None,scale_factors_by_key=None):
+def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_case_total_key,size_data_dicts,case_names,keys_for_each_case,total_key,name_for_other_category,colors_by_key,label_pos_by_key,ax=None,scale_factors_by_key=None):
     if ax is None:
         fig=pyplot.figure()
         ax=fig.gca()
-    
+    default_label_pos="center"
     ratios_by_key=defaultdict(lambda:np.zeros(len(size_data_dicts)))
     totals={instance:nominal_data_dict[size][instance][nominal_case_total_key] for size in nominal_data_dict for instance in nominal_data_dict[size]}
     for i in range(len(size_data_dicts)):
@@ -362,9 +362,13 @@ def compare_bar_plot_stacked_keys_avg_ratio_all_sizes(nominal_data_dict,nominal_
     for key in ratios_by_key:
         bar=ax.barh(case_positions,ratios_by_key[key],1,cumulative,label=key,log=False,color=colors_by_key[key],edgecolor="k")
         cumulative+=ratios_by_key[key]
-        ax.bar_label(bar,labels=[f"{x*100:.1f}%" if x>0 else "" for x in ratios_by_key[key]],label_type="center")
-    ax.bar_label(bar,labels=[f"{cum*100:.1f}%" for cum in cumulative])
-    ax.set_yticks(case_positions,case_names,horizontalalignment='right',verticalalignment='center')
+        if key in label_pos_by_key:
+            label_pos=label_pos_by_key[key]
+        else:
+            label_pos=default_label_pos
+        ax.bar_label(bar,labels=[f"{x*100:.1f}%" if x>0 else "" for x in ratios_by_key[key]],label_type=label_pos,padding=5,fontsize='large')
+    ax.bar_label(bar,labels=[f"{cum*100:.1f}%" for cum in cumulative],padding=10,fontsize='large')
+    ax.set_yticks(case_positions,case_names,horizontalalignment='right',verticalalignment='center',fontsize='large')
     ax.legend()
     return ax
 
