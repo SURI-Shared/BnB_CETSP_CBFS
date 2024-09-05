@@ -62,4 +62,4 @@ ax=parse_results.compare_bar_plot_stacked_keys_avg_ratio_all_sizes(data[1],"Time
                                                             ["SOCP Setup Time","SOCP Iteration Time"],
                                                             ["SOCP Setup Time","SOCP Iteration Time","Warm Start Time"]],"Time total","Other",
                                                             {"SOCP Setup Time":"r","SOCP Iteration Time":"b","Warm Start Time":"g",'SOCP initialization Time':'y',"Other":'m'},{"SOCP initialization Time":"edge"})
-ax.set_xlabel("Avg Fraction of Cout+Clarabel Wall Time",fontsize='x-large')
+ax.set_xlabel("Avg Fraction of Cout+Clarabel Wall Time",fontsize='xx-large')
