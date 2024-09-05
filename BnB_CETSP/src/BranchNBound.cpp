@@ -319,7 +319,7 @@ vector< int > BranchNBound::selectRootClarabel(SolveSocpClarabelStatistics& info
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
 //solves the SOCP to pick the last node using a SolveSocpClarabelWithReuse that is output via solver_out_ptr, which should have been passed as nullptr
-vector< int > BranchNBound::selectRootClarabelWithRecycling(SolveSocpClarabelWithReuse** solver_out_ptr,bool reduced_first_correction)
+vector< int > BranchNBound::selectRootClarabelWithReuse(SolveSocpClarabelWithReuse** solver_out_ptr,bool reduced_first_correction)
 {
    //	escolher os elementos que entram na raiz
    double greatestSolution = 0;
@@ -361,7 +361,7 @@ vector< int > BranchNBound::selectRootClarabelWithRecycling(SolveSocpClarabelWit
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
 //solves the SOCP to pick the last node using a SolveSocpSCSWithRecycling that is output via solver_out_ptr, which should have been passed as nullptr
-vector< int > BranchNBound::selectRootSCSWithRecycling(SolveSocpSCSWithRecycling** solver_out_ptr)
+vector< int > BranchNBound::selectRootSCSWithReuse(SolveSocpSCSWithReuse** solver_out_ptr)
 {
    //	escolher os elementos que entram na raiz
    double greatestSolution = 0;
@@ -379,7 +379,7 @@ vector< int > BranchNBound::selectRootSCSWithRecycling(SolveSocpSCSWithRecycling
    tempSequence[ 0 ] = 0;
    tempSequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
 
-   *solver_out_ptr=new SolveSocpSCSWithRecycling(objectOfData,3);
+   *solver_out_ptr=new SolveSocpSCSWithReuse(objectOfData,3);
 
    for ( int i = 1; i < sizeInst; i++ ){
       tempSequence[ 2 ] = i;
@@ -404,7 +404,7 @@ vector< int > BranchNBound::selectRootSCSWithRecycling(SolveSocpSCSWithRecycling
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
 //solves the SOCP to pick the last node using a SolveSocpSCSWithRecycling that is output via solver_out_ptr, which should have been passed as nullptr
-vector< int > BranchNBound::selectRootSCStridiagWithRecycling(SolveSocpSCSWithRecycling** solver_out_ptr)
+vector< int > BranchNBound::selectRootSCStridiagWithReuse(SolveSocpSCSWithReuse** solver_out_ptr)
 {
    //	escolher os elementos que entram na raiz
    double greatestSolution = 0;
@@ -422,7 +422,7 @@ vector< int > BranchNBound::selectRootSCStridiagWithRecycling(SolveSocpSCSWithRe
    tempSequence[ 0 ] = 0;
    tempSequence[ 1 ] = objectOfData->getDepotFarthest( 0 );
 
-   *solver_out_ptr=new SolveSocpSCSWithRecycling(objectOfData,3,true);
+   *solver_out_ptr=new SolveSocpSCSWithReuse(objectOfData,3,true);
 
    for ( int i = 1; i < sizeInst; i++ ){
       tempSequence[ 2 ] = i;

@@ -179,7 +179,7 @@ int main(int argc, char** argv)
    //####################################################################	
 
    //### root node selection strategy ###
-   SolveSocpSCSWithRecycling *solveSocpPtr;
+   SolveSocpSCSWithReuse *solveSocpPtr;
    double totalSocpCompTime = 0;
    double initialSocpCompTime = monotonicClock();
    if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCSWithRecycling(&solveSocpPtr);

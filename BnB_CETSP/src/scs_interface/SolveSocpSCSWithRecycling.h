@@ -4,14 +4,14 @@
 #include "SolveSocpSCS.h"
 #include <unordered_map>
 
-class SolveSocpSCSWithRecycling: public SolveSocpSCS{
+class SolveSocpSCSWithReuse: public SolveSocpSCS{
    public:
       //constructor
-      SolveSocpSCSWithRecycling( Data *, vector< int >&);
-      SolveSocpSCSWithRecycling( Data *,int);
-      SolveSocpSCSWithRecycling( Data *, vector< int >&,bool);
-      SolveSocpSCSWithRecycling( Data *,int,bool);
-      ~SolveSocpSCSWithRecycling();
+      SolveSocpSCSWithReuse( Data *, vector< int >&);
+      SolveSocpSCSWithReuse( Data *,int);
+      SolveSocpSCSWithReuse( Data *, vector< int >&,bool);
+      SolveSocpSCSWithReuse( Data *,int,bool);
+      ~SolveSocpSCSWithReuse();
       //functions
       void clear_removable_constraints();
       void clear_removable_constraints(int prev_pos, int curr_pos);

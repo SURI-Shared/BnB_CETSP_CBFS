@@ -1,7 +1,7 @@
 #include "SolveSocpSCSWithRecycling.h"
 
 //constructors
-SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int>& in_sequence):
+SolveSocpSCSWithReuse::SolveSocpSCSWithReuse(Data * instance, vector<int>& in_sequence):
     SolveSocpSCS(instance,in_sequence),
     info_struct(){
     //zero out the info struct entries
@@ -22,7 +22,7 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
     solution.y=(double*)calloc(ncon,sizeof(double));
 }
 
-SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_seq):
+SolveSocpSCSWithReuse::SolveSocpSCSWithReuse(Data * instance, int size_seq):
     SolveSocpSCS(instance,size_seq),
     info_struct(){
     //zero out the info struct entries
@@ -42,7 +42,7 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
     solution.y=(double*)calloc(max_ncon,sizeof(double));
 }
 
-SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int>& in_sequence, bool use_tridiagonal):
+SolveSocpSCSWithReuse::SolveSocpSCSWithReuse(Data * instance, vector<int>& in_sequence, bool use_tridiagonal):
     SolveSocpSCS(instance,in_sequence,use_tridiagonal),
     info_struct(){
     //zero out the info struct entries
@@ -63,7 +63,7 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, vector<int
     solution.y=(double*)calloc(ncon,sizeof(double));
 }
 
-SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_seq, bool use_tridiagonal):
+SolveSocpSCSWithReuse::SolveSocpSCSWithReuse(Data * instance, int size_seq, bool use_tridiagonal):
     SolveSocpSCS(instance,size_seq, use_tridiagonal),
     info_struct(){
     //zero out the info struct entries
@@ -83,7 +83,7 @@ SolveSocpSCSWithRecycling::SolveSocpSCSWithRecycling(Data * instance, int size_s
     solution.y=(double*)calloc(max_ncon,sizeof(double));
 }
 
-SolveSocpSCSWithRecycling::~SolveSocpSCSWithRecycling(){
+SolveSocpSCSWithReuse::~SolveSocpSCSWithReuse(){
     for(auto ptr: solvers){
         scs_finish(ptr.second);
     }
@@ -98,7 +98,7 @@ store a ScsWork in this->workspace_ptr and populate its data for the SOCP to vis
 Parameters: sequence : vector<int>&
                 the order to visit neighborhoods in. The first element must be the depot, of radius 0. The path returns to the depot after visiting sequence[-1]
 */
-void SolveSocpSCSWithRecycling::createModel(vector<int>& sequence){
+void SolveSocpSCSWithReuse::createModel(vector<int>& sequence){
     sizeProblem=sequence.size();
     if (solvers.count(sizeProblem)){
         workspace_ptr=solvers.at(sizeProblem);
@@ -111,20 +111,20 @@ void SolveSocpSCSWithRecycling::createModel(vector<int>& sequence){
     }
 }
 
-void SolveSocpSCSWithRecycling::clear_removable_constraints(){}//don't delete the old workspaces
-void SolveSocpSCSWithRecycling::clear_removable_constraints(int prev_pos, int curr_pos){
+void SolveSocpSCSWithReuse::clear_removable_constraints(){}//don't delete the old workspaces
+void SolveSocpSCSWithReuse::clear_removable_constraints(int prev_pos, int curr_pos){
     clear_removable_constraints();
 }
 
-void SolveSocpSCSWithRecycling::solveSOCP(){
+void SolveSocpSCSWithReuse::solveSOCP(){
     SolveSocpSCS::solveSOCP();
     accumulate_info();
 }
-void SolveSocpSCSWithRecycling::accumulate_info(){
+void SolveSocpSCSWithReuse::accumulate_info(){
     SolveSocpSCS::accumulate_info(info_struct);
     info_struct.solvers_made=solvers.size();
 }
-void SolveSocpSCSWithRecycling::update_b(){
+void SolveSocpSCSWithReuse::update_b(){
     size_t m=sequence.size()-1;
     size_t nf=m+1;
     size_t nx=SOCP_NDIM*m;
@@ -211,7 +211,7 @@ Mutates:    solution
             m_num_solves
             *workspace_ptr
 */
-void SolveSocpSCSWithRecycling::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess){
+void SolveSocpSCSWithReuse::solve_warm(double* primal_guess, double* slack_guess, double* dual_guess){
     std::memcpy(solution.x,primal_guess,nvar*sizeof(double));
     std::memcpy(solution.s,slack_guess,ncon*sizeof(double));
     std::memcpy(solution.y,dual_guess,ncon*sizeof(double));
