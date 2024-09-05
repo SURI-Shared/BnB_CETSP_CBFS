@@ -1,5 +1,5 @@
 #include "warm_start_socp.h"
-#include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
+#include "clarabel_interface/SolveSocpClarabelWithReuse.h"
 
 int main(int argc, char** argv) 
 {

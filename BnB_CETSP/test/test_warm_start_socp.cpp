@@ -1,5 +1,5 @@
 #include "warm_start_socp.h"
-#include "clarabel_interface/SolveSocpClarabelWithRecycling.h"
+#include "clarabel_interface/SolveSocpClarabelWithReuse.h"
 
 void print_vector(const double* vector, size_t length){
     for(size_t i=0;i<length-1;i++){
@@ -39,7 +39,7 @@ int main(int argc, char** argv)
         cout<<i<<" ";
     }
     cout<<endl;
-    SolveSocpClarabelWithRecycling solver_handle=SolveSocpClarabelWithRecycling(dataptr,in_order,true);
+    SolveSocpClarabelWithReuse solver_handle=SolveSocpClarabelWithReuse(dataptr,in_order,true);
     solver_handle.solveSOCP();
 
     BnBNodeForWarmStart parent(in_order,solver_handle.primals(),solver_handle.duals(),solver_handle.slacks());

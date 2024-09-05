@@ -62,21 +62,21 @@ exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -Wl,-rpath,${SCS_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 ############################
 
-clarabel_dropin: $(OBJDIR)/exec/clarabel_dropin.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+clarabel_reduce: $(OBJDIR)/exec/clarabel_reduce.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
 clarabel_redundant: $(OBJDIR)/exec/clarabel_redundant.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_redundant.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-clarabel_recycling: $(OBJDIR)/exec/clarabel_recycling.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+clarabel_reuse: $(OBJDIR)/exec/clarabel_reuse.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-clarabel_warmstart: $(OBJDIR)/exec/clarabel_warmstart.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+clarabel_recycle: $(OBJDIR)/exec/clarabel_recycle.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
 test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
