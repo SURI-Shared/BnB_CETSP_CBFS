@@ -360,7 +360,7 @@ vector< int > BranchNBound::selectRootClarabelWithReuse(SolveSocpClarabelWithReu
 }
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
-//solves the SOCP to pick the last node using a SolveSocpSCSWithRecycling that is output via solver_out_ptr, which should have been passed as nullptr
+//solves the SOCP to pick the last node using a SolveSocpSCSWithReuse that is output via solver_out_ptr, which should have been passed as nullptr
 vector< int > BranchNBound::selectRootSCSWithReuse(SolveSocpSCSWithReuse** solver_out_ptr)
 {
    //	escolher os elementos que entram na raiz
@@ -403,7 +403,7 @@ vector< int > BranchNBound::selectRootSCSWithReuse(SolveSocpSCSWithReuse** solve
 
 
 //select root as node starting at depot, going to farthest neighborhood, then inserting the node that maximizes the cost
-//solves the SOCP to pick the last node using a SolveSocpSCSWithRecycling that is output via solver_out_ptr, which should have been passed as nullptr
+//solves the SOCP to pick the last node using a SolveSocpSCSWithReuse that is output via solver_out_ptr, which should have been passed as nullptr
 vector< int > BranchNBound::selectRootSCStridiagWithReuse(SolveSocpSCSWithReuse** solver_out_ptr)
 {
    //	escolher os elementos que entram na raiz

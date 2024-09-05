@@ -82,33 +82,33 @@ test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} $< -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-scs_dropin: $(OBJDIR)/exec/scs_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+scs_reduce: $(OBJDIR)/exec/scs_reduce.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
 
-scs_recycling: $(OBJDIR)/exec/scs_recycling.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+scs_reuse: $(OBJDIR)/exec/scs_reuse.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-scs_warmstart: $(OBJDIR)/exec/scs_warmstart.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+scs_recycle: $(OBJDIR)/exec/scs_recycle.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-scs_tridiag_dropin: $(OBJDIR)/exec/scs_tridiag_dropin.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+scs_tridiag_reduce: $(OBJDIR)/exec/scs_tridiag_reduce.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_dropin.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 
-scs_tridiag_recycling: $(OBJDIR)/exec/scs_tridiag_recycling.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+scs_tridiag_reuse: $(OBJDIR)/exec/scs_tridiag_reuse.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_recycling.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 
-scs_tridiag_warmstart: $(OBJDIR)/exec/scs_tridiag_warmstart.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+scs_tridiag_recycle: $(OBJDIR)/exec/scs_tridiag_recycle.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_warmstart.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o run/$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
 
-clarabel: clarabel_dropin clarabel_redundant clarabel_recycling clarabel_warmstart
+clarabel: clarabel_reduce clarabel_redundant clarabel_reuse clarabel_recycle
 
-scs: scs_dropin scs_recycling scs_warmstart scs_tridiag_dropin scs_tridiag_recycling scs_tridiag_warmstart
+scs: scs_reduce scs_reuse scs_recycle scs_tridiag_reduce scs_tridiag_reuse scs_tridiag_recycle
 
 all: exeCVXHULL clarabel scs
 #includes dependency files

@@ -25,14 +25,13 @@
 #include "PrintFunctions.h"
 #include "Data.h"
 #include "BranchNBound.h"
-#include "scs_interface/SolveSocpSCSWithRecycling.h"
+#include "scs_interface/SolveSocpSCSWithReuse.h"
 #include "structs.h"
 #include "CBFS.h"
 #include "subgraph.h"
 #include "tsp_lb.h"
 #include "local_search.h"
 #include "cetsp_solver.h"
-#include "warm_start_socp_scs.h"
 
 using namespace std;
 
@@ -113,7 +112,7 @@ int main(int argc, char** argv)
       if (argc >= 13) use_fsi = (atoi(argv[12]) > 0);
    }
    cout<<"Use LAH: "<<use_lah<<endl;
-   cout<<"Use Concorde Feasible Solution improvement: "<<use_fsi<<endl;
+   cout<<"Use Concorde Feasible Solution improvement"<<use_fsi<<endl;
    Data *dataptr = new Data( arqInstancia, option, overlap, argc, argv );
 
    int sizeInst = dataptr->getSizeInst();
@@ -182,7 +181,7 @@ int main(int argc, char** argv)
    SolveSocpSCSWithReuse *solveSocpPtr;
    double totalSocpCompTime = 0;
    double initialSocpCompTime = monotonicClock();
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCSWithRecycling(&solveSocpPtr);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCStridiagWithReuse(&solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
    totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
@@ -192,10 +191,8 @@ int main(int argc, char** argv)
       cout << root->pts[ i ] << " ";
    }
    cout << endl;
-
    //####################################
-   std::unordered_map<int,BnBNodeForWarmStart> nodes_for_warmstart;
-   SCSWarmStartHandler warm_start_handler(false);
+
    //solve model
    initialSocpCompTime = monotonicClock();
    solveSocpPtr->solveSOCP( root->pts );
@@ -222,8 +219,6 @@ int main(int argc, char** argv)
       tempY.push_back( solveSocpPtr-> getSolutionY( i ) );
       tempZ.push_back( solveSocpPtr-> getSolutionZ( i ) );
    }
-   nodes_for_warmstart.emplace(root->id,BnBNodeForWarmStart(root->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks(),false));
-
    feasibilityTest = bnbPtr->check_feasibility_Q( root, tempX, tempY, tempZ );
 
    cout << endl;
@@ -470,7 +465,6 @@ int main(int argc, char** argv)
                   quantity += mpz_class(sizeOfTree)/levels[current->pts.size() - 3] - 1;
                   temp = mpz_class( sizeOfTree );
                   temp = ( quantity/temp )*100;
-                  nodes_for_warmstart.erase(current->id);
                   cbfs->delNode(current);
                   delete current;
                   continue;
@@ -622,10 +616,6 @@ int main(int argc, char** argv)
                      }
                      
                      initialSocpCompTime = monotonicClock();
-                     std::vector<double> primal_guess;
-                     std::vector<double> slack_guess;
-                     std::vector<double> dual_guess;
-                     warm_start_handler.construct_initial_guess(child->pts,nodes_for_warmstart.at(current->id),dataptr,primal_guess,slack_guess,dual_guess);
                      if (solveSocpPtr->m_num_solves == 0)
                      {
                         solveSocpPtr->populate_removable_constraints(child->pts);
@@ -635,7 +625,7 @@ int main(int argc, char** argv)
                         solveSocpPtr->clear_removable_constraints(prev_insert_pos, curr_insert_pos);
                         solveSocpPtr->populate_removable_constraints(child->pts, prev_insert_pos, curr_insert_pos);
                      }
-                     solveSocpPtr->solve_warm(primal_guess.data(),slack_guess.data(),dual_guess.data());
+                     solveSocpPtr->solveSOCP();
                      prev_insert_pos = curr_insert_pos;
                      totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
                      count_SOCP_solved++;
@@ -653,7 +643,6 @@ int main(int argc, char** argv)
                      else
                      {
                         tempSbStr.sum += child->lb;
-                        nodes_for_warmstart.emplace(child->id,BnBNodeForWarmStart(child->pts,solveSocpPtr->primals(),solveSocpPtr->duals(),solveSocpPtr->slacks(),false));
                      }
 
                      somaTeste += solveSocpPtr->violation;
@@ -925,7 +914,6 @@ int main(int argc, char** argv)
       }
       temp = mpz_class( sizeOfTree );
       temp = ( quantity/temp )*100;
-      nodes_for_warmstart.erase(current->id);
 
       iterCount++;
       cbfs->delNode(current);
@@ -1012,12 +1000,8 @@ int main(int argc, char** argv)
 
    cout << endl << "#################" << endl;	
 
-   cout << "Warm Start Time: "<<warm_start_handler.get_total_time()<<endl;
-   cout << "    init Time: "<<warm_start_handler.get_init_time()<<endl;
-   cout << "    construct Time: "<<warm_start_handler.get_construct_time()<<endl;
-   cout << "        solve Time: "<<warm_start_handler.get_solve_time()<<endl;
+
    cout << solveSocpPtr->info_struct<<endl;
-   
    
    //  for (auto it = open.begin(); it != open.end(); it++)
    //  {
@@ -1035,5 +1019,6 @@ int main(int argc, char** argv)
    delete cbfs;
    delete dataptr;
    delete solveSocpPtr;
+   
    return 0;
 }

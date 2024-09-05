@@ -27,7 +27,7 @@
 #include"structs.h"
 #include"util.h"
 #include "clarabel_interface/SolveSocpClarabelWithReuse.h"
-#include "scs_interface/SolveSocpSCSWithRecycling.h"
+#include "scs_interface/SolveSocpSCSWithReuse.h"
 
 using namespace std;
 

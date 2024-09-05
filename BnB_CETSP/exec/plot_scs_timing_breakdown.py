@@ -2,17 +2,17 @@ from exec import parse_results
 import os
 
 #specify the baseline run first, followed by the run to use for each variant
-folder=["exeCVXHULL_20240829_155920",
-        "clarabel_redundant_20240829_164432",
-        "clarabel_dropin_20240829_164438",
-        "clarabel_recycling_20240829_164443",
-        "clarabel_warmstart_20240829_164446",
-        "scs_dropin_20240829_164449",
-        "scs_recycling_20240829_164455",
-        "scs_warmstart_20240829_164500",
-        "scs_tridiag_dropin_20240829_164504",
-        "scs_tridiag_recycling_20240829_164510",
-        "scs_tridiag_warmstart_20240829_164514"]
+folder=["exeCVXHULL_20240905_122502",
+        "clarabel_redundant_20240905_122514",
+        "clarabel_reduce_20240905_122520",
+        "clarabel_reuse_20240905_122524",
+        "clarabel_recycle_20240905_122528",
+        "scs_reduce_20240905_122531",
+        "scs_reuse_20240905_122536",
+        "scs_recycle_20240905_122541",
+        "scs_tridiag_reduce_20240905_122545",
+        "scs_tridiag_reuse_20240905_122550",
+        "scs_tridiag_recycle_20240905_122555"]
 
 #variant names
 names=["Clarabel",

@@ -1,4 +1,4 @@
-#include "SolveSocpSCSWithRecycling.h"
+#include "SolveSocpSCSWithReuse.h"
 
 //constructors
 SolveSocpSCSWithReuse::SolveSocpSCSWithReuse(Data * instance, vector<int>& in_sequence):

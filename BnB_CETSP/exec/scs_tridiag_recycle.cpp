@@ -25,7 +25,7 @@
 #include "PrintFunctions.h"
 #include "Data.h"
 #include "BranchNBound.h"
-#include "scs_interface/SolveSocpSCSWithRecycling.h"
+#include "scs_interface/SolveSocpSCSWithReuse.h"
 #include "structs.h"
 #include "CBFS.h"
 #include "subgraph.h"
@@ -182,7 +182,7 @@ int main(int argc, char** argv)
    SolveSocpSCSWithReuse *solveSocpPtr;
    double totalSocpCompTime = 0;
    double initialSocpCompTime = monotonicClock();
-   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCStridiagWithRecycling(&solveSocpPtr);
+   if( selectingRoot == 1 ) root->pts = bnbPtr->selectRootSCStridiagWithReuse(&solveSocpPtr);
    if( selectingRoot == 2 ) root->pts = bnbPtr->selectRoot2();
    if( selectingRoot == 3 ) root->pts = bnbPtr->selectRoot3();
    totalSocpCompTime += ( monotonicClock() - initialSocpCompTime );
