@@ -3,7 +3,7 @@
 SYSTEM = x86-64_linux
 LIBFORMAT = static_pic 
 
-####diretorios com as libs do cplex
+####directories
 INCLUDE 	  = /src/BnB_CETSP_CBFS/BnB_CETSP/src
 CPLEXDIR      = /opt/ibm/ILOG/CPLEX_Studio2211/cplex
 QSOPTDIR	  = /src/QSOPT
@@ -27,12 +27,12 @@ CPLEXINCDIR   = $(CPLEXDIR)/include
 CCFLAGS = $(CCOPT) -I$(INCLUDE) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDEINCDIR) -I${CLARABEL_INCLUDE} -I${EIGEN_INCLUDE}
 #############################
 
-#### flags do linker
+#### flags to linker
 CCLNFLAGS = -L$(CONCORDELIBDIR) -l:concorde.a -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -l:qsopt.a
 CLARABELLINFLAGS = -L${CLARABEL_LIBDIR} -lclarabel_c
 #############################
 
-#### diretorios com os source files e com os objs files
+#### relative paths to folders for input and output
 SRCDIR = /src/BnB_CETSP_CBFS/BnB_CETSP/src
 OBJDIR = /src/BnB_CETSP_CBFS/BnB_CETSP/obj
 TESTDIR = /src/BnB_CETSP_CBFS/BnB_CETSP/test
@@ -51,7 +51,7 @@ EXEC_SRCS =  $(wildcard $(EXECDIR)/*.cpp)
 TEST_OBJS = $(patsubst $(EXECDIR)/%.cpp, $(OBJDIR)/exec/%.o, $(EXEC_SRCS))
 #############################
 
-#### regra principal, gera o executavel
+#### baseline
 exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS) $(CLARABEL_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
 	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
@@ -87,7 +87,7 @@ $(OBJDIR)/src/%.o: $(SRCDIR)/%.cpp
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
 	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
-	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
+	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
 
@@ -96,7 +96,7 @@ $(OBJDIR)/src/%.o: $(SRCDIR)/clarabel_interface/%.cpp
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
 	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
-	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
+	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
 
@@ -105,7 +105,7 @@ $(OBJDIR)/test/%.o: $(TESTDIR)/%.cpp
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
 	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
-	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
+	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
 
@@ -114,10 +114,10 @@ $(OBJDIR)/exec/%.o: $(EXECDIR)/%.cpp
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
 	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
-	@mv -f $(basename $@).d $(basename $@).d.tmp #proximas tres linhas colocam o diretorio no arquivo de dependencias (g++ nao coloca, surprisingly!)
+	@mv -f $(basename $@).d $(basename $@).d.tmp
 	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
 	@rm -f $(basename $@).d.tmp
-#delete objetos e arquivos de dependencia
+#delete objects etc
 clean:
 	@echo "\033[31mcleaning obj directory \033[0m"
 	@rm -f $(OBJDIR)/src/**.o $(OBJDIR)/src/**.d $(OBJDIR)/test/**.o $(OBJDIR)/test/**.d $(OBJDIR)/exec/**.o $(OBJDIR)/exec/**.d
