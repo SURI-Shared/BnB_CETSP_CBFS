@@ -72,22 +72,47 @@ The executable targets are:
 ### Docker
 The docker folder contains Dockerfiles for building images that can then be derived from to build the actual codebase.
 1. build concorde.Dockerfile
+```
+cd BnB_CETSP_CBFS/docker
+docker build -t concorde -f concorde.Dockerfile .
+```
 2. build gmp_bignum.Dockerfile (this is SLOW)
+```
+docker build -t gmp_bignum -f gmp_bignum.Dockerfile .
+```
 3. build clarabelcpp's Docker image using the Dockerfile from https://github.com/SURI-Shared/Clarabel.cpp
+```
+cd Clarabel.cpp
+docker build . -t clarabel.cpp
+```
 4. build scs's Docker image using the Dockerfile from [https://github.com/SURI-Shared/scs/tree/tridiagonal](https://github.com/SURI-Shared/scs/tree/tridiagonal)
+```
+cd scs
+docker build . -t scs
+```
 5. build cplex's Docker image using cplex.Dockerfile. You will need to place cplex_install_response_file.properties into the same folder as cplex_studio2211.linux_x86_64.bin
+```
+cd BnB_CETSP_CBFS/docker
+cp cplex_install_response_file.properties /folder/with/cplex_studio2211.linux_x86_64.bin
+docker build -t cplex2211 -f cplex.Dockerfile /folder/with/cplex_studio2211.linux_x86_64.bin
+```
 6. Update the image tags in BnB_CETSP_CBFS/Dockerfile and build
+```
+cd BnB_CETSP_CBFS
+docker build -t r3cetsp .
+```
 
-To run, attach interactively to the running container produced by step 6. Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
+To run, attach interactively to the container produced by step 6. 
+```
+docker run -it r3cetsp
+```
+
+Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
 
 To build an executable, run the following command from the project root directory "BnB_CETSP":
 ```
 make
 ```
-Please, note that:
- * You will need to edit the makefile in order to fix the correct path to your CPLEX installation.
- * You will need to install the "GMP MP Bignum Library" (https://gmplib.org/) in order to run this code.
- * You will need to install Concorde (http://www.math.uwaterloo.ca/tsp/concorde.html).
 
 ## Calling command:
 
@@ -135,6 +160,13 @@ Running a 3D instance:
 ```
 ./exeCVXHULL 3D/d493.txt 3D 0.5 3600 V1 BeFS 1 1
 ```
+
+## Results
+run_instances.py (and also run_all.py) redirect the output of the executables into log files that are named according to the name of the instance, stored in a folder named for the executable and timestamped. Within the folder is a README specifying the git commit that was present when the logs were produced (so as long as you are careful to recompile and keep git up to date, you can always reconstruct the codebase at the state that produced a log).
+
+The log files can be parsed into a dictionary of timing info using functions from the parse_results.py module (requires numpy and matplotlib). There are also a number of functions to make useful plots comparing results. For some examples, see exec/plot_scs_timing_breakdown.py and exec/plot_time_fraction.py.
+
+For convenience, we provide a pickle file BnB_CETSP/zhang_best_lbs.pkl that contains the lower bounds reported by https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711 for each of the instances processed under BnB_CETSP/Results/16GB. The data is a dictionary with three keys. 'oldoptimal' is a dictionary mapping instance names to if Zhang reported an optimal solution. For those instances Zhang did not report an optimal solution, 'oldbestalg' reports which algorithm from Zhang found the best lower bound and 'oldbestlb' contains that lower bound.
 
 ## License
 
