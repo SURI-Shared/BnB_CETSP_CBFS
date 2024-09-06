@@ -13,8 +13,8 @@ queue_of_paths=deque([(parent_folder,)])
 while len(queue_of_paths)>0:
     current_path=queue_of_paths.popleft()
     contents=glob.glob(os.path.join(*current_path,"*"))
-    child_paths=[current_path+(os.path.split(item)[1],) for item in contents]
-    if os.path.isfile(os.path.join(*child_paths[0])) and not child_paths[0][-1]=="html":
+    child_paths=[current_path+(os.path.split(item)[1],) for item in contents if item!=os.path.join(parent_folder,"table.html") and item!=os.path.join(parent_folder,"table.pdf")]
+    if os.path.isfile(os.path.join(*child_paths[0])):
         #reached bottom
         print(f"Loading {os.path.join(*current_path)}")
         folder_data=parse_results.load_folder_by_instance_name(os.path.join(*current_path))
