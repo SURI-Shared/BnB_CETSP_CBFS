@@ -74,9 +74,11 @@ The docker folder contains Dockerfiles for building images that can then be deri
 1. build concorde.Dockerfile
 2. build gmp_bignum.Dockerfile (this is SLOW)
 3. build clarabelcpp's Docker image using the Dockerfile from https://github.com/SURI-Shared/Clarabel.cpp
-4. Update the image tags in BnB_CETSP_CBFS/Dockerfile and build
+4. build scs's Docker image using the Dockerfile from [https://github.com/SURI-Shared/scs/tree/tridiagonal](https://github.com/SURI-Shared/scs/tree/tridiagonal)
+5. build cplex's Docker image using cplex.Dockerfile. You will need to place cplex_install_response_file.properties into the same folder as cplex_studio2211.linux_x86_64.bin
+6. Update the image tags in BnB_CETSP_CBFS/Dockerfile and build
 
-To run, attach interactively to the running container produced by step 4. Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
+To run, attach interactively to the running container produced by step 6. Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
 
 To build an executable, run the following command from the project root directory "BnB_CETSP":
 ```
