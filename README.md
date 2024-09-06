@@ -161,6 +161,13 @@ Running a 3D instance:
 ./exeCVXHULL 3D/d493.txt 3D 0.5 3600 V1 BeFS 1 1
 ```
 
+## Results
+run_instances.py (and also run_all.py) redirect the output of the executables into log files that are named according to the name of the instance, stored in a folder named for the executable and timestamped. Within the folder is a README specifying the git commit that was present when the logs were produced (so as long as you are careful to recompile and keep git up to date, you can always reconstruct the codebase at the state that produced a log).
+
+The log files can be parsed into a dictionary of timing info using functions from the parse_results.py module (requires numpy and matplotlib). There are also a number of functions to make useful plots comparing results. For some examples, see exec/plot_scs_timing_breakdown.py and exec/plot_time_fraction.py.
+
+For convenience, we provide a pickle file BnB_CETSP/zhang_best_lbs.pkl that contains the lower bounds reported by https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711 for each of the instances processed under BnB_CETSP/Results/16GB. The data is a dictionary with three keys. 'oldoptimal' is a dictionary mapping instance names to if Zhang reported an optimal solution. For those instances Zhang did not report an optimal solution, 'oldbestalg' reports which algorithm from Zhang found the best lower bound and 'oldbestlb' contains that lower bound.
+
 ## License
 
 This project is licensed under the GNU General Public License - see the [LICENSE](LICENSE) file for details
