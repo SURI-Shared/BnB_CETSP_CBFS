@@ -72,22 +72,47 @@ The executable targets are:
 ### Docker
 The docker folder contains Dockerfiles for building images that can then be derived from to build the actual codebase.
 1. build concorde.Dockerfile
+```
+cd BnB_CETSP_CBFS/docker
+docker build -t concorde -f concorde.Dockerfile .
+```
 2. build gmp_bignum.Dockerfile (this is SLOW)
+```
+docker build -t gmp_bignum -f gmp_bignum.Dockerfile .
+```
 3. build clarabelcpp's Docker image using the Dockerfile from https://github.com/SURI-Shared/Clarabel.cpp
+```
+cd Clarabel.cpp
+docker build . -t clarabel.cpp
+```
 4. build scs's Docker image using the Dockerfile from [https://github.com/SURI-Shared/scs/tree/tridiagonal](https://github.com/SURI-Shared/scs/tree/tridiagonal)
+```
+cd scs
+docker build . -t scs
+```
 5. build cplex's Docker image using cplex.Dockerfile. You will need to place cplex_install_response_file.properties into the same folder as cplex_studio2211.linux_x86_64.bin
+```
+cd BnB_CETSP_CBFS/docker
+cp cplex_install_response_file.properties /folder/with/cplex_studio2211.linux_x86_64.bin
+docker build -t cplex2211 -f cplex.Dockerfile /folder/with/cplex_studio2211.linux_x86_64.bin
+```
 6. Update the image tags in BnB_CETSP_CBFS/Dockerfile and build
+```
+cd BnB_CETSP_CBFS
+docker build -t r3cetsp .
+```
 
-To run, attach interactively to the running container produced by step 6. Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
+To run, attach interactively to the container produced by step 6. 
+```
+docker run -it r3cetsp
+```
+
+Result files can be extracted by using a [bind-mount ](https://docs.docker.com/storage/bind-mounts/)
 
 To build an executable, run the following command from the project root directory "BnB_CETSP":
 ```
 make
 ```
-Please, note that:
- * You will need to edit the makefile in order to fix the correct path to your CPLEX installation.
- * You will need to install the "GMP MP Bignum Library" (https://gmplib.org/) in order to run this code.
- * You will need to install Concorde (http://www.math.uwaterloo.ca/tsp/concorde.html).
 
 ## Calling command:
 
