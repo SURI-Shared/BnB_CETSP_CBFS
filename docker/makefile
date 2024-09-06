@@ -15,6 +15,8 @@ CONCORDELIBDIR = /src/concorde/concorde_build/
 CLARABEL_INCLUDE = /src/Clarabel.cpp/include
 CLARABEL_LIBDIR = /src/Clarabel.cpp/rust_wrapper/target/release/
 EIGEN_INCLUDE = /usr/local/include/eigen3
+SCS_INCLUDE = /src/scs/include/
+SCS_LIBDIR = /src/scs/build/lib/
 
 #### define o compilador
 CPPC = g++
@@ -24,12 +26,14 @@ CPPC = g++
 CCOPT = $(BITS_OPTION) -O3 -g -fPIC -fexceptions -DNDEBUG -DIL_STD -std=c++14
 CONCERTINCDIR = $(CONCERTDIR)/include
 CPLEXINCDIR   = $(CPLEXDIR)/include
-CCFLAGS = $(CCOPT) -I$(INCLUDE) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDEINCDIR) -I${CLARABEL_INCLUDE} -I${EIGEN_INCLUDE}
+CCFLAGS = $(CCOPT) -I$(INCLUDE) -I$(CPLEXINCDIR) -I$(CONCERTINCDIR) -I$(CONCORDEINCDIR) -I${CLARABEL_INCLUDE} -I${SCS_INCLUDE} -I${EIGEN_INCLUDE}
 #############################
 
 #### flags to linker
 CCLNFLAGS = -L$(CONCORDELIBDIR) -l:concorde.a -L$(CPLEXLIBDIR) -lilocplex -lcplex -L$(CONCERTLIBDIR) -lconcert -lgmpxx -lgmp -ldl -lm -lpthread -L${QSOPTDIR} -l:qsopt.a
 CLARABELLINFLAGS = -L${CLARABEL_LIBDIR} -lclarabel_c
+SCSDIRECTLINFLAGS = -L${SCS_LIBDIR} -lscsdir#link to generic direct SCS solver
+SCSTRIDIAGLINFLAGS = -L${SCS_LIBDIR} -lscstridir#link to tridiagonal direct SCS solver
 #############################
 
 #### relative paths to folders for input and output
@@ -45,6 +49,8 @@ SRCS = $(wildcard $(SRCDIR)/*.cpp)
 OBJS = $(patsubst $(SRCDIR)/%.cpp, $(OBJDIR)/src/%.o, $(SRCS))
 CLARABEL_SRCS = $(wildcard $(SRCDIR)/clarabel_interface/*.cpp)
 CLARABEL_OBJS = $(patsubst $(SRCDIR)/clarabel_interface/%.cpp, $(OBJDIR)/src/%.o, $(CLARABEL_SRCS))
+SCS_SRCS = $(wildcard $(SRCDIR)/scs_interface/*.cpp)
+SCS_OBJS = $(patsubst $(SRCDIR)/scs_interface/%.cpp, $(OBJDIR)/src/%.o, $(SCS_SRCS))
 TEST_SRCS = $(wildcard $(TESTDIR)/*.cpp)
 TEST_OBJS = $(patsubst $(TESTDIR)/%.cpp, $(OBJDIR)/test/%.o, $(TEST_SRCS))
 EXEC_SRCS =  $(wildcard $(EXECDIR)/*.cpp)
@@ -52,30 +58,60 @@ TEST_OBJS = $(patsubst $(EXECDIR)/%.cpp, $(OBJDIR)/exec/%.o, $(EXEC_SRCS))
 #############################
 
 #### baseline
-exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS) $(CLARABEL_OBJS)
+exeCVXHULL: $(OBJDIR)/exec/main.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS) $(OBJDIR)/exec/main.o -Wl,-rpath,${CLARABEL_LIBDIR} -Wl,-rpath,${SCS_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 ############################
 
-clarabel_reduce: $(OBJDIR)/exec/clarabel_reduce.o $(OBJS) $(CLARABEL_OBJS)
+clarabel_reduce: $(OBJDIR)/exec/clarabel_reduce.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reduce.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-clarabel_redundant: $(OBJDIR)/exec/clarabel_redundant.o $(OBJS) $(CLARABEL_OBJS)
+clarabel_redundant: $(OBJDIR)/exec/clarabel_redundant.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_redundant.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_redundant.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-clarabel_reuse: $(OBJDIR)/exec/clarabel_reuse.o $(OBJS) $(CLARABEL_OBJS)
+clarabel_reuse: $(OBJDIR)/exec/clarabel_reuse.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reuse.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-clarabel_recycle: $(OBJDIR)/exec/clarabel_recycle.o $(OBJS) $(CLARABEL_OBJS)
+clarabel_recycle: $(OBJDIR)/exec/clarabel_recycle.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo  "\033[31m \nLinking all objects files: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycle.o -Wl,-rpath,${CLARABEL_LIBDIR} -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/clarabel_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
 
-test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS)
+test/%: $(OBJDIR)/test/%.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
 	@echo "\033[31m \nLinking test: \033[0m"
-	$(CPPC) $(BITS_OPTION) $(OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${CLARABEL_LIBDIR} $< -o $(RUNDIR)/$@ $(CCLNFLAGS) $(CLARABELLINFLAGS)
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} $< -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+
+scs_reduce: $(OBJDIR)/exec/scs_reduce.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(SCSDIRECTLINFLAGS) $(CLARABELLINFLAGS)
+
+scs_reuse: $(OBJDIR)/exec/scs_reuse.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+
+scs_recycle: $(OBJDIR)/exec/scs_recycle.o $(OBJS) $(CLARABEL_OBJS) $(SCS_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(CLARABELLINFLAGS) $(SCSDIRECTLINFLAGS)
+
+scs_tridiag_reduce: $(OBJDIR)/exec/scs_tridiag_reduce.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_reduce.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+
+scs_tridiag_reuse: $(OBJDIR)/exec/scs_tridiag_reuse.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_reuse.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+
+scs_tridiag_recycle: $(OBJDIR)/exec/scs_tridiag_recycle.o $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS)
+	@echo  "\033[31m \nLinking all objects files: \033[0m"
+	$(CPPC) $(BITS_OPTION) $(OBJS) $(SCS_OBJS) $(CLARABEL_OBJS) $(OBJDIR)/exec/scs_tridiag_recycle.o -Wl,-rpath,${SCS_LIBDIR} -Wl,-rpath,${CLARABEL_LIBDIR} -o ${RUN_DIR}$@ $(CCLNFLAGS) $(SCSTRIDIAGLINFLAGS) $(CLARABELLINFLAGS)
+
+clarabel: clarabel_reduce clarabel_redundant clarabel_reuse clarabel_recycle
+
+scs: scs_reduce scs_reuse scs_recycle scs_tridiag_reduce scs_tridiag_reuse scs_tridiag_recycle
+
+all: exeCVXHULL clarabel scs
 
 #includes dependency files
 -include $(OBJS:.o=.d)
@@ -92,6 +128,15 @@ $(OBJDIR)/src/%.o: $(SRCDIR)/%.cpp
 	@rm -f $(basename $@).d.tmp
 
 $(OBJDIR)/src/%.o: $(SRCDIR)/clarabel_interface/%.cpp
+	@echo  "\033[31m \nCompiling $<: \033[0m"
+	$(CPPC) $(CCFLAGS) -c $< -o $@
+	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
+	$(CPPC)  -MM -I$(INCLUDE) $< > $(basename $@).d
+	@mv -f $(basename $@).d $(basename $@).d.tmp
+	@sed -e 's|.*:|$(basename $@).o:|' < $(basename $@).d.tmp > $(basename $@).d
+	@rm -f $(basename $@).d.tmp
+
+$(OBJDIR)/src/%.o: $(SRCDIR)/scs_interface/%.cpp
 	@echo  "\033[31m \nCompiling $<: \033[0m"
 	$(CPPC) $(CCFLAGS) -c $< -o $@
 	@echo  "\033[32m \ncreating $< dependency file: \033[0m"
