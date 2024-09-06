@@ -56,7 +56,7 @@ make
 For help compiling things, look at the various docker files for hints.
 
 The executable targets are:
-* exeCVXHULL: As in (https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711), with some additional logging
+* exeCVXHULL: As in [Zhang](https://doi.org/10.1007/s10589-023-00474-3), with some additional logging
 * clarabel_redundant: Replaces CPLEX with Clarabel, but no other changes from exeCVXHULL
 * clarabel_reduce: Uses Clarabel to solve RSOCP not MSOCP (see the paper)
 * clarabel_reuse: as clarabel_reduce, but reuses the Clarabel solvers between nodes in the B&B tree
@@ -123,7 +123,7 @@ To process all instances in a folder in parallel using one of the executables:
 python exec/run_instances.py [n_processes] [executable] [folder of instances] [folder to save log files] [OPTIONS] [OVERLAP FACTOR] [TIME LIMIT] [BRANCHING RULE] [BRANCHING Strategy] [ROOT SELECTION] [S.B SIZE]
 ```
 
-To process the 152 problem instances from https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711:
+To process the 152 problem instances from https://doi.org/10.1007/s10589-023-00474-3:
 ```
 python exec/run_all.py [n_processes] [executable] [folder to save log files]
 ```
@@ -164,9 +164,9 @@ Running a 3D instance:
 ## Results
 run_instances.py (and also run_all.py) redirect the output of the executables into log files that are named according to the name of the instance, stored in a folder named for the executable and timestamped. Within the folder is a README specifying the git commit that was present when the logs were produced (so as long as you are careful to recompile and keep git up to date, you can always reconstruct the codebase at the state that produced a log).
 
-The log files can be parsed into a dictionary of timing info using functions from the parse_results.py module (requires numpy and matplotlib). There are also a number of functions to make useful plots comparing results. For some examples, see exec/plot_scs_timing_breakdown.py and exec/plot_time_fraction.py.
+The log files can be parsed into a dictionary of timing info using functions from the parse_results.py module (requires numpy and matplotlib). There are also a number of functions to make useful plots comparing results. For some examples, see exec/plot_scs_timing_breakdown.py and exec/plot_time_fraction.py. A table of the results of clarabel_recycle on instances from [Zhang](https://doi.org/10.1007/s10589-023-00474-3), with a 16GB RAM limit, is provided in Results/16GB in html and pdf form. Data was produced by exec/run_all.py and the tables generated using exec/make_result_table.py
 
-For convenience, we provide a pickle file BnB_CETSP/zhang_best_lbs.pkl that contains the lower bounds reported by https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711 for each of the instances processed under BnB_CETSP/Results/16GB. The data is a dictionary with three keys. 'oldoptimal' is a dictionary mapping instance names to if Zhang reported an optimal solution. For those instances Zhang did not report an optimal solution, 'oldbestalg' reports which algorithm from Zhang found the best lower bound and 'oldbestlb' contains that lower bound.
+For convenience, we provide a pickle file BnB_CETSP/zhang_best_lbs.pkl that contains the lower bounds reported by [Zhang](https://doi.org/10.1007/s10589-023-00474-3) for each of the instances processed under BnB_CETSP/Results/16GB. The data is a dictionary with three keys. 'oldoptimal' is a dictionary mapping instance names to if Zhang reported an optimal solution. For those instances Zhang did not report an optimal solution, 'oldbestalg' reports which algorithm from Zhang found the best lower bound and 'oldbestlb' contains that lower bound.
 
 ## License
 
