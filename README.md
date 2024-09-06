@@ -2,7 +2,7 @@
 
 A branch-and-bound algorithm for the CETSP based the [original work by Walton Pereira Coutinho](https://github.com/waltonpcoutinho/BnB_CETSP) and [Wenda Zhang](https://github.com/UranusR/BnB_CETSP_CBFS)
 
-This code accompanies the paper "Reduce, Reuse, Recycle: Efficient Second-Order Cone Programming for the CLose Enough Traveling Salesman Problem," submitted to WAFR 2024.
+This code accompanies the paper "Efficient Second-Order Cone Programming for the Close Enough Traveling Salesman Problem," submitted to ICRA 2025.
 
 ## Dependencies
 
@@ -14,11 +14,27 @@ Clone the Clarabel.cpp repository (including the submodule, which contains the a
 git clone --recurse-submodules git@github.com:SURI-Shared/Clarabel.cpp.git
 ```
 
+### SCS
+This code relies on a fork of the SCS cone programming solver. This fork is available at [https://github.com/SURI-Shared/scs/tree/tridiagonal](https://github.com/SURI-Shared/scs/tree/tridiagonal)
+
+Clone the SCS repository (make sure to switch to the tridiagonal branch):
+```
+git clone git@github.com:SURI-Shared/scs
+cd scs
+git checkout tridiagonal
+```
+
 ### Eigen, QSOPT, Concorde, and GMP BigNum
 tar files and archives of these dependencies can be obtained by running download_dependencies.sh
 
 ### CPLEX
 CPLEX is used only by the baseline approach. You will need to obtain a CPLEX install to build the rest of the code, however.
+
+### LAPACK and LAPACKE
+SCS depends on both LAPACK for linear algebra and LAPACKE (the C interface to LAPACK).
+```
+sudo apt-get install liblapack-dev liblapacke-dev
+```
 
 ## Building an executable
 
@@ -26,8 +42,17 @@ CPLEX is used only by the baseline approach. You will need to obtain a CPLEX ins
 1. Build concorde following the instructions at https://www.math.uwaterloo.ca/tsp/concorde/DOC/README.html
 2. Build gmp_bignum (this is SLOW)
 3. Build Clarabel.cpp using cmake (We recommend doing a Release build)
-4. Install CPLEX
-5. Update BnB_CETSP_CBFS/BnB_CETSP/makefile (NOT BnB_CETSP_CBFS/docker/makefile) to reflect the installation paths
+4. Build SCS using cmake (multiple shared object libraries are produced, one for each choice of linear system solver. We use both scsdir and scstridir).
+```
+cd scs
+mkdir build
+cd build
+cmake .. -DCMAKE_BUILD_TYPE=Release
+make
+```
+5. Install CPLEX
+6. Update BnB_CETSP_CBFS/BnB_CETSP/makefile (NOT BnB_CETSP_CBFS/docker/makefile) to reflect the paths (everything in the section ###directories)
+
 For help compiling things, look at the various docker files for hints.
 
 The executable targets are:
@@ -36,6 +61,12 @@ The executable targets are:
 * clarabel_reduce: Uses Clarabel to solve RSOCP not MSOCP (see the paper)
 * clarabel_reuse: as clarabel_reduce, but reuses the Clarabel solvers between nodes in the B&B tree
 * clarabel_recycle: as clarabel_reuse, but warm starts Clarabel by solving a small SOCP.
+* scs_reduce: Uses SCS to solve RSOCP not MSOCP (see the paper)
+* scs_reuse: as scs_reduce, but reuses the SCS solvers between nodes in the B&B tree (and also the matrix factorization)
+* scs_recycle: as scs_reuse, but warm starts SCS by solving a small SOCP.
+* scs_tridiag_reduce: Uses SCS with a custom tridiagonal solver to solve RSOCP not MSOCP (see the paper)
+* scs_tridiag_reuse: as scs_tridiag_reduce, but reuses the SCS solvers between nodes in the B&B tree (and also the matrix factorization)
+* scs_tridiag_recycle: as scs_tridiag_reuse, but warm starts SCS by solving a small SOCP.
 
 
 ### Docker
@@ -58,7 +89,17 @@ Please, note that:
 
 ## Calling command:
 
-Python scripts to run multiple instances in parallel are provided in BnB_CETSP/exec
+Scripts to run multiple instances in parallel are provided in BnB_CETSP/exec
+
+To process all instances in a folder in parallel using one of the executables:
+```
+python exec/run_instances.py [n_processes] [executable] [folder of instances] [folder to save log files] [OPTIONS] [OVERLAP FACTOR] [TIME LIMIT] [BRANCHING RULE] [BRANCHING Strategy] [ROOT SELECTION] [S.B SIZE]
+```
+
+To process the 152 problem instances from https://pubsonline.informs.org/doi/abs/10.1287/ijoc.2016.0711:
+```
+python exec/run_all.py [n_processes] [executable] [folder to save log files]
+```
 
 A single executable can be run using the following command structure
 ```
