@@ -77,7 +77,7 @@ Data::Data ( char * instanceName, char * options, double overlapFactor, int argc
    }
 
    //		######### Mennel Instances ##########
-   if ( DirectoryName.compare( "2D" ) == 0 || DirectoryName.compare( "3D" ) == 0 || DirectoryName.compare( "RND" ) == 0 ){
+   if ( DirectoryName.compare( "2D" ) == 0 || DirectoryName.compare( "3D" ) == 0 || DirectoryName.compare( "RND" ) == 0 || DirectoryName.compare("Custom") == 0 ){
       setAllData( readFile );
       if( DirectoryName.compare( "2D" ) == 0 ){
          setUb( "2D", fileName, options, overlapFactor );
@@ -87,6 +87,9 @@ Data::Data ( char * instanceName, char * options, double overlapFactor, int argc
       }
       if( DirectoryName.compare( "RND" ) == 0 ){
          setUb( "RND", fileName, options, overlapFactor );
+      }
+      if( DirectoryName.compare( "Custom") == 0 ){
+         setUb( "Custom", fileName, options, overlapFactor );
       }
    }
    else{
@@ -104,7 +107,7 @@ Data::Data ( char * instanceName, char * options, double overlapFactor, int argc
          setUb( "medium_2D_Behdani_CETSPs", fileName, options, overlapFactor);
       }
       else{
-         cout << "Something wrong with the directory names!" << endl;
+         cout << "Something wrong with the directory name: "<<DirectoryName << endl;
          exit( 1 );
       }
 
